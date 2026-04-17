@@ -16,7 +16,7 @@
 |---|---|---|---|
 | `brainstormar-sobre-minha-funcao` | Entrevista o usuario sobre seu trabalho para descobrir como usar IA no dia a dia dele. Configura agenda, an... | — | — |
 | `compartilhar-skill` | Empacota uma skill local e abre Pull Request no Builders Hub publico automaticamente. Use quando o usuario... | — | — |
-| `contexto` | Le todos os arquivos em uma base de conhecimento (cliente ou projeto) e gera um CLAUDE.md com o contexto co... | — | — |
+| `contexto` | Le todos os arquivos em uma base de conhecimento (cliente ou projeto) e gera os arquivos CLAUDE.md e AGENTS... | — | — |
 | `criador-de-skills` | Cria skills novas e melhora skills existentes no Builders Hub. Use quando o usuario quiser criar uma skill... | — | — |
 | `frontend-design` | Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the... | — | — |
 | `novo-cliente` | Cria uma nova pasta de cliente com estrutura padrao e CLAUDE.md inicial. Pergunta nome e NotebookLM. Use qu... | — | — |
