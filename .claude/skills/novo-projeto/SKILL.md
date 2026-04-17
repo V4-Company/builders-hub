@@ -18,7 +18,10 @@ Use o nome para criar a pasta. Converta para lowercase-com-hifens (ex: "Concilia
 
 ```bash
 cp -r bases/_template "bases/[nome-formatado]"
+cp "bases/[nome-formatado]/.env.example" "bases/[nome-formatado]/.env"
 ```
+
+`.env` fica local (bases/ inteiro e gitignored, so `_template/` sobe). Preenche credenciais conforme usar.
 
 ### Passo 3 — Contexto inicial
 
@@ -42,6 +45,8 @@ Mostre a estrutura criada:
 ```
 bases/[nome-formatado]/
 ├── CLAUDE.md
+├── .env            # credenciais locais (gitignored)
+├── .env.example    # template
 ├── docs/
 ├── dados/
 └── referencias/

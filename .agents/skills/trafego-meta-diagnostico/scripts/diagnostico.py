@@ -2,11 +2,17 @@
 """
 trafego-meta-diagnostico — diagnostico de Meta Ads via V4mos API.
 
-Pre-requisitos: variaveis de ambiente
-  V4MOS_CLIENT_ID, V4MOS_CLIENT_SECRET, V4MOS_WORKSPACE_ID
+Credenciais sao lidas em ordem de prioridade:
+  1. --cliente <nome>  -> le clientes/<nome>/.env
+  2. cwd dentro de clientes/<X>/ ou bases/<X>/ -> le <X>/.env
+  3. variaveis de ambiente do shell (V4MOS_CLIENT_ID, V4MOS_CLIENT_SECRET, V4MOS_WORKSPACE_ID)
+
+Se faltar alguma credencial, o script sai com exit=2 e orienta onde pegar
+(https://app.v4mkt.com/... ou matheus.netto@v4company.com).
 
 Uso:
-  python3 diagnostico.py [--dias N] [--ate YYYY-MM-DD] [--account-id ACT_ID] [--out path.md]
+  python3 diagnostico.py [--cliente NOME] [--dias N] [--ate YYYY-MM-DD]
+                         [--account-id ACT_ID] [--out path.md]
 
 Default: ultimos 7 dias ate ontem, todas as contas do workspace, salva em cwd.
 
@@ -19,6 +25,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import sys
 import time
 from collections import defaultdict
@@ -35,21 +42,115 @@ BASE_URL = "https://api.data.v4.marketing"
 RATE_SLEEP = 2.0  # segundos entre chamadas (conservador — 30 req/min)
 TIMEOUT = 45
 
+V4MOS_KEYS_URL = "https://app.v4mkt.com"  # confirme o path exato no seu painel
+V4MOS_SUPPORT = "matheus.netto@v4company.com"
+
 BR_MONEY = lambda v: f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 BR_INT = lambda v: f"{int(v):,}".replace(",", ".")
 PCT = lambda v: f"{v*100:.2f}%".replace(".", ",")
 
 
-def require_env() -> dict[str, str]:
+def load_dotenv(path: Path) -> dict[str, str]:
+    """Parser minimal de .env (KEY=VALUE por linha, ignora # e linhas vazias)."""
+    out: dict[str, str] = {}
+    if not path.is_file():
+        return out
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        m = re.match(r'^([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$', line)
+        if not m:
+            continue
+        key, val = m.group(1), m.group(2).strip()
+        # strip matching quotes
+        if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
+            val = val[1:-1]
+        if val:  # so grava se nao vazio
+            out[key] = val
+    return out
+
+
+def find_client_env(cliente: str | None) -> tuple[Path | None, str | None]:
+    """
+    Resolve o .env do cliente. Busca em:
+    - builders_hub/clientes/<cliente>/.env (se --cliente passado)
+    - cwd e ancestors ate achar clientes/<X>/.env ou bases/<X>/.env
+
+    Retorna (path_do_env_ou_None, nome_do_cliente_ou_None).
+    """
+    cwd = Path.cwd().resolve()
+
+    # Caso 1: --cliente explicito. Procura em cwd e ancestors por clientes/<cliente>
+    if cliente:
+        cand = cwd / "clientes" / cliente / ".env"
+        if cand.is_file():
+            return cand, cliente
+        # sobe ancestors
+        for parent in cwd.parents:
+            cand = parent / "clientes" / cliente / ".env"
+            if cand.is_file():
+                return cand, cliente
+        return None, cliente  # pediu cliente mas nao achou
+
+    # Caso 2: cwd esta dentro de clientes/<X>/ ou bases/<X>/
+    parts = cwd.parts
+    for i, part in enumerate(parts):
+        if part in ("clientes", "bases") and i + 1 < len(parts):
+            nome = parts[i + 1]
+            if nome == "_template":
+                continue
+            base = Path(*parts[: i + 2])
+            env_path = base / ".env"
+            if env_path.is_file():
+                return env_path, nome
+    return None, None
+
+
+def require_creds(cliente: str | None) -> tuple[dict[str, str], str | None]:
+    """
+    Retorna (creds, cliente_detectado). Estrategia:
+      1. Procura .env do cliente
+      2. Mistura com env vars do shell (shell vence se tiver)
+    """
     required = ["V4MOS_CLIENT_ID", "V4MOS_CLIENT_SECRET", "V4MOS_WORKSPACE_ID"]
-    missing = [k for k in required if not os.environ.get(k)]
+    env_path, detected = find_client_env(cliente)
+    file_vars = load_dotenv(env_path) if env_path else {}
+    shell_vars = {k: os.environ.get(k, "") for k in required}
+    # shell tem prioridade pra CLIENT_ID/SECRET (sao globais do V4er), arquivo pra WORKSPACE_ID
+    creds = {}
+    for k in required:
+        if k == "V4MOS_WORKSPACE_ID":
+            # priorizar .env do cliente (workspace e por cliente)
+            creds[k] = file_vars.get(k) or shell_vars.get(k) or ""
+        else:
+            creds[k] = shell_vars.get(k) or file_vars.get(k) or ""
+
+    missing = [k for k in required if not creds[k]]
     if missing:
-        print(f"ERRO: variaveis de ambiente faltando: {', '.join(missing)}", file=sys.stderr)
-        print("Adicione no seu ~/.zshrc:", file=sys.stderr)
-        for k in missing:
-            print(f'  export {k}="..."', file=sys.stderr)
+        print(f"✗ Credenciais V4mos faltando: {', '.join(missing)}", file=sys.stderr)
+        print("", file=sys.stderr)
+        if env_path:
+            print(f"  .env encontrado em: {env_path}", file=sys.stderr)
+            print(f"  Abre e preenche os campos vazios.", file=sys.stderr)
+        elif cliente:
+            print(f"  Nao encontrei clientes/{cliente}/.env", file=sys.stderr)
+            print(f"  Rode /novo-cliente ou copie clientes/_template pra clientes/{cliente}.", file=sys.stderr)
+        else:
+            print("  Voce nao esta dentro de uma pasta de cliente e nao passou --cliente.", file=sys.stderr)
+            print("  Solucoes:", file=sys.stderr)
+            print("    - cd clientes/<nome>/ e rode de la", file=sys.stderr)
+            print("    - ou: python3 diagnostico.py --cliente <nome>", file=sys.stderr)
+            print("    - ou: set V4MOS_* no ~/.zshrc", file=sys.stderr)
+        print("", file=sys.stderr)
+        print(f"  Onde pegar as credenciais:", file=sys.stderr)
+        print(f"    1. {V4MOS_KEYS_URL} (logado com sua conta V4)", file=sys.stderr)
+        print(f"    2. Selecione o workspace do cliente", file=sys.stderr)
+        print(f"    3. Settings > API / Integracoes > gerar client credentials", file=sys.stderr)
+        print(f"    4. Se nao encontrar: {V4MOS_SUPPORT}", file=sys.stderr)
         sys.exit(2)
-    return {k: os.environ[k] for k in required}
+
+    return creds, detected
 
 
 class V4mos:
@@ -99,6 +200,8 @@ class V4mos:
 
 def parse_args():
     p = argparse.ArgumentParser(description="Diagnostico Meta Ads V4mos")
+    p.add_argument("--cliente", type=str, default=None,
+                   help="Nome do cliente (pasta em clientes/<nome>). Auto-detecta se cwd estiver dentro.")
     p.add_argument("--dias", type=int, default=7, help="Janela em dias (default 7)")
     p.add_argument("--ate", type=str, default=None,
                    help="Data final YYYY-MM-DD (default ontem)")
@@ -300,7 +403,9 @@ def build_report(data: dict) -> str:
 
 def main():
     args = parse_args()
-    creds = require_env()
+    creds, cliente = require_creds(args.cliente)
+    if cliente:
+        print(f"▶ Cliente: {cliente}", file=sys.stderr)
 
     # Janela: termina ontem (dados de hoje sempre incompletos) ou na data informada
     end = dt.date.fromisoformat(args.ate) if args.ate else dt.date.today() - dt.timedelta(days=1)

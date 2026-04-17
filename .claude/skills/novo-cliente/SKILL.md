@@ -18,7 +18,11 @@ Use o nome para criar a pasta. Converta para lowercase-com-hifens para o nome da
 
 ```bash
 cp -r clientes/_template "clientes/[nome-formatado]"
+# Copia o .env.example pra .env (inicial vazio, o usuario preenche conforme for usando)
+cp "clientes/[nome-formatado]/.env.example" "clientes/[nome-formatado]/.env"
 ```
+
+O `.env` e gitignored por padrao (clientes/ inteiro e — so `_template/` sobe pro repo). Credenciais ficam locais.
 
 ### Passo 3 — NotebookLM
 
@@ -58,10 +62,12 @@ Mostre a estrutura criada:
 ```
 clientes/[nome-formatado]/
 ├── CLAUDE.md
+├── .env            # suas credenciais (gitignored)
+├── .env.example    # template das credenciais
 ├── calls/
 ├── docs/
 └── campanhas/
 ```
 
 Diga:
-> "Cliente criado. Jogue os dados dele nas pastas (calls, docs, campanhas) e rode `/contexto` quando tiver pronto."
+> "Cliente criado. Jogue os dados dele nas pastas (calls, docs, campanhas) e rode `/contexto` quando tiver pronto. O `.env` ta vazio — preenche as credenciais V4mos conforme for precisar (skills tipo `/trafego-meta-diagnostico` vao pedir o que falta)."

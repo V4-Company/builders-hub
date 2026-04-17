@@ -7,9 +7,10 @@
 !/clientes/_template/
 !/bases/_template/
 
-# Credenciais e env
+# Credenciais e env (mas .env.example pode ser commitado como template)
 .env
 .env.*
+!.env.example
 *.secrets
 *.pem
 *.key

@@ -32,7 +32,7 @@
 
 | Skill | O que faz | Autor | v |
 |---|---|---|---|
-| `trafego-meta-diagnostico` | Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ad... | @guilhermelippert | 1.0.0 |
+| `trafego-meta-diagnostico` | Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ad... | @guilhermelippert | 1.1.0 |
 
 ---
 

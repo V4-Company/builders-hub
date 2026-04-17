@@ -1,9 +1,9 @@
 ---
 name: trafego-meta-diagnostico
-description: Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ads com quality_ranking ruim queimando dinheiro, breakdown por plataforma (feed/stories/reels), delta W/W e runway de saldo. Use sempre que o usuario pedir "diagnostico Meta", "relatorio Facebook Ads", "como tao as campanhas", "check-in Meta", "saude da conta FB", "ads com problema", ou quando for montar relatorio pra cliente com dados da ultima semana. Exige variaveis de ambiente V4MOS_CLIENT_ID, V4MOS_CLIENT_SECRET, V4MOS_WORKSPACE_ID. Entrega markdown pronto pra copiar/colar em check-in ou PPT. Google Ads fora do escopo (API V4mos ignora filtro de data no Google — bug reportavel).
+description: Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ads com quality_ranking ruim queimando dinheiro, breakdown por plataforma (feed/stories/reels), delta W/W e runway de saldo. Use sempre que o usuario pedir "diagnostico Meta", "relatorio Facebook Ads", "como tao as campanhas", "check-in Meta", "saude da conta FB", "ads com problema", ou quando for montar relatorio pra cliente com dados da ultima semana. Le credenciais de clientes/<cliente>/.env (ou bases/<projeto>/.env) por padrao, com fallback pra env vars do shell. Se faltar credencial, orienta onde pegar (https://app.v4mkt.com). Entrega markdown pronto pra copiar/colar em check-in ou PPT. Google Ads fora do escopo (API V4mos ignora filtro de data no Google — bug reportavel).
 area: trafego
 author: guilhermelippert
-version: 1.0.0
+version: 1.1.0
 ---
 
 # /trafego-meta-diagnostico
@@ -24,25 +24,60 @@ Dispara quando o usuario diz:
 
 Se o usuario pedir dados Google/Analytics, explique que essa skill e **Meta only** (Google Ads na V4mos ignora o filtro de data, entao a gente nao arrisca numero errado).
 
-## Pre-requisitos — variaveis de ambiente
+## Passo 1 — Identificar o cliente
 
-Antes de rodar, confirme que essas 3 variaveis estao setadas:
+Antes de qualquer coisa, descubra com qual cliente voce esta trabalhando. Ordem:
+
+1. **Se o usuario nomeou explicitamente** ("diagnostico Meta do cliente X"): use esse nome.
+2. **Se o cwd ja esta dentro de `clientes/<nome>/` ou `bases/<nome>/`**: use o nome detectado. Mencione: "Detectei que voce ta dentro da pasta do cliente <nome>. Uso ele?"
+3. **Se nao esta claro**: liste os clientes disponiveis (`ls clientes/ | grep -v _template`) e pergunte: "Qual cliente?"
+
+Se o cliente nao existir como pasta ainda, sugira: "Nao encontrei `clientes/<nome>/`. Quer criar com `/novo-cliente` primeiro?"
+
+## Passo 2 — Verificar credenciais no `.env` do cliente
+
+O padrao do Builders Hub e: cada cliente tem seu proprio `.env` em `clientes/<nome>/.env` (copiado de `.env.example` pelo `/novo-cliente`). Esse arquivo e gitignored — fica so local.
+
+Confira o conteudo:
 
 ```bash
-echo "V4MOS_CLIENT_ID=$V4MOS_CLIENT_ID"
-echo "V4MOS_CLIENT_SECRET=${V4MOS_CLIENT_SECRET:+<set>}"
-echo "V4MOS_WORKSPACE_ID=$V4MOS_WORKSPACE_ID"
+test -f "clientes/<nome>/.env" && cat "clientes/<nome>/.env" | grep -E "^V4MOS" | sed 's/=.*$/=<set>/' || echo "arquivo nao existe"
 ```
 
-Se alguma estiver vazia, oriente o usuario a adicionar no `~/.zshrc` (Mac) ou `~/.bashrc` (Linux):
+Deve ter 3 chaves **preenchidas**:
+- `V4MOS_CLIENT_ID` — suas credenciais V4er (pode reusar entre clientes)
+- `V4MOS_CLIENT_SECRET` — idem
+- `V4MOS_WORKSPACE_ID` — **especifico do cliente** (cada cliente tem um workspace diferente no V4mkt)
+
+### Se faltar alguma chave
+
+Oriente o usuario passo a passo:
+
+> "Faltam credenciais V4mos no `clientes/<nome>/.env`. Onde pegar:
+> 
+> 1. Acesse **https://app.v4mkt.com** logado com sua conta V4
+> 2. Selecione o workspace deste cliente (V4 Marketing Operating System)
+> 3. Va em **Settings > API / Integracoes > gerar client credentials**
+> 4. Copie `client_id`, `client_secret` e o `workspace_id` do cliente
+> 5. Abre `clientes/<nome>/.env` e preenche as linhas vazias
+> 
+> Se nao encontrar o caminho no painel, fala com **matheus.netto@v4company.com** (contato do time de API V4mos).
+> 
+> Depois de preencher, roda a skill de novo."
+
+`V4MOS_CLIENT_ID`/`SECRET` sao os mesmos em todos os clientes (sao suas credenciais V4er). So o `WORKSPACE_ID` muda por cliente. Se o usuario ja tem as 2 primeiras em outro `.env` ou no `~/.zshrc`, pode reusar.
+
+### Alternativa: env vars do shell
+
+Se o usuario preferir setar `V4MOS_CLIENT_ID` e `V4MOS_CLIENT_SECRET` no `~/.zshrc` (uma vez, vale pra todos os clientes):
 
 ```bash
-export V4MOS_CLIENT_ID="<uuid fornecido pela V4mos>"
-export V4MOS_CLIENT_SECRET="<hex fornecido>"
-export V4MOS_WORKSPACE_ID="<uuid do workspace>"
+echo 'export V4MOS_CLIENT_ID="..."' >> ~/.zshrc
+echo 'export V4MOS_CLIENT_SECRET="..."' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-Depois: `source ~/.zshrc` (ou abrir novo terminal). Nao aceite creds no prompt — obriga env vars pra evitar vazar no historico/logs.
+Nesse caso, o `.env` do cliente so precisa do `V4MOS_WORKSPACE_ID`. O script mistura as duas fontes (shell vence pra CLIENT_ID/SECRET, arquivo vence pra WORKSPACE_ID).
 
 ## Pre-requisito — dependencia Python
 
@@ -52,36 +87,50 @@ python3 -c "import requests" 2>/dev/null || pip install requests
 
 ## Fluxo
 
-### Passo 1 — Coletar parametros do usuario
+### Passo 3 — Coletar parametros do periodo
 
 Pergunte (ou inferir do contexto):
 
 1. **Janela em dias** (default 7). Outras opcoes: 1 (ontem), 14, 30.
 2. **Data final** (default: ontem, YYYY-MM-DD). Nunca hoje — V4mos tem D-1 sync e Facebook tem D-3 de latencia; hoje sempre incompleto.
-3. **Conta especifica?** (default: todas as contas do workspace). Se o usuario trabalha com varios clientes no mesmo workspace, pergunte o `account_id` da conta do cliente especifico (formato `act_1234567890`).
+3. **Conta especifica?** (default: todas as contas do workspace). Se o workspace tem varias contas FB, pergunte o `account_id` especifico (formato `act_1234567890`).
 
-### Passo 2 — Executar o script
+### Passo 4 — Executar o script
+
+**Se o cwd ja esta dentro de `clientes/<nome>/`:**
 
 ```bash
-cd "$(dirname "$0")"  # estar na pasta da skill ajuda o python localizar o script
-python3 scripts/diagnostico.py --dias 7
+mkdir -p relatorios
+python3 .claude/skills/trafego-meta-diagnostico/scripts/diagnostico.py \
+  --dias 7 \
+  --out "relatorios/meta-diagnostico-$(date -v-1d +%Y-%m-%d).md"
 ```
 
+**Se estiver no root do builders-hub ou fora da pasta do cliente:**
+
+```bash
+python3 .claude/skills/trafego-meta-diagnostico/scripts/diagnostico.py \
+  --cliente "<nome-do-cliente>" \
+  --dias 7
+```
+
+O script vai:
+1. Ler `clientes/<cliente>/.env` pra pegar `V4MOS_WORKSPACE_ID` (prioridade)
+2. Mesclar com `V4MOS_CLIENT_ID`/`SECRET` do shell (se setados no ~/.zshrc)
+3. Se qualquer chave faltar, imprime erro com link pra V4mkt e sai com exit=2
+4. Fazer fetch paginado de `/v1/facebook/accounts`, `/ads/campaigns` (agora e anterior), `/ads/ad` (agora), `/ads/platform` (agora)
+5. Respeitar rate limit (30 req/min conservador) e retry com backoff em 429
+6. Recalcular CTR como `clicks/impressions` (campo da API vem quebrado)
+7. Montar markdown com todas as secoes + salvar no `--out` (ou `meta-diagnostico-YYYY-MM-DD.md` no cwd se nao especificar)
+
 Flags disponiveis:
-- `--dias N` — janela em dias
+- `--cliente NOME` — nome da pasta em `clientes/` (nao precisa se cwd ja ta dentro)
+- `--dias N` — janela em dias (default 7)
 - `--ate YYYY-MM-DD` — data final (default ontem)
-- `--account-id act_XXX` — filtra conta
-- `--out path.md` — destino do arquivo (default: `meta-diagnostico-YYYY-MM-DD.md` no cwd)
+- `--account-id act_XXX` — filtra conta FB especifica do workspace
+- `--out path.md` — destino do arquivo
 
-O script:
-1. Valida env vars (sai com codigo 2 se faltar)
-2. Faz fetch paginado de `/v1/facebook/accounts`, `/ads/campaigns` (agora e anterior), `/ads/ad` (agora), `/ads/platform` (agora)
-3. Respeita rate limit (30 req/min conservador) e retry com backoff em 429
-4. Recalcula CTR como `clicks/impressions` — o campo da API vem quebrado (valores >100%)
-5. Monta markdown com todas as secoes
-6. Salva `.md` + imprime no stdout
-
-### Passo 3 — Apresentar resultado
+### Passo 5 — Apresentar resultado
 
 Apos rodar, mostre ao usuario:
 1. Path do arquivo salvo
@@ -92,15 +141,6 @@ Apos rodar, mostre ao usuario:
    - Runway se houver saldo configurado
 3. Ofereca proximas acoes:
    > "Quer que eu abra o markdown? Gere versao HTML? Mande pro cliente?"
-
-### Passo 4 — Se a skill for usada dentro de pasta de cliente
-
-Se o cwd for uma pasta `clientes/<nome>/`, sugira salvar dentro de `relatorios/`:
-
-```bash
-mkdir -p relatorios
-python3 .claude/skills/trafego-meta-diagnostico/scripts/diagnostico.py --dias 7 --out relatorios/meta-diagnostico-$(date -v-1d +%Y-%m-%d).md
-```
 
 Isso mantem o historico de diagnosticos por cliente.
 
