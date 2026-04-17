@@ -1,0 +1,39 @@
+name: Build Registry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.claude/skills/**'
+      - 'scripts/build-registry.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Regenerate REGISTRY.md
+        run: python3 scripts/build-registry.py
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet REGISTRY.md; then
+            echo "No REGISTRY.md changes"
+          else
+            git config user.name "builders-hub-bot"
+            git config user.email "bot@v4company.com"
+            git add REGISTRY.md
+            git commit -m "chore(registry): regenerate REGISTRY.md [skip ci]"
+            git push
+          fi

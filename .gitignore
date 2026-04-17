@@ -1,0 +1,47 @@
+# Arquivos pessoais do usuario — NUNCA sobem pro repo publico
+# Usa /pasta/* em vez de /pasta/ pra permitir re-incluir subpastas com !
+/clientes/*
+/bases/*
+
+# Excecao: manter os templates vazios pra quem clona
+!/clientes/_template/
+!/bases/_template/
+
+# Credenciais e env
+.env
+.env.*
+*.secrets
+*.pem
+*.key
+
+# Arquivos locais de trabalho
+*.local.md
+*.draft.md
+*.scratch.*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+
+# Python (notebooklm-py etc)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node (vibe coding)
+node_modules/
+.next/
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+.sync-hub-last

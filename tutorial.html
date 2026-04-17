@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Builders Hub — Tutorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --white: #fff;
+    --black: #1a1a1a;
+    --red: #e50914;
+    --gray-100: #f5f5f5;
+    --gray-200: #e0e0e0;
+    --gray-400: #999;
+    --gray-600: #666;
+    --gray-800: #333;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Montserrat', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══════════ HERO ═══════════ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px clamp(24px, 6vw, 120px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: 'AI';
+    font-family: var(--font-display);
+    font-size: clamp(300px, 50vw, 800px);
+    color: rgba(229, 9, 20, 0.06);
+    position: absolute;
+    right: -5%;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 0.8;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-tag {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(64px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: -2px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+
+  .hero h1 span {
+    display: block;
+    color: var(--red);
+  }
+
+  .hero-desc {
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 400;
+    color: var(--gray-400);
+    max-width: 600px;
+    margin-top: 32px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+  }
+
+  .hero-cta {
+    margin-top: 48px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .hero-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    border: 2px solid var(--red);
+    padding: 16px 36px;
+    transition: all 0.3s ease;
+  }
+
+  .hero-cta a:hover {
+    background: var(--red);
+    transform: translateY(-2px);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 1s;
+  }
+
+  .scroll-indicator span {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-600);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* ═══════════ SECTIONS ═══════════ */
+  section {
+    padding: clamp(60px, 10vw, 120px) clamp(24px, 6vw, 120px);
+  }
+
+  .section-num {
+    font-family: var(--font-display);
+    font-size: clamp(80px, 10vw, 140px);
+    color: rgba(229, 9, 20, 0.15);
+    line-height: 1;
+    margin-bottom: -20px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .section-subtitle {
+    font-size: clamp(15px, 1.5vw, 18px);
+    color: var(--gray-400);
+    max-width: 700px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  /* ═══════════ WHAT IS ═══════════ */
+  .what-is {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .what-is-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+    margin-top: 48px;
+  }
+
+  .what-is-card {
+    background: rgba(255,255,255,0.03);
+    padding: 40px 32px;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s ease;
+  }
+
+  .what-is-card:hover {
+    background: rgba(229, 9, 20, 0.05);
+    border-color: rgba(229, 9, 20, 0.2);
+  }
+
+  .what-is-card h3 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .what-is-card p {
+    font-size: 14px;
+    color: var(--gray-400);
+    line-height: 1.7;
+  }
+
+  /* ═══════════ SKILLS ═══════════ */
+  .skills-section {
+    background: var(--gray-100);
+    color: var(--black);
+  }
+
+  .skills-section .section-num { color: rgba(229, 9, 20, 0.1); }
+  .skills-section .section-subtitle { color: var(--gray-600); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .skill-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .skill-card:hover {
+    border-color: var(--red);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--red);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+    transform-origin: top;
+  }
+
+  .skill-card:hover::before { transform: scaleY(1); }
+
+  .skill-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+
+  .tag-todos { background: rgba(229, 9, 20, 0.1); color: var(--red); }
+  .tag-ops { background: rgba(26, 26, 26, 0.08); color: var(--black); }
+  .tag-avancado { background: rgba(229, 9, 20, 0.05); color: var(--gray-600); }
+
+  .skill-name {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+
+  .skill-cmd {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .skill-desc {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  /* ═══════════ STRUCTURE ═══════════ */
+  .structure-section {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .structure-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  @media (max-width: 768px) { .structure-visual { grid-template-columns: 1fr; } }
+
+  .structure-box {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 40px;
+    position: relative;
+  }
+
+  .structure-box h3 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .structure-box .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+  }
+
+  .folder-tree {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: var(--gray-400);
+  }
+
+  .folder-tree .folder { color: var(--white); font-weight: 600; }
+  .folder-tree .comment { color: var(--gray-600); font-style: italic; }
+
+  /* ═══════════ FLOW ═══════════ */
+  .flow-section {
+    background: var(--white);
+    color: var(--black);
+  }
+
+  .flow-section .section-num { color: rgba(229, 9, 20, 0.08); }
+  .flow-section .section-subtitle { color: var(--gray-600); }
+
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 48px;
+    max-width: 800px;
+  }
+
+  .flow-step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--gray-200);
+    position: relative;
+  }
+
+  .flow-step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 56px;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .step-content h3 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .step-content p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.7;
+  }
+
+  .step-cmd {
+    display: inline-block;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    background: var(--black);
+    color: var(--red);
+    padding: 6px 14px;
+    margin-top: 12px;
+    border-radius: 2px;
+  }
+
+  /* ═══════════ CTA ═══════════ */
+  .cta-section {
+    background: var(--red);
+    color: var(--white);
+    text-align: center;
+    padding: 100px clamp(24px, 6vw, 120px);
+  }
+
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 100px);
+    line-height: 0.95;
+    margin-bottom: 24px;
+  }
+
+  .cta-section p {
+    font-size: 18px;
+    opacity: 0.85;
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  .cta-cmd {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 20px;
+    background: rgba(0,0,0,0.3);
+    display: inline-block;
+    padding: 16px 40px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* ═══════════ FOOTER ═══════════ */
+  footer {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 40px clamp(24px, 6vw, 120px);
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray-600);
+  }
+
+  footer strong { color: var(--white); }
+
+  /* ═══════════ ANIMATIONS ═══════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <div class="hero-tag">Foundation — Builders of the Future</div>
+  <h1>V4 AI<span>FOUNDATION</span></h1>
+  <p class="hero-desc">Seu kit de trabalho com inteligencia artificial. Skills, Knowledge Bases e ferramentas pra transformar como voce trabalha.</p>
+  <div class="hero-cta">
+    <a href="#oque">Comecar &darr;</a>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- ═══════════ O QUE E ═══════════ -->
+<section class="what-is" id="oque">
+  <div class="reveal">
+    <div class="section-num">01</div>
+    <h2 class="section-title">O que e isso?</h2>
+    <p class="section-subtitle">Um repositorio com tudo que voce precisa pra usar IA no seu trabalho na V4. Nao importa se voce e da operacao, financeiro, comercial ou qualquer outra area.</p>
+  </div>
+  <div class="what-is-grid reveal">
+    <div class="what-is-card">
+      <h3>Knowledge Bases</h3>
+      <p>Pastas organizadas com os dados dos seus clientes ou projetos. A IA le tudo e trabalha com contexto real — nao chuta.</p>
+    </div>
+    <div class="what-is-card">
+      <h3>Skills</h3>
+      <p>Instrucoes que a IA segue toda vez que voce precisa. Como um POP, mas a IA executa junto com voce. Consistente, toda vez.</p>
+    </div>
+    <div class="what-is-card">
+      <h3>Ferramentas</h3>
+      <p>Claude Code, NotebookLM, conectores pro Google Drive e Calendar. Tudo configurado pelo onboarding.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SKILLS ═══════════ -->
+<section class="skills-section" id="skills">
+  <div class="reveal">
+    <div class="section-num">02</div>
+    <h2 class="section-title">Skills Disponiveis</h2>
+    <p class="section-subtitle">Cada skill e um comando que voce roda no terminal. A IA le as instrucoes e executa o processo.</p>
+  </div>
+  <div class="skills-grid reveal">
+    <div class="skill-card">
+      <span class="skill-tag tag-todos">Todo mundo</span>
+      <div class="skill-name">Onboarding</div>
+      <div class="skill-cmd">/onboarding</div>
+      <p class="skill-desc">Configura seu ambiente: instala dependencias, ensina a usar tudo. Rode uma vez e pronto.</p>
+    </div>
+    <div class="skill-card">
+      <span class="skill-tag tag-todos">Todo mundo</span>
+      <div class="skill-name">Brainstormar sobre<br>Minha Funcao</div>
+      <div class="skill-cmd">/brainstormar-sobre-minha-funcao</div>
+      <p class="skill-desc">Te entrevista sobre seu trabalho, analisa sua agenda e descobre onde IA agrega mais valor no seu dia a dia.</p>
+    </div>
+    <div class="skill-card">
+      <span class="skill-tag tag-todos">Todo mundo</span>
+      <div class="skill-name">Sabatina</div>
+      <div class="skill-cmd">/sabatina</div>
+      <p class="skill-desc">Stress-test de planos e ideias. Questiona cada aspecto ate voce ter certeza de que esta bom.</p>
+    </div>
+    <div class="skill-card">
+      <span class="skill-tag tag-ops">Operacao</span>
+      <div class="skill-name">Novo Cliente</div>
+      <div class="skill-cmd">/novo-cliente</div>
+      <p class="skill-desc">Cria pasta de cliente com estrutura padrao. Pergunta o NotebookLM e deixa tudo pronto.</p>
+    </div>
+    <div class="skill-card">
+      <span class="skill-tag tag-ops">Outras areas</span>
+      <div class="skill-name">Novo Projeto</div>
+      <div class="skill-cmd">/novo-projeto</div>
+      <p class="skill-desc">Cria pasta de projeto com estrutura padrao pra qualquer area: financeiro, RH, comercial, etc.</p>
+    </div>
+    <div class="skill-card">
+      <span class="skill-tag tag-todos">Todo mundo</span>
+      <div class="skill-name">Contexto</div>
+      <div class="skill-cmd">/contexto</div>
+      <p class="skill-desc">Le tudo numa pasta e gera um resumo completo. A partir dai, a IA conhece seu cliente ou projeto.</p>
+    </div>
+    <div class="skill-card">
+      <span class="skill-tag tag-todos">Todo mundo</span>
+      <div class="skill-name">Skill Creator</div>
+      <div class="skill-cmd">/criador-de-skills</div>
+      <p class="skill-desc">Transforma um workflow que funcionou em skill reutilizavel. A mais poderosa do kit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ STRUCTURE ═══════════ -->
+<section class="structure-section" id="estrutura">
+  <div class="reveal">
+    <div class="section-num">03</div>
+    <h2 class="section-title">Estrutura de Pastas</h2>
+    <p class="section-subtitle">Opera clientes? Use clientes/. Outra area? Use bases/. O onboarding configura pra voce.</p>
+  </div>
+  <div class="structure-visual reveal">
+    <div class="structure-box">
+      <span class="tag">Operacao</span>
+      <h3>clientes/</h3>
+      <div class="folder-tree">
+        <span class="folder">clientes/</span><br>
+        &nbsp;&nbsp;<span class="folder">empresa-x/</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;calls/ <span class="comment">— reunioes</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;docs/ <span class="comment">— documentos</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;campanhas/ <span class="comment">— dados</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;CLAUDE.md <span class="comment">— contexto gerado</span>
+      </div>
+    </div>
+    <div class="structure-box">
+      <span class="tag">Outras Areas</span>
+      <h3>bases/</h3>
+      <div class="folder-tree">
+        <span class="folder">bases/</span><br>
+        &nbsp;&nbsp;<span class="folder">meu-projeto/</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;docs/ <span class="comment">— relatorios, atas</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;dados/ <span class="comment">— planilhas, CSVs</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;referencias/ <span class="comment">— apoio</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;CLAUDE.md <span class="comment">— contexto gerado</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FLOW ═══════════ -->
+<section class="flow-section" id="fluxo">
+  <div class="reveal">
+    <div class="section-num">04</div>
+    <h2 class="section-title">O Fluxo</h2>
+    <p class="section-subtitle">Do setup ate virar builder. Passo a passo.</p>
+  </div>
+  <div class="flow-steps reveal">
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Configure seu ambiente</h3>
+        <p>Rode o onboarding. Ele instala tudo e te ensina como funciona.</p>
+        <span class="step-cmd">/onboarding</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Descubra onde IA te ajuda</h3>
+        <p>A IA te entrevista sobre seu trabalho, sua agenda e suas tarefas. Sai com um plano personalizado.</p>
+        <span class="step-cmd">/brainstormar-sobre-minha-funcao</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Crie sua primeira base</h3>
+        <p>Monte a Knowledge Base do seu cliente ou projeto. Jogue os dados la dentro.</p>
+        <span class="step-cmd">/novo-cliente</span> <span class="step-cmd">/novo-projeto</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Gere o contexto</h3>
+        <p>A IA le tudo e gera um resumo completo. A partir dai, ela conhece seu cliente.</p>
+        <span class="step-cmd">/contexto</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h3>Trabalhe com a IA</h3>
+        <p>Faca seu trabalho: analises, check-ins, relatorios, estrategias. A IA conhece o contexto e ajuda de verdade.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h3>Transforme em skill</h3>
+        <p>Quando algo funcionar bem, transforme em skill. Na proxima vez, a IA repete o processo.</p>
+        <span class="step-cmd">/criador-de-skills</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="cta-section">
+  <div class="reveal">
+    <h2>Bora<br>Construir</h2>
+    <p>Abre o terminal e roda o onboarding. Em 10 minutos voce ta pronto pra comecar.</p>
+    <div class="cta-cmd">/onboarding</div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <strong>Builders Hub</strong> — Builders of the Future &copy; 2026
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
