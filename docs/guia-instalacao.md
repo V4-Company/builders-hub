@@ -44,16 +44,10 @@
 
 No terminal, digite:
 ```
-/verificar-setup
-```
-Isso valida que seu git, GitHub CLI e dependencias estao ok.
-
-Depois rode:
-```
 /onboarding
 ```
 
-A skill vai te guiar no resto da configuracao (Claude Code CLI, MCPs, etc) e te mostrar como compartilhar skills com o time via `/compartilhar-skill`.
+A skill valida git e GitHub CLI primeiro (garante que seu push/PR vao funcionar), depois instala o que faltar (Claude Code CLI, notebooklm, etc) e te mostra como compartilhar skills com o time via `/compartilhar-skill`.
 
 ## Problemas comuns
 

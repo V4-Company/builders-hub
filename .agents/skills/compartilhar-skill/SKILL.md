@@ -9,14 +9,14 @@ Pega uma skill que ja funciona no ambiente local do usuario, valida tudo, e abre
 
 ## Pre-requisitos
 
-Antes de comecar, confirme que o ambiente esta OK. Se tiver duvida, rode `/verificar-setup` primeiro. Os bloqueadores fatais sao:
+Antes de comecar, confirme que o ambiente esta OK. Se tiver duvida, rode `/onboarding` primeiro. Os bloqueadores fatais sao:
 
 - Sem git identity → commit fica anonimo
 - Sem `gh` autenticado → impossivel abrir PR automatico
 - Sem remote configurado pra `builders-hub` → nao tem pra onde pushar
 - Usuario fora do repo `builders-hub` (rodando em outra pasta)
 
-Se qualquer um falhar, chame `/verificar-setup` e pare aqui.
+Se qualquer um falhar, chame `/onboarding` (os checks de setup sao a primeira coisa que ele faz) e pare aqui.
 
 ## Fluxo
 
@@ -30,7 +30,7 @@ Se ele nao souber o nome exato, liste as skills locais que NAO sao skills de bas
 ls .claude/skills/
 ```
 
-Filtre as skills de base (onboarding, contexto, criador-de-skills, novo-cliente, novo-projeto, brainstormar-sobre-minha-funcao, sabatina, verificar-setup, compartilhar-skill, sync-hub, frontend-design). Apresente so as que tem prefixo de area (`trafego-*`, `criativo-*`, etc.) ou que parecem ser de contribuicao.
+Filtre as skills de base (onboarding, contexto, criador-de-skills, novo-cliente, novo-projeto, brainstormar-sobre-minha-funcao, sabatina, compartilhar-skill, sync-hub, frontend-design). Apresente so as que tem prefixo de area (`trafego-*`, `criativo-*`, etc.) ou que parecem ser de contribuicao.
 
 ### Passo 2 — Validar naming
 
@@ -228,7 +228,7 @@ git checkout main
 ## Tratamento de erros comuns
 
 ### `gh: not authenticated`
-Pare e chame `/verificar-setup`.
+Pare e chame `/onboarding` (os checks de setup sao a primeira coisa que ele faz).
 
 ### `fatal: not a git repository`
 Usuario nao esta em `builders-hub`. Peca pra ele navegar pra la: `cd /caminho/builders-hub`.

@@ -17,7 +17,7 @@ git remote -v | grep origin
 gh auth status
 ```
 
-Se qualquer falhar, chame `/verificar-setup`.
+Se qualquer falhar, chame `/onboarding` (os checks de setup sao a primeira coisa que ele faz).
 
 ## Fluxo
 

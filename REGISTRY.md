@@ -1,12 +1,12 @@
 # Builders Hub — Registry
 
-**11 skills** · última atualização: 2026-04-17
+**10 skills** · última atualização: 2026-04-17
 
 > Catálogo auto-gerado por `scripts/build-registry.py`. Não edite à mão — rode `/sync-hub` ou envie PR pela `/compartilhar-skill`.
 
 ## Índice
 
-- [🛠 Base (setup/fluxo)](#base) (11)
+- [🛠 Base (setup/fluxo)](#base) (10)
 
 ## 🛠 Base (setup/fluxo)
 
@@ -21,10 +21,9 @@
 | `frontend-design` | Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the... | — | — |
 | `novo-cliente` | Cria uma nova pasta de cliente com estrutura padrao e CLAUDE.md inicial. Pergunta nome e NotebookLM. Use qu... | — | — |
 | `novo-projeto` | Cria uma nova pasta de projeto com estrutura padrao em bases/. Use quando o usuario rodar /novo-projeto ou... | — | — |
-| `onboarding` | Configura o ambiente do usuario para trabalhar com IA na V4 via o Builders Hub. Valida git 100%, instala de... | — | — |
+| `onboarding` | Configura todo o ambiente do usuario pra trabalhar com IA na V4 via o Builders Hub — valida e conserta git... | — | — |
 | `sabatina` | Entrevista o usuario de forma implacavel sobre cada aspecto de um plano ou design ate atingir entendimento... | — | — |
 | `sync-hub` | Atualiza o Builders Hub local puxando as skills mais recentes do repo publico, mostra diff do que mudou des... | — | — |
-| `verificar-setup` | Valida e configura tudo que o Builders Hub precisa pra funcionar — git, GitHub CLI (gh), identidade git, re... | — | — |
 
 ---
 

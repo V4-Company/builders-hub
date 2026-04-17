@@ -27,25 +27,18 @@ Ou baixe o ZIP pelo GitHub.
 - Anti-Gravity: `File > Open Folder` → selecione `builders-hub`
 - Abra o terminal (`Cmd+~` ou `Ctrl+~`)
 
-### 3. Rode o setup
-
-```
-/verificar-setup
-```
-
-Verifica git, GitHub CLI, dependências. Depois:
+### 3. Rode o onboarding
 
 ```
 /onboarding
 ```
 
-Te guia pelo resto: primeiro cliente/projeto, primeiras skills, fluxo de trabalho.
+Valida git/GitHub CLI/dependências 100%, instala o que faltar, e te guia pelo resto: primeiro cliente/projeto, primeiras skills, fluxo de trabalho. Pode rodar de novo sempre que algo quebrar — os checks que já passaram voam.
 
 ## Skills principais
 
 | Skill | O que faz |
 |---|---|
-| `/verificar-setup` | Valida que seu ambiente tá pronto |
 | `/onboarding` | Configura tudo e te ensina o fluxo V4 |
 | `/sync-hub` | Atualiza suas skills com o que o time compartilhou |
 | `/compartilhar-skill` | Empacota uma skill sua e manda pro Hub (abre PR automático) |

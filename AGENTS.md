@@ -13,8 +13,7 @@ Este repositorio e o hub open-source de skills de IA da V4. Funciona como base d
 
 ## Skills de setup/fluxo (base)
 
-- `/verificar-setup` — Valida git, gh CLI, remote, dependencias. Roda antes de qualquer coisa.
-- `/onboarding` — Guia a primeira configuracao. Chama `/verificar-setup` primeiro.
+- `/onboarding` — Guia a primeira configuracao. Valida git/gh 100% e depois instala dependencias. Roda sempre que algo do setup quebrar.
 - `/sync-hub` — Puxa as skills compartilhadas mais recentes do repo remoto.
 - `/compartilhar-skill` — Empacota uma skill local e abre PR pro hub publico.
 - `/criador-de-skills` — Cria skill nova com prefixo de area obrigatorio.
@@ -41,4 +40,4 @@ Consulte [REGISTRY.md](./REGISTRY.md) pra ver tudo que o time ja compartilhou. P
 - **Prefixo de area obrigatorio** em skills contribuidas: `{area}-{nome}`. Skills de base (onboarding, contexto, sync-hub, etc.) sao excecao e ficam sem prefixo.
 - Nunca commitar arquivos de `clientes/` ou `bases/` — sao pessoais, ficam no `.gitignore`.
 - Nunca editar `REGISTRY.md` a mao — e auto-gerado pelo script `scripts/build-registry.py` e pela GitHub Action.
-- Se o fluxo git/gh quebrar em qualquer skill (sync, compartilhar, push), oriente rodar `/verificar-setup` antes de tentar debugar manualmente.
+- Se o fluxo git/gh quebrar em qualquer skill (sync, compartilhar, push), oriente rodar `/onboarding` de novo — os checks de setup sao a primeira coisa que ele faz.

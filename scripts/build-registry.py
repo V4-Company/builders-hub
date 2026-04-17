@@ -40,7 +40,6 @@ BASE_SKILLS = {
     "novo-projeto",
     "brainstormar-sobre-minha-funcao",
     "sabatina",
-    "verificar-setup",
     "compartilhar-skill",
     "sync-hub",
     "frontend-design",
