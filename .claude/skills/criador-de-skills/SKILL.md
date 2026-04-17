@@ -1,13 +1,13 @@
 ---
 name: criador-de-skills
-description: Cria skills novas e melhora skills existentes no Builders Hub. Use quando o usuario quiser criar uma skill do zero, transformar um workflow que funcionou em skill reutilizavel, editar uma skill existente, ou rodar avaliacoes. Forca prefixo de area ({area}-{nome}) e escreve a skill em .claude/skills/ E .agents/skills/ ao mesmo tempo.
+description: Cria skills novas e melhora skills existentes no Builders Hub. Use quando o usuario quiser criar uma skill do zero, transformar um workflow que funcionou em skill reutilizavel, editar uma skill existente, ou rodar avaliacoes. Forca prefixo de area OU prefixo de fonte ({prefixo}-{nome}) e escreve a skill em .claude/skills/ E .agents/skills/ ao mesmo tempo.
 ---
 
 # Skill Creator — Builders Hub
 
 Cria skills novas e itera pra deixar elas melhores. No contexto do **Builders Hub**, toda skill criada por essa criador-de-skills segue dois padroes rigidos que a gente valida antes de escrever qualquer arquivo:
 
-1. **Prefixo de area obrigatorio** no nome (`{area}-{slug}`)
+1. **Prefixo obrigatorio** no nome (`{prefixo}-{slug}`) — pode ser prefixo de AREA (trabalho/output) ou de FONTE (puxador de dados)
 2. **Duplo-write**: a skill e escrita em `.claude/skills/{nome}/SKILL.md` **E** em `.agents/skills/{nome}/SKILL.md` com conteudo identico, pra funcionar tanto no Claude Code quanto no Anti-Gravity.
 
 Se o usuario quer rodar benchmarks, evals quantitativos, otimizacao de descricao e packaging, tudo isso continua disponivel nas secoes avancadas mais abaixo — mas a maioria dos V4ers so precisa do fluxo simples que tem nessa primeira parte.
@@ -16,30 +16,46 @@ Se o usuario quer rodar benchmarks, evals quantitativos, otimizacao de descricao
 
 ## Fluxo V4 — leia isso primeiro
 
-### Passo 1 — Coletar area e nome
+### Passo 1 — Classificar e nomear a skill
 
-Antes de escrever qualquer linha da skill, pergunte ao usuario:
+Antes de escrever qualquer linha, pergunte ao usuario:
 
-1. **De que area e essa skill?** Apresente as opcoes exatas:
-   - `trafego` — gestao de midia, analise de contas, anomalias
-   - `criativo` — copy, briefing, design, LPs
-   - `cs` — check-in, relatorio, playbook, transcricao
-   - `estrategia` — diagnostico, planejamento, pesquisa
-   - `gestao` — reunioes, tasks, overview, processos
-   - `dados` — analise, dashboards, insights, BI
-   - `outra` — se nao encaixa em nenhuma, use "outra" (fica numa secao propria no REGISTRY.md)
+**1a. Que tipo de skill e essa?**
+- **Workflow (output final)** — entrega trabalho acabado: relatorio, analise, check-in, PPT, briefing corrigido, etc. Vai pro prefixo de **AREA**.
+- **Puxador de dados (library)** — so busca dados de uma fonte externa (API, banco, planilha) e devolve em formato utilizavel. Outras skills podem consumir essa. Vai pro prefixo de **FONTE**.
 
-2. **Qual o nome curto da skill?** Peca em kebab-case (minusculas, hifens, sem acentos). Exemplo: `analise-anomalias`, `checkin-ppt`, `variacoes-design`.
+**1b. Se WORKFLOW → escolha a area:**
+- `trafego` — gestao de midia, analise de contas, anomalias
+- `criativo` — copy, briefing, design, LPs
+- `cs` — check-in, relatorio, playbook, transcricao
+- `estrategia` — diagnostico, planejamento, pesquisa
+- `gestao` — reunioes, tasks, overview, processos
+- `dados` — analise, dashboards, insights, BI
+- `outra` — se nao encaixa em nenhuma (fica numa secao propria no REGISTRY.md)
 
-3. **Monte o nome final** concatenando: `{area}-{slug}`. Exemplos:
-   - Area `trafego` + slug `analise-anomalias` → `trafego-analise-anomalias`
-   - Area `cs` + slug `checkin-ppt` → `cs-checkin-ppt`
+**1b. Se PUXADOR → escolha a fonte:**
+- `v4mos` — V4mos / V4mkt (Meta Ads, Google Ads, CRM agregados)
+- `google` — Google Ads direto
+- `ga4` — Google Analytics 4
+- `meta` — Meta Marketing API direta
+- `hubspot` — HubSpot CRM
+- `kommo` — Kommo CRM
+- `shopify` — Shopify e-commerce
+- `tray` — Tray e-commerce
 
-4. **Valide com regex** antes de seguir:
-   ```
-   ^(trafego|criativo|cs|estrategia|gestao|dados|outra)-[a-z0-9-]+$
-   ```
-   Se nao passar, explique o que esta errado e pergunte de novo.
+Se a fonte nao estiver na lista, pare e oriente: "Pra adicionar uma fonte nova, o curador precisa atualizar a regex do hub. Peca pra abrir issue no V4-Company/builders-hub."
+
+**1c. Nome curto** em kebab-case (minusculas, hifens, sem acentos). Ex: `analise-anomalias`, `dados-meta-ads`, `checkin-ppt`.
+
+**1d. Montar o nome final** = `{prefixo}-{slug}`. Exemplos:
+- Workflow area trafego + slug `analise-anomalias` → `trafego-analise-anomalias`
+- Puxador fonte v4mos + slug `dados-meta-ads` → `v4mos-dados-meta-ads`
+
+**1e. Validar com regex:**
+```
+^(trafego|criativo|cs|estrategia|gestao|dados|outra|v4mos|google|ga4|meta|hubspot|kommo|shopify|tray)-[a-z0-9-]+$
+```
+Se nao passar, explique o que esta errado e pergunte de novo.
 
 ### Passo 2 — Verificar duplicata
 
@@ -64,7 +80,7 @@ version: 1.0.0
 
 - `name` deve bater EXATAMENTE com o nome da pasta
 - `description` precisa ser "pushy" sobre quando triggerar (veja secao avancada)
-- `area` deve ser uma das 7 opcoes validas
+- `area` aceita: as 7 areas (trafego/criativo/cs/estrategia/gestao/dados/outra) ou uma das fontes (v4mos/google/ga4/meta/hubspot/kommo/shopify/tray). Bate com o prefixo do nome.
 - `author` pegue do git (`git config user.name`) ou pergunte ao usuario qual o github-handle dele
 - `version` comeca em `1.0.0`
 

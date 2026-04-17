@@ -61,7 +61,14 @@ Toda skill tem prefixo de área:
 - `gestao-*` — reuniões, tasks, overview
 - `dados-*` — análise, dashboards, insights
 
-Exemplo: `trafego-analise-anomalias`, `cs-checkin-ppt`.
+Além das áreas, skills **puxadoras de dados** (libraries de fonte) usam prefixo da integração:
+
+- `v4mos-*` — V4mos / V4mkt (Meta Ads, Google Ads, CRMs agregados)
+- `google-*` · `ga4-*` · `meta-*` — APIs diretas
+- `hubspot-*` · `kommo-*` — CRMs
+- `shopify-*` · `tray-*` — e-commerce
+
+Exemplo: `trafego-analise-anomalias`, `cs-checkin-ppt`, `v4mos-dados-meta-ads`.
 
 ## Estrutura do repo
 

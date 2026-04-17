@@ -7,7 +7,8 @@
 ## Índice
 
 - [🛠 Base (setup/fluxo)](#base) (10)
-- [🎯 Tráfego](#trafego) (1)
+- [🔌 Integrações / Fontes](#fontes) (1)
+  - [🔌 V4mos](#v4mos) (1)
 
 ## 🛠 Base (setup/fluxo)
 
@@ -26,13 +27,19 @@
 | `sabatina` | Entrevista o usuario de forma implacavel sobre cada aspecto de um plano ou design ate atingir entendimento... | — | — |
 | `sync-hub` | Atualiza o Builders Hub local puxando as skills mais recentes do repo publico, mostra diff do que mudou des... | — | — |
 
-## 🎯 Tráfego
+## 🔌 Integrações / Fontes
 
-<a id="trafego"></a>
+<a id="fontes"></a>
+
+_Skills que puxam dados de integrações externas. Reutilizáveis por outras skills._
+
+## 🔌 V4mos
+
+<a id="v4mos"></a>
 
 | Skill | O que faz | Autor | v |
 |---|---|---|---|
-| `trafego-meta-diagnostico` | Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ad... | @guilhermelippert | 1.2.0 |
+| `v4mos-dados-meta-ads` | Puxa qualquer dado de Meta Ads (Facebook + Instagram) via API V4mos pra um cliente especifico. Use sempre q... | @guilhermelippert | 2.0.0 |
 
 ---
 

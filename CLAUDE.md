@@ -25,8 +25,10 @@ Este repositorio e o hub open-source de skills de IA da V4. Funciona como base d
 
 ## Skills compartilhadas (hub)
 
-Toda skill compartilhada pelo time segue o padrao `{area}-{nome}`:
-- `trafego-*` · `criativo-*` · `cs-*` · `estrategia-*` · `gestao-*` · `dados-*` · `outra-*`
+Toda skill compartilhada pelo time segue o padrao `{prefixo}-{nome}`. Dois tipos de prefixo:
+
+- **Áreas** (skills que entregam trabalho final): `trafego-*` · `criativo-*` · `cs-*` · `estrategia-*` · `gestao-*` · `dados-*` · `outra-*`
+- **Fontes** (skills que puxam dados de integracoes externas, reutilizaveis por outras): `v4mos-*` · `google-*` · `ga4-*` · `meta-*` · `hubspot-*` · `kommo-*` · `shopify-*` · `tray-*`
 
 Consulte [REGISTRY.md](./REGISTRY.md) pra ver tudo que o time ja compartilhou. Pra contribuir veja [CONTRIBUTING.md](./CONTRIBUTING.md).
 
@@ -37,7 +39,7 @@ Consulte [REGISTRY.md](./REGISTRY.md) pra ver tudo que o time ja compartilhou. P
 - Nao invente dados. Se nao tem a informacao na KB, diga que nao tem.
 - Quando o usuario fizer algo complexo, processual ou que ficou bom, sugira: "Isso ficou bom. Quer transformar em skill pra reutilizar? Roda /criador-de-skills. Quando estiver redonda, roda /compartilhar-skill pra o time usar tambem".
 - **Duplo-write obrigatorio**: toda skill criada/editada deve existir identica em `.claude/skills/{nome}/` E `.agents/skills/{nome}/`. `/criador-de-skills` faz isso automaticamente; se voce editar manualmente, espelhe nos dois. `/sync-hub` tambem re-espelha apos pull.
-- **Prefixo de area obrigatorio** em skills contribuidas: `{area}-{nome}`. Skills de base (onboarding, contexto, sync-hub, etc.) sao excecao e ficam sem prefixo.
+- **Prefixo obrigatorio** em skills contribuidas: `{prefixo}-{nome}`. Prefixo pode ser de area (trafego/criativo/cs/estrategia/gestao/dados/outra) ou de fonte (v4mos/google/ga4/meta/hubspot/kommo/shopify/tray). Skills de base (onboarding, contexto, sync-hub, etc.) sao excecao e ficam sem prefixo.
 - Nunca commitar arquivos de `clientes/` ou `bases/` — sao pessoais, ficam no `.gitignore`.
 - Nunca editar `REGISTRY.md` a mao — e auto-gerado pelo script `scripts/build-registry.py` e pela GitHub Action.
 - Se o fluxo git/gh quebrar em qualquer skill (sync, compartilhar, push), oriente rodar `/onboarding` de novo — os checks de setup sao a primeira coisa que ele faz.

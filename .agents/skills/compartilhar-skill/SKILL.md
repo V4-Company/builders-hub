@@ -37,7 +37,7 @@ Filtre as skills de base (onboarding, contexto, criador-de-skills, novo-cliente,
 A skill DEVE seguir o padrao `{area}-{slug}`:
 
 ```
-^(trafego|criativo|cs|estrategia|gestao|dados|outra)-[a-z0-9-]+$
+^(trafego|criativo|cs|estrategia|gestao|dados|outra|v4mos|google|ga4|meta|hubspot|kommo|shopify|tray)-[a-z0-9-]+$
 ```
 
 Se o nome nao bater, pare e oriente o usuario:

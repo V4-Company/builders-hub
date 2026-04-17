@@ -27,15 +27,17 @@ Se voce manja de git, tambem pode:
 
 1. Fork do repo
 2. Branch nova: `skill/{area}-{nome}`
-3. Copie sua skill pra `.claude/skills/{area}-{nome}/SKILL.md` E `.agents/skills/{area}-{nome}/SKILL.md`
+3. Copie sua skill pra `.claude/skills/{prefixo}-{nome}/SKILL.md` E `.agents/skills/{prefixo}-{nome}/SKILL.md`
 4. Commit + push
 5. Abra PR preenchendo o template
 
 ## Regras de contribuição
 
 ### Naming
-- **Prefixo obrigatorio** de area: `trafego`, `criativo`, `cs`, `estrategia`, `gestao`, `dados`
-- Slug em kebab-case: `trafego-analise-anomalias`
+- **Prefixo obrigatorio** no nome — pode ser:
+  - **Area** (trabalho/output): `trafego`, `criativo`, `cs`, `estrategia`, `gestao`, `dados`, `outra`
+  - **Fonte** (puxador de dados): `v4mos`, `google`, `ga4`, `meta`, `hubspot`, `kommo`, `shopify`, `tray`
+- Slug em kebab-case: `trafego-analise-anomalias`, `v4mos-dados-meta-ads`
 - Nome dentro do frontmatter bate com o nome da pasta
 
 ### Frontmatter obrigatorio
@@ -43,7 +45,7 @@ Se voce manja de git, tambem pode:
 ---
 name: trafego-analise-anomalias
 description: O que a skill faz em uma frase. Triggera quando [cenarios].
-area: trafego
+area: trafego       # area OU fonte (bate com o prefixo do nome)
 author: seu-github-username
 version: 1.0.0
 ---
