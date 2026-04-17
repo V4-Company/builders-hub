@@ -1,9 +1,9 @@
 ---
 name: trafego-meta-diagnostico
-description: Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ads com quality_ranking ruim queimando dinheiro, breakdown por plataforma (feed/stories/reels), delta W/W e runway de saldo. Use sempre que o usuario pedir "diagnostico Meta", "relatorio Facebook Ads", "como tao as campanhas", "check-in Meta", "saude da conta FB", "ads com problema", ou quando for montar relatorio pra cliente com dados da ultima semana. Le credenciais de clientes/<cliente>/.env (ou bases/<projeto>/.env) por padrao, com fallback pra env vars do shell. Se faltar credencial, orienta onde pegar (https://app.v4mkt.com). Entrega markdown pronto pra copiar/colar em check-in ou PPT. Google Ads fora do escopo (API V4mos ignora filtro de data no Google — bug reportavel).
+description: Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ads com quality_ranking ruim queimando dinheiro, breakdown por plataforma (feed/stories/reels), delta W/W e runway de saldo. Use sempre que o usuario pedir "diagnostico Meta", "relatorio Facebook Ads", "como tao as campanhas", "check-in Meta", "saude da conta FB", "ads com problema", ou quando for montar relatorio pra cliente com dados da ultima semana. Le credenciais de clientes/<cliente>/.env (ou bases/<projeto>/.env); se faltarem, pergunta ao usuario e salva automaticamente no .env. Entrega markdown pronto pra copiar/colar em check-in ou PPT. Google Ads fora do escopo (API V4mos ignora filtro de data no Google).
 area: trafego
 author: guilhermelippert
-version: 1.1.0
+version: 1.2.0
 ---
 
 # /trafego-meta-diagnostico
@@ -49,35 +49,47 @@ Deve ter 3 chaves **preenchidas**:
 - `V4MOS_CLIENT_SECRET` — idem
 - `V4MOS_WORKSPACE_ID` — **especifico do cliente** (cada cliente tem um workspace diferente no V4mkt)
 
-### Se faltar alguma chave
+### Se faltar alguma chave — ASK & SAVE
 
-Oriente o usuario passo a passo:
+Voce (Claude) pergunta conversacionalmente pro usuario e grava no `.env` do cliente. Fluxo:
 
-> "Faltam credenciais V4mos no `clientes/<nome>/.env`. Onde pegar:
-> 
-> 1. Acesse **https://app.v4mkt.com** logado com sua conta V4
-> 2. Selecione o workspace deste cliente (V4 Marketing Operating System)
-> 3. Va em **Settings > API / Integracoes > gerar client credentials**
-> 4. Copie `client_id`, `client_secret` e o `workspace_id` do cliente
-> 5. Abre `clientes/<nome>/.env` e preenche as linhas vazias
-> 
-> Se nao encontrar o caminho no painel, fala com **matheus.netto@v4company.com** (contato do time de API V4mos).
-> 
-> Depois de preencher, roda a skill de novo."
+1. **Se o `.env` do cliente nao existe**, crie copiando do template:
+   ```bash
+   mkdir -p "clientes/<cliente>"
+   cp clientes/_template/.env.example "clientes/<cliente>/.env"
+   ```
 
-`V4MOS_CLIENT_ID`/`SECRET` sao os mesmos em todos os clientes (sao suas credenciais V4er). So o `WORKSPACE_ID` muda por cliente. Se o usuario ja tem as 2 primeiras em outro `.env` ou no `~/.zshrc`, pode reusar.
+2. **Liste o que ta faltando** e o link de onde pegar:
 
-### Alternativa: env vars do shell
+   > "Pra rodar o diagnostico do **<cliente>** preciso das credenciais V4mos. Pega em:
+   > 
+   > **https://v4marketing.mktlab.app/configuracoes/api-dados**
+   > 
+   > (logado com sua conta V4 e com o workspace do cliente selecionado)
+   > 
+   > Precisa me mandar 3 valores:
+   > - `Client ID` (uuid)
+   > - `Client Secret` (hex longo)
+   > - `Workspace ID` do cliente (uuid — muda por cliente)"
 
-Se o usuario preferir setar `V4MOS_CLIENT_ID` e `V4MOS_CLIENT_SECRET` no `~/.zshrc` (uma vez, vale pra todos os clientes):
+3. **Receba os valores do usuario** (ele cola no chat).
 
-```bash
-echo 'export V4MOS_CLIENT_ID="..."' >> ~/.zshrc
-echo 'export V4MOS_CLIENT_SECRET="..."' >> ~/.zshrc
-source ~/.zshrc
-```
+4. **Edite `clientes/<cliente>/.env`** substituindo as linhas `V4MOS_CLIENT_ID=`, `V4MOS_CLIENT_SECRET=`, `V4MOS_WORKSPACE_ID=` pelos valores recebidos. Use a ferramenta Edit pra preservar comentarios e outras chaves do arquivo.
 
-Nesse caso, o `.env` do cliente so precisa do `V4MOS_WORKSPACE_ID`. O script mistura as duas fontes (shell vence pra CLIENT_ID/SECRET, arquivo vence pra WORKSPACE_ID).
+5. **Rode o script** normalmente — ele le as creds do `.env`.
+
+6. **Confirme salvamento** ao usuario: "Credenciais salvas em `clientes/<cliente>/.env` (gitignored, nao sobe pro repo). Proxima vez que rodar nesse cliente, ja pega automatico."
+
+### Reaproveitamento: CLIENT_ID/SECRET sao do V4er
+
+`V4MOS_CLIENT_ID` e `V4MOS_CLIENT_SECRET` sao credenciais da sua conta V4 — valem pra todos os clientes. Se o usuario ja tem elas em outro `.env` (ex: cliente anterior) ou no `~/.zshrc`, reuse:
+
+- Se ele mencionar "ja tenho essas": pegue de um `.env` anterior e reutilize nesse novo.
+- Ou ofereca: "Quer que eu salve no `~/.zshrc` pra valer pra todos os clientes? Ai so o `WORKSPACE_ID` muda por cliente."
+
+### Fallback 100% nao-interativo
+
+Se voce (Claude) nao consegue perguntar (ex: esta rodando em modo autonomo / sem input do usuario), o script tambem suporta **modo interativo direto**: se o usuario rodar `python3 scripts/diagnostico.py` num terminal TTY sem credenciais, o script pergunta via `input()` e salva no `.env` sozinho. Util se o usuario quiser rodar sem passar pelo Claude.
 
 ## Pre-requisito — dependencia Python
 

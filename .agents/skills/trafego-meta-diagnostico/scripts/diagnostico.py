@@ -42,8 +42,7 @@ BASE_URL = "https://api.data.v4.marketing"
 RATE_SLEEP = 2.0  # segundos entre chamadas (conservador — 30 req/min)
 TIMEOUT = 45
 
-V4MOS_KEYS_URL = "https://app.v4mkt.com"  # confirme o path exato no seu painel
-V4MOS_SUPPORT = "matheus.netto@v4company.com"
+V4MOS_KEYS_URL = "https://v4marketing.mktlab.app/configuracoes/api-dados"
 
 BR_MONEY = lambda v: f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 BR_INT = lambda v: f"{int(v):,}".replace(",", ".")
@@ -128,29 +127,105 @@ def require_creds(cliente: str | None) -> tuple[dict[str, str], str | None]:
 
     missing = [k for k in required if not creds[k]]
     if missing:
+        # Modo interativo (usuario rodando direto no terminal): pergunta e salva no .env
+        if sys.stdin.isatty() and sys.stderr.isatty():
+            creds, env_path = prompt_and_save(cliente, detected, env_path, creds, missing)
+            missing = [k for k in required if not creds[k]]
+
+    if missing:
         print(f"✗ Credenciais V4mos faltando: {', '.join(missing)}", file=sys.stderr)
         print("", file=sys.stderr)
         if env_path:
-            print(f"  .env encontrado em: {env_path}", file=sys.stderr)
-            print(f"  Abre e preenche os campos vazios.", file=sys.stderr)
+            print(f"  .env do cliente: {env_path}", file=sys.stderr)
         elif cliente:
-            print(f"  Nao encontrei clientes/{cliente}/.env", file=sys.stderr)
-            print(f"  Rode /novo-cliente ou copie clientes/_template pra clientes/{cliente}.", file=sys.stderr)
+            print(f"  Esperado em: clientes/{cliente}/.env", file=sys.stderr)
         else:
-            print("  Voce nao esta dentro de uma pasta de cliente e nao passou --cliente.", file=sys.stderr)
-            print("  Solucoes:", file=sys.stderr)
-            print("    - cd clientes/<nome>/ e rode de la", file=sys.stderr)
-            print("    - ou: python3 diagnostico.py --cliente <nome>", file=sys.stderr)
-            print("    - ou: set V4MOS_* no ~/.zshrc", file=sys.stderr)
+            print("  Pasta de cliente nao identificada. Use --cliente <nome> ou cd na pasta.", file=sys.stderr)
         print("", file=sys.stderr)
         print(f"  Onde pegar as credenciais:", file=sys.stderr)
         print(f"    1. {V4MOS_KEYS_URL} (logado com sua conta V4)", file=sys.stderr)
         print(f"    2. Selecione o workspace do cliente", file=sys.stderr)
         print(f"    3. Settings > API / Integracoes > gerar client credentials", file=sys.stderr)
-        print(f"    4. Se nao encontrar: {V4MOS_SUPPORT}", file=sys.stderr)
         sys.exit(2)
 
     return creds, detected
+
+
+def prompt_and_save(cliente: str | None, detected: str | None, env_path: Path | None,
+                    creds: dict[str, str], missing: list[str]) -> tuple[dict[str, str], Path | None]:
+    """
+    Pergunta ao usuario as chaves que faltam e salva no .env do cliente.
+    So chamado se stdin e stderr sao TTYs (usuario rodou direto no terminal).
+    """
+    # Resolve o path do .env destino
+    nome_cliente = cliente or detected
+    if env_path is None and nome_cliente:
+        # Acha raiz do builders-hub (procura clientes/ nos ancestors)
+        cwd = Path.cwd().resolve()
+        hub_root = None
+        for p in [cwd, *cwd.parents]:
+            if (p / "clientes").is_dir():
+                hub_root = p
+                break
+        if hub_root:
+            client_dir = hub_root / "clientes" / nome_cliente
+            client_dir.mkdir(parents=True, exist_ok=True)
+            env_path = client_dir / ".env"
+            if not env_path.exists():
+                template = hub_root / "clientes" / "_template" / ".env.example"
+                if template.is_file():
+                    env_path.write_text(template.read_text(encoding="utf-8"), encoding="utf-8")
+                else:
+                    env_path.write_text("# V4mos\nV4MOS_CLIENT_ID=\nV4MOS_CLIENT_SECRET=\nV4MOS_WORKSPACE_ID=\n", encoding="utf-8")
+    if env_path is None:
+        return creds, env_path  # nao da pra salvar, volta vazio
+
+    labels = {
+        "V4MOS_CLIENT_ID": "Client ID (uuid)",
+        "V4MOS_CLIENT_SECRET": "Client Secret (hex)",
+        "V4MOS_WORKSPACE_ID": "Workspace ID do cliente (uuid)",
+    }
+
+    print("", file=sys.stderr)
+    print(f"▶ Faltam credenciais V4mos pra rodar. Vou perguntar e salvar em:", file=sys.stderr)
+    print(f"  {env_path}", file=sys.stderr)
+    print(f"  (onde pegar: {V4MOS_KEYS_URL} > workspace do cliente > Settings > API)", file=sys.stderr)
+    print("", file=sys.stderr)
+
+    for key in missing:
+        while True:
+            try:
+                val = input(f"  {labels.get(key, key)}: ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\n✗ Cancelado.", file=sys.stderr)
+                sys.exit(130)
+            if val:
+                creds[key] = val
+                break
+            print(f"  (valor vazio — tenta de novo, ou Ctrl+C pra cancelar)", file=sys.stderr)
+
+    # Merge no .env existente (preserva comentarios e chaves ja preenchidas)
+    existing_lines = env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
+    new_lines = []
+    seen = set()
+    for line in existing_lines:
+        m = re.match(r'^([A-Z_][A-Z0-9_]*)\s*=', line.strip())
+        if m and m.group(1) in creds and creds[m.group(1)]:
+            new_lines.append(f"{m.group(1)}={creds[m.group(1)]}")
+            seen.add(m.group(1))
+        else:
+            new_lines.append(line)
+    # Adiciona chaves que nao estavam no arquivo
+    for key in ["V4MOS_CLIENT_ID", "V4MOS_CLIENT_SECRET", "V4MOS_WORKSPACE_ID"]:
+        if key not in seen and creds.get(key):
+            new_lines.append(f"{key}={creds[key]}")
+    env_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+
+    print("", file=sys.stderr)
+    print(f"✓ Credenciais salvas em {env_path}", file=sys.stderr)
+    print("", file=sys.stderr)
+
+    return creds, env_path
 
 
 class V4mos:
