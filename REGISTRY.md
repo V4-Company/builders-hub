@@ -1,12 +1,13 @@
 # Builders Hub — Registry
 
-**10 skills** · última atualização: 2026-04-17
+**11 skills** · última atualização: 2026-04-17
 
 > Catálogo auto-gerado por `scripts/build-registry.py`. Não edite à mão — rode `/sync-hub` ou envie PR pela `/compartilhar-skill`.
 
 ## Índice
 
 - [🛠 Base (setup/fluxo)](#base) (10)
+- [🎯 Tráfego](#trafego) (1)
 
 ## 🛠 Base (setup/fluxo)
 
@@ -24,6 +25,14 @@
 | `onboarding` | Configura todo o ambiente do usuario pra trabalhar com IA na V4 via o Builders Hub — valida e conserta git... | — | — |
 | `sabatina` | Entrevista o usuario de forma implacavel sobre cada aspecto de um plano ou design ate atingir entendimento... | — | — |
 | `sync-hub` | Atualiza o Builders Hub local puxando as skills mais recentes do repo publico, mostra diff do que mudou des... | — | — |
+
+## 🎯 Tráfego
+
+<a id="trafego"></a>
+
+| Skill | O que faz | Autor | v |
+|---|---|---|---|
+| `trafego-meta-diagnostico` | Gera diagnostico completo de Meta Ads (Facebook + Instagram) via API V4mos — spend, ROAS, top campanhas, ad... | @guilhermelippert | 1.0.0 |
 
 ---
 
