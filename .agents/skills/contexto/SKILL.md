@@ -1,13 +1,13 @@
 ---
 name: contexto
-description: Le todos os arquivos em uma base de conhecimento (cliente ou projeto) e gera um CLAUDE.md com o contexto completo. Use quando o usuario rodar /contexto ou quiser que a IA "conheca" um cliente ou projeto.
+description: Le todos os arquivos em uma base de conhecimento (cliente ou projeto) e gera os arquivos CLAUDE.md e AGENTS.md com o contexto completo. Use quando o usuario rodar /contexto ou quiser que a IA "conheca" um cliente ou projeto.
 ---
 
-Voce vai analisar toda a Knowledge Base de um cliente ou projeto e gerar um arquivo CLAUDE.md que resume tudo que a IA precisa saber.
+Voce vai analisar toda a Knowledge Base de um cliente ou projeto e gerar os arquivos CLAUDE.md e AGENTS.md que resumem tudo que a IA precisa saber.
 
 ## Objetivo
 
-Ler todos os arquivos na pasta e gerar um CLAUDE.md que funcione como "memoria" para qualquer trabalho futuro.
+Ler todos os arquivos na pasta e gerar os arquivos CLAUDE.md e AGENTS.md que funcionem como "memoria" para qualquer trabalho futuro.
 
 ## Processo
 
@@ -42,7 +42,7 @@ Extraia:
 - Contatos/stakeholders, combinados, pendencias
 - Objetivos, teses em andamento, historico, proximos passos
 
-Gere o CLAUDE.md com:
+Gere o CLAUDE.md e o AGENTS.md (ambos com o mesmo conteúdo) com:
 ```markdown
 # [Nome da Empresa]
 
@@ -87,7 +87,7 @@ Extraia:
 - Problemas e oportunidades
 - Decisoes ja tomadas, pendencias
 
-Gere o CLAUDE.md com:
+Gere o CLAUDE.md e o AGENTS.md (ambos com o mesmo conteúdo) com:
 ```markdown
 # [Nome do Projeto/Area]
 
@@ -119,7 +119,7 @@ Gere o CLAUDE.md com:
 
 ### Passo 5 — Apresentar ao usuario
 
-Mostre um resumo do que encontrou e o CLAUDE.md gerado. Pergunte:
+Mostre um resumo do que encontrou e os arquivos gerados. Pergunte:
 - "Tem algo que eu errei ou que falta?"
 - "Quer adicionar alguma informacao que nao estava nos arquivos?"
 
@@ -127,12 +127,12 @@ Ajuste conforme o feedback.
 
 ### Passo 6 — Confirmar
 
-Salve o arquivo e diga:
-> "Pronto. Agora toda vez que voce trabalhar nessa pasta, a IA vai ler esse CLAUDE.md automaticamente e ja vai saber tudo. Se os dados mudarem, rode /contexto de novo pra atualizar."
+Salve os arquivos e diga:
+> "Pronto. Agora toda vez que voce trabalhar nessa pasta, a IA vai ler esse contexto automaticamente e ja vai saber tudo. Se os dados mudarem, rode /contexto de novo pra atualizar."
 
 ## Regras
 
 - NAO invente informacoes. Se nao encontrou algo nos arquivos, deixe como "[nao disponivel]"
 - Se a KB estiver vazia ou quase vazia, avise o usuario e sugira quais dados adicionar
-- Priorize fatos sobre interpretacoes. O CLAUDE.md deve ser factual
-- Mantenha o CLAUDE.md conciso — maximo 150 linhas
+- Priorize fatos sobre interpretacoes. Os arquivos devem ser factuais
+- Mantenha os arquivos concisos — maximo 150 linhas
