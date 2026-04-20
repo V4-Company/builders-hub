@@ -3,7 +3,7 @@ name: gestao-wbr
 description: Gera o documento completo do WBR (Weekly Business Review) de uma tribo ou operação V4 a partir dos dados do DRE e informações fornecidas pelo gestor. Use sempre que o usuário pedir para montar, preparar ou redigir o WBR da semana, mencionar dados de churn/monetização/NPS/pessoas para apresentar à diretoria, ou quiser atualizar o relatório semanal da operação. A skill monta análise comparativa semana atual vs anterior, FCAs por desvio e tabela de monetização no formato pronto para apresentação.
 area: gestao
 author: hellenoliveira-sys
-version: 2.0.0
+version: 2.1.0
 ---
 
 # gestao-wbr — WBR Weekly Business Review
@@ -87,6 +87,20 @@ Toda vez que houver desvio relevante (aceleração de churn, meta abaixo, flag s
 **Fato:** o que os números mostram objetivamente
 **Causa:** por que isso aconteceu (raiz, não sintoma)
 **Ação:** o que será feito, por quem e até quando
+
+### Passo 4 — Criar o Google Doc
+
+Ao finalizar o conteúdo do WBR, crie um Google Doc via `mcp__claude_ai_Google_Drive__create_file`:
+
+- **name:** `WBR [Nome da Tribo] — [DATA]`
+- **mimeType:** `application/vnd.google-apps.document`
+- **content:** o texto completo do WBR formatado em markdown, passado diretamente como texto (sem base64)
+
+Após criar, retorne o link no formato:
+> `Documento criado: https://docs.google.com/document/d/[ID]`
+> Adicione como nova aba no seu documento principal de WBR.
+
+Se não conseguir criar o Google Doc (ex: MCP indisponível), entregue o WBR como texto formatado na própria sessão e avise o gestor para copiar manualmente.
 
 ## Template do documento
 
@@ -190,9 +204,10 @@ Toda vez que houver desvio relevante (aceleração de churn, meta abaixo, flag s
 - **Análise comparativa sempre que houver dados de duas semanas.** Destaque variações positivas E negativas.
 - **Tom direto e executivo.** O documento é lido pela diretoria — sem rodeios, com clareza nos pontos de atenção.
 - **Se alguma seção estiver incompleta,** pergunte ao gestor se quer publicar assim ou aguardar os dados.
+- **Ao criar o Google Doc**, passe o conteúdo diretamente como texto — não use base64.
 
 ## Exemplo de uso
 
 **Gestor diz:** "Churn MRR: R$49k — 10 logos perdidas. Monetização total em 80% da meta, variáveis em 143%, one time só 3,6%. NPS: 16 respostas de meta 20. Pessoas: Colaborador A será desligado por desempenho abaixo da média."
 
-**Skill gera:** Documento completo com tabela de monetização, FCA do One Time (gap vs meta), FCA do churn (variação de logos na semana), FCA do Colaborador A (desempenho inviável para a carteira atual), e NPS com ponto de atenção para fechar as respostas restantes.
+**Skill gera:** Documento completo com tabela de monetização, FCA do One Time (gap vs meta), FCA do churn (variação de logos na semana), FCA do Colaborador A (desempenho inviável para a carteira atual), NPS com ponto de atenção para fechar as respostas restantes — e ao final cria o Google Doc e retorna o link para adicionar como nova aba no documento principal.
