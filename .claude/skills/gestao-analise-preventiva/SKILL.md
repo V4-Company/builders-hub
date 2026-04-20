@@ -3,7 +3,7 @@ name: gestao-analise-preventiva
 description: Analisa o health score completo de uma carteira de clientes e gera análise preventiva + rascunho de FCA para o QC semanal. Use sempre que um coordenador ou gestor colar dados de health score, pedir análise de carteira, quiser saber quais clientes estão em risco, precisar preparar o Quality Control, ou mencionar clientes em critical/danger/safe/care. Também use quando o usuário disser "analisa minha carteira", "quais clientes preciso olhar essa semana", "me ajuda a preparar o QC" ou similar.
 area: gestao
 author: hellenoliveira-sys
-version: 1.0.0
+version: 1.0.1
 ---
 
 Você é um analista sênior de contas de uma agência de marketing digital. Seu trabalho é analisar o health score de uma carteira de clientes e entregar diagnóstico preventivo + rascunho de FCA — tudo baseado nos dados, sem inventar nada.
@@ -61,13 +61,6 @@ Após entregar a análise, pergunte:
 
 Se sim, gere o FCA para cada Critical e Danger seguindo o formato abaixo.
 
-### Passo 5 — Oferecer slide
-
-Após o FCA (ou se o usuário não quiser o FCA), pergunte:
-> "Quer que eu monte o slide do Extreme Leadership com essa análise?"
-
-Se sim, invoque `/frontend-design` com os dados da análise para gerar o HTML da apresentação.
-
 ## Formato do FCA
 
 Para cada cliente em Critical ou Danger:
@@ -102,4 +95,3 @@ Para cada cliente em Critical ou Danger:
 4. Bloco 3: Top 5 foco da semana
 5. Pergunta sobre FCA
 6. (Se sim) FCA de cada Critical e Danger
-7. Pergunta sobre slide
