@@ -1,12 +1,13 @@
 # Builders Hub — Registry
 
-**11 skills** · última atualização: 2026-04-17
+**12 skills** · última atualização: 2026-05-01
 
 > Catálogo auto-gerado por `scripts/build-registry.py`. Não edite à mão — rode `/sync-hub` ou envie PR pela `/compartilhar-skill`.
 
 ## Índice
 
 - [🛠 Base (setup/fluxo)](#base) (10)
+- [🤝 Customer Success](#cs) (1)
 - [🔌 Integrações / Fontes](#fontes) (1)
   - [🔌 V4mos](#v4mos) (1)
 
@@ -26,6 +27,14 @@
 | `onboarding` | Configura todo o ambiente do usuario pra trabalhar com IA na V4 via o Builders Hub — valida e conserta git... | — | — |
 | `sabatina` | Entrevista o usuario de forma implacavel sobre cada aspecto de um plano ou design ate atingir entendimento... | — | — |
 | `sync-hub` | Atualiza o Builders Hub local puxando as skills mais recentes do repo publico, mostra diff do que mudou des... | — | — |
+
+## 🤝 Customer Success
+
+<a id="cs"></a>
+
+| Skill | O que faz | Autor | v |
+|---|---|---|---|
+| `cs-notebook-lm-consulta` | Consulta o NotebookLM de um cliente especifico decompondo uma tarefa em ate 5 perguntas direcionadas, dispa... | @junioraiellogestaodetrafego | 1.0.0 |
 
 ## 🔌 Integrações / Fontes
 
