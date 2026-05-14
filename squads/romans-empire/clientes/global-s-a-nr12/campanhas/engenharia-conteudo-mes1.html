@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engenharia de Conteúdo ABM — Global S.A. | Mês 1</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1f1f1f;
+    --surface3: #2a2a2a;
+    --border: #2e2e2e;
+    --border2: #3a3a3a;
+    --red: #E53935;
+    --red-dim: #b71c1c;
+    --red-glow: rgba(229,57,53,0.15);
+    --blue: #2196F3;
+    --blue-dim: #1565C0;
+    --blue-soft: rgba(33,150,243,0.12);
+    --orange: #FF9800;
+    --orange-dim: #E65100;
+    --orange-soft: rgba(255,152,0,0.12);
+    --purple: #9C27B0;
+    --purple-dim: #6A1B9A;
+    --purple-soft: rgba(156,39,176,0.12);
+    --green: #43A047;
+    --green-soft: rgba(67,160,71,0.15);
+    --yellow: #FBC02D;
+    --yellow-soft: rgba(251,192,45,0.15);
+    --text: #EBEBEB;
+    --text2: #A0A0A0;
+    --text3: #666;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; gap: 0;
+    height: 52px;
+  }
+  .nav-logo {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--red); text-transform: uppercase; margin-right: 32px;
+    white-space: nowrap;
+  }
+  .nav-links { display: flex; gap: 4px; overflow-x: auto; }
+  .nav-links a {
+    color: var(--text2); text-decoration: none; font-size: 12px;
+    padding: 6px 12px; border-radius: var(--radius-sm);
+    white-space: nowrap; transition: all 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface2); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #161616 0%, #1a0a0a 50%, #161616 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 40px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--red-glow); border: 1px solid var(--red-dim);
+    color: var(--red); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 32px; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--text); margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .hero h1 span { color: var(--red); }
+  .hero-meta {
+    color: var(--text2); font-size: 13px; margin-bottom: 28px;
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .hero-meta span::before { content: '·'; margin-right: 24px; color: var(--text3); }
+  .hero-meta span:first-child::before { display: none; }
+
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-top: 4px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+  }
+  .stat-value {
+    font-size: 28px; font-weight: 800; color: var(--text);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .stat-value.red { color: var(--red); }
+  .stat-label { font-size: 11px; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ── SECTIONS ── */
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  .section-header { margin-bottom: 28px; }
+  .section-num {
+    font-size: 11px; font-weight: 700; color: var(--red);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 22px; font-weight: 700; color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .section-desc {
+    color: var(--text2); font-size: 13px; margin-top: 8px; line-height: 1.7;
+    max-width: 680px;
+  }
+
+  /* ── PERSONAS ── */
+  .personas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .persona-card {
+    border-radius: var(--radius); padding: 24px;
+    border: 1px solid;
+    position: relative; overflow: hidden;
+  }
+  .persona-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .persona-a { background: var(--blue-soft); border-color: var(--blue-dim); }
+  .persona-a::before { background: var(--blue); }
+  .persona-b { background: var(--orange-soft); border-color: var(--orange-dim); }
+  .persona-b::before { background: var(--orange); }
+  .persona-c { background: var(--purple-soft); border-color: var(--purple-dim); }
+  .persona-c::before { background: var(--purple); }
+
+  .persona-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 3px 10px; border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .persona-a .persona-tag { background: rgba(33,150,243,0.2); color: var(--blue); }
+  .persona-b .persona-tag { background: rgba(255,152,0,0.2); color: var(--orange); }
+  .persona-c .persona-tag { background: rgba(156,39,176,0.2); color: var(--purple); }
+
+  .persona-name { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .persona-roles { font-size: 11px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
+
+  .persona-row { margin-bottom: 12px; }
+  .persona-row-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 4px; }
+  .persona-row-value { font-size: 12px; color: var(--text); line-height: 1.5; }
+
+  .persona-authority {
+    margin-top: 16px; padding: 12px; border-radius: var(--radius-sm);
+    background: rgba(0,0,0,0.3); font-size: 12px; color: var(--text2);
+    font-style: italic; line-height: 1.5;
+    border-left: 2px solid;
+  }
+  .persona-a .persona-authority { border-color: var(--blue); }
+  .persona-b .persona-authority { border-color: var(--orange); }
+  .persona-c .persona-authority { border-color: var(--purple); }
+
+  /* ── FUNNEL VISUAL ── */
+  .funnel-visual {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 0;
+  }
+  .funnel-step {
+    flex: 1; text-align: center; position: relative;
+  }
+  .funnel-step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -12px; top: 50%;
+    transform: translateY(-50%); color: var(--red); font-size: 18px; font-weight: bold;
+    z-index: 1;
+  }
+  .funnel-step-box {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 12px; margin: 0 8px;
+    transition: border-color 0.2s;
+  }
+  .funnel-step-num {
+    font-size: 10px; font-weight: 700; color: var(--red);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+  .funnel-step-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .funnel-step-sub { font-size: 10px; color: var(--text2); line-height: 1.4; }
+  .funnel-step-channel {
+    margin-top: 8px; font-size: 10px; color: var(--text3);
+    padding: 3px 8px; background: var(--surface3);
+    border-radius: 10px; display: inline-block;
+  }
+
+  /* ── TABS ── */
+  .tabs { margin-bottom: 0; }
+  .tab-buttons { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text2); cursor: pointer;
+    font-size: 12px; font-weight: 600; transition: all 0.15s;
+  }
+  .tab-btn:hover { border-color: var(--border2); color: var(--text); }
+  .tab-btn.active-a { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); }
+  .tab-btn.active-b { background: var(--orange-soft); border-color: var(--orange); color: var(--orange); }
+  .tab-btn.active-c { background: var(--purple-soft); border-color: var(--purple); color: var(--purple); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .trilha-header {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px;
+  }
+  .trilha-tier {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 14px;
+    font-size: 11px; color: var(--text2); white-space: nowrap;
+  }
+  .trilha-tier strong { color: var(--text); display: block; font-size: 12px; margin-bottom: 2px; }
+  .trilha-signal { flex: 1; font-size: 12px; color: var(--text2); }
+  .trilha-signal strong { color: var(--text); }
+
+  /* ── TABLES ── */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--surface2); }
+  thead th {
+    padding: 11px 14px; text-align: left; font-size: 11px;
+    font-weight: 600; color: var(--text2); text-transform: uppercase;
+    letter-spacing: 0.06em; white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td {
+    padding: 12px 14px; font-size: 12px; color: var(--text);
+    vertical-align: top; line-height: 1.55;
+  }
+  tbody td:first-child { font-weight: 700; color: var(--text2); white-space: nowrap; }
+
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; font-weight: 700; white-space: nowrap;
+  }
+  .badge-blue { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-dim); }
+  .badge-orange { background: var(--orange-soft); color: var(--orange); border: 1px solid var(--orange-dim); }
+  .badge-purple { background: var(--purple-soft); color: var(--purple); border: 1px solid var(--purple-dim); }
+  .badge-green { background: var(--green-soft); color: var(--green); }
+  .badge-red { background: var(--red-glow); color: var(--red); }
+  .badge-gray { background: var(--surface3); color: var(--text2); }
+
+  /* ── CRONOGRAMA ── */
+  .week-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 20px; overflow: hidden;
+  }
+  .week-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .week-num {
+    background: var(--red); color: white; font-size: 11px; font-weight: 800;
+    padding: 4px 10px; border-radius: var(--radius-sm); text-transform: uppercase;
+    letter-spacing: 0.06em; white-space: nowrap;
+  }
+  .week-title { font-size: 15px; font-weight: 700; }
+  .week-obj { font-size: 12px; color: var(--text2); margin-left: auto; max-width: 400px; text-align: right; }
+  .week-deliverable {
+    background: var(--green-soft); border-top: 1px solid var(--border);
+    padding: 10px 24px; font-size: 12px; color: var(--green);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .day-icon { font-size: 15px; }
+  .icon-setup { color: #5C6BC0; }
+  .icon-write { color: #26A69A; }
+  .icon-publish { color: var(--red); }
+  .icon-outreach { color: var(--orange); }
+  .icon-analyze { color: var(--yellow); }
+
+  /* ── SEQUENCES ── */
+  .seq-accordion { margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .seq-header {
+    display: flex; align-items: center; gap: 14px; padding: 14px 20px;
+    cursor: pointer; background: var(--surface); transition: background 0.15s;
+    user-select: none;
+  }
+  .seq-header:hover { background: var(--surface2); }
+  .seq-step-badge {
+    font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 12px;
+    white-space: nowrap;
+  }
+  .seq-day { font-size: 11px; color: var(--text3); white-space: nowrap; }
+  .seq-subject { font-size: 13px; font-weight: 600; flex: 1; }
+  .seq-toggle { color: var(--text3); font-size: 14px; transition: transform 0.2s; }
+  .seq-accordion.open .seq-toggle { transform: rotate(180deg); }
+  .seq-body {
+    display: none; padding: 20px 24px;
+    background: var(--surface2); border-top: 1px solid var(--border);
+    font-size: 12px; line-height: 1.7; color: var(--text2);
+    white-space: pre-wrap; font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .seq-accordion.open .seq-body { display: block; }
+  .seq-highlight { color: var(--text); background: rgba(255,255,255,0.04); }
+
+  /* ── MAKE FLOWS ── */
+  .make-flow {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px; margin-bottom: 12px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .make-priority-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .dot-red { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+  .make-flow-content { flex: 1; }
+  .make-flow-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .make-flow-trigger { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
+  .make-flow-trigger strong { color: var(--orange); }
+  .make-actions { display: flex; flex-direction: column; gap: 4px; }
+  .make-action {
+    display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text2);
+    padding: 6px 10px; background: var(--surface2); border-radius: var(--radius-sm);
+  }
+  .make-action::before { content: '→'; color: var(--red); font-weight: 700; flex-shrink: 0; }
+
+  /* ── METRICS ── */
+  .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+  .metric-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+  }
+  .metric-stage {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text3); margin-bottom: 12px;
+  }
+  .metric-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .metric-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .metric-name { font-size: 12px; color: var(--text2); }
+  .metric-target { font-size: 13px; font-weight: 700; color: var(--text); }
+  .metric-source { font-size: 10px; color: var(--text3); }
+
+  .mqa-box {
+    background: var(--green-soft); border: 1px solid rgba(67,160,71,0.3);
+    border-radius: var(--radius); padding: 20px 24px;
+  }
+  .mqa-title { font-size: 14px; font-weight: 700; color: var(--green); margin-bottom: 12px; }
+  .mqa-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .mqa-check { color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+  /* ── MEDIA BRIEFING ── */
+  .budget-bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .budget-bar-row { display: flex; align-items: center; gap: 14px; }
+  .budget-bar-label { font-size: 12px; font-weight: 600; width: 200px; flex-shrink: 0; }
+  .budget-bar-track { flex: 1; height: 8px; background: var(--surface3); border-radius: 4px; overflow: hidden; }
+  .budget-bar-fill { height: 100%; border-radius: 4px; }
+  .budget-bar-pct { font-size: 13px; font-weight: 700; width: 40px; text-align: right; flex-shrink: 0; }
+  .bar-linkedin { background: #0077B5; }
+  .bar-meta { background: #1877F2; }
+  .bar-google { background: #4285F4; }
+
+  .retargeting-levels { display: flex; gap: 12px; margin-bottom: 24px; }
+  .rt-level {
+    flex: 1; border-radius: var(--radius); padding: 16px; border: 1px solid var(--border);
+    background: var(--surface); position: relative; overflow: hidden;
+  }
+  .rt-level::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .rt-l1::before { background: var(--text3); }
+  .rt-l2::before { background: var(--orange); }
+  .rt-l3::before { background: var(--red); }
+  .rt-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .rt-l1 .rt-badge { color: var(--text3); }
+  .rt-l2 .rt-badge { color: var(--orange); }
+  .rt-l3 .rt-badge { color: var(--red); }
+  .rt-name { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .rt-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
+  .rt-cta { margin-top: 10px; font-size: 11px; color: var(--text3); }
+  .rt-cta strong { color: var(--text); }
+
+  /* ── CHECKLIST ── */
+  .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .checklist-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px;
+  }
+  .checklist-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text2); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .checklist-title span { color: var(--text3); font-size: 11px; font-weight: 400; }
+  .check-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 7px 0;
+    border-bottom: 1px solid var(--border); cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item input[type="checkbox"] {
+    appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--border2);
+    border-radius: 4px; flex-shrink: 0; cursor: pointer; margin-top: 1px;
+    transition: all 0.15s; position: relative;
+  }
+  .check-item input[type="checkbox"]:checked {
+    background: var(--red); border-color: var(--red);
+  }
+  .check-item input[type="checkbox"]:checked::after {
+    content: '✓'; position: absolute; top: -1px; left: 2px;
+    font-size: 11px; color: white; font-weight: 700;
+  }
+  .check-item.done { opacity: 0.45; }
+  .check-item.done .check-label { text-decoration: line-through; }
+  .check-label { font-size: 12px; color: var(--text); line-height: 1.5; flex: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 0; text-align: center;
+    color: var(--text3); font-size: 11px;
+  }
+  footer strong { color: var(--text2); }
+
+  /* ── UTILITIES ── */
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; background: var(--surface3); color: var(--text2); margin: 2px; }
+  .quote { background: var(--surface2); border-left: 3px solid var(--red); padding: 14px 18px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; color: var(--text2); font-style: italic; line-height: 1.6; margin: 20px 0; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  @media (max-width: 768px) {
+    .personas-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid { grid-template-columns: 1fr; }
+    .checklist-grid { grid-template-columns: 1fr; }
+    .retargeting-levels { flex-direction: column; }
+    .hero h1 { font-size: 22px; }
+    nav { padding: 0 16px; }
+    .container { padding: 0 16px; }
+  }
+
+  @media print {
+    nav { display: none; }
+    .seq-body { display: block !important; }
+    .tab-content { display: block !important; }
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Global S.A · ABM</div>
+  <div class="nav-links">
+    <a href="#personas">Personas</a>
+    <a href="#framework">Framework 4D</a>
+    <a href="#cronograma">Cronograma</a>
+    <a href="#sequences">Sequences</a>
+    <a href="#midia">Mídia Paga</a>
+    <a href="#make">Make</a>
+    <a href="#metricas">Métricas</a>
+    <a href="#checklist">Checklist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">⚡ Squad Romans Empire</div>
+    <h1>Engenharia de Conteúdo ABM<br><span>Global S.A. · Mês 1</span></h1>
+    <div class="hero-meta">
+      <span>Responsável: Giullio</span>
+      <span>Semanas 1–4 do ciclo ABM</span>
+      <span>Stack: Apollo · LinkedIn · Great Pages · Make</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value red">3</div>
+        <div class="stat-label">Trilhas de Persona</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">5–8</div>
+        <div class="stat-label">Reuniões-meta / mês</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12</div>
+        <div class="stat-label">Apollo Steps (3 seq.)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">5</div>
+        <div class="stat-label">Automações Make</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1: PERSONAS -->
+<section id="personas">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">01 · Mapa de Personas</div>
+      <div class="section-title">Quem atingimos e como</div>
+      <div class="section-desc">O ICP da Global não é uma pessoa — é um comitê. Nossa estratégia ataca as 3 figuras que decidem uma compra de adequação NR-12: o Influenciador (que sente a dor no campo), o Decisor (que quer produção sem parar) e o Blocker (que controla o CAPEX).</div>
+    </div>
+
+    <div class="personas-grid">
+      <!-- INFLUENCIADOR -->
+      <div class="persona-card persona-a">
+        <div class="persona-tag">🔧 Trilha A</div>
+        <div class="persona-name">Influenciador</div>
+        <div style="font-size:11px;color:var(--blue);font-weight:600;margin-bottom:4px;">Cavalo de Troia</div>
+        <div class="persona-roles">Técnico de Segurança · Analista de SST · SESMT · Assistente de Qualidade</div>
+        <div class="persona-row">
+          <div class="persona-row-label">O que querem</div>
+          <div class="persona-row-value">Ferramentas que façam o trabalho braçal por eles. Não querem tomar bronca.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-row-label">Maior medo</div>
+          <div class="persona-row-value">Ser pego pelo MPT sem documentações. Aparecer como responsável técnico de um acidente.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-row-label">Tier Apollo</div>
+          <div class="persona-row-value"><span class="badge badge-gray">Tier 2</span> <span class="badge badge-gray">Tier 3</span> — Sequence automatizada</div>
+        </div>
+        <div class="persona-authority persona-a">"Calculadora HRN + Checklist de APR feitos por quem formou o mercado — use amanhã na sua planta."</div>
+      </div>
+
+      <!-- DECISOR -->
+      <div class="persona-card persona-b">
+        <div class="persona-tag">🏭 Trilha B</div>
+        <div class="persona-name">Decisor</div>
+        <div style="font-size:11px;color:var(--orange);font-weight:600;margin-bottom:4px;">Gerente / Diretor Industrial</div>
+        <div class="persona-roles">Gerente de Produção · Diretor Industrial · Engenheiro de Manufatura · Gerente de Qualidade</div>
+        <div class="persona-row">
+          <div class="persona-row-label">O que querem</div>
+          <div class="persona-row-value">Bater meta de OEE. Adequar sem parar linha.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-row-label">Maior medo</div>
+          <div class="persona-row-value">Que o projeto de NR-12 trave a máquina ou derrube a produtividade da fábrica.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-row-label">Tier Apollo</div>
+          <div class="persona-row-value"><span class="badge badge-red">Tier 1</span> CEO manual · <span class="badge badge-gray">Tier 2</span> sequence</div>
+        </div>
+        <div class="persona-authority persona-b">"Fizemos 3.800 adequações. Zero paradas não programadas. O Método Global 360° preserva a produtividade."</div>
+      </div>
+
+      <!-- BLOCKER -->
+      <div class="persona-card persona-c">
+        <div class="persona-tag">💼 Trilha C</div>
+        <div class="persona-name">Blocker</div>
+        <div style="font-size:11px;color:var(--purple);font-weight:600;margin-bottom:4px;">CFO / Diretor Financeiro</div>
+        <div class="persona-roles">CFO · Diretor Financeiro · Gerente de Compras · Diretor Administrativo</div>
+        <div class="persona-row">
+          <div class="persona-row-label">O que querem</div>
+          <div class="persona-row-value">Cortar CAPEX, blindar CNPJ/CPF, evitar multa e passivo trabalhista.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-row-label">Maior medo</div>
+          <div class="persona-row-value">Interdição do MPT, multa milionária, responsabilidade penal do CPF do sócio.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-row-label">Tier Apollo</div>
+          <div class="persona-row-value"><span class="badge badge-red">Tier 1</span> premium · CEO assina todos os emails</div>
+        </div>
+        <div class="persona-authority persona-c">"O custo de NÃO adequar é 10–50x maior que o projeto. Aqui está o estudo de mercado que prova isso."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: FRAMEWORK 4D -->
+<section id="framework">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">02 · Framework 4D</div>
+      <div class="section-title">Trilhas de Conversão por Persona</div>
+      <div class="section-desc">Cada peça de conteúdo tem uma CTA que leva para a próxima. O conteúdo é uma escada — cada degrau mais profundo, mais próximo de uma conversa comercial.</div>
+    </div>
+
+    <!-- FUNNEL VISUAL -->
+    <div class="funnel-visual">
+      <div class="funnel-step">
+        <div class="funnel-step-box">
+          <div class="funnel-step-num">Nível 1</div>
+          <div class="funnel-step-title">Hook</div>
+          <div class="funnel-step-sub">Raso, provocativo<br>Dado ou erro comum</div>
+          <div class="funnel-step-channel">LinkedIn Post</div>
+        </div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-box">
+          <div class="funnel-step-num">Nível 2</div>
+          <div class="funnel-step-title">Profundidade</div>
+          <div class="funnel-step-sub">Resolve 1 problema<br>500–1200 palavras</div>
+          <div class="funnel-step-channel">Newsletter · Artigo</div>
+        </div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-box">
+          <div class="funnel-step-num">Nível 3</div>
+          <div class="funnel-step-title">Conversão</div>
+          <div class="funnel-step-sub">Captura de lead gated<br>Make dispara Apollo</div>
+          <div class="funnel-step-channel">Great Pages LP</div>
+        </div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-box" style="border-color:var(--red);background:var(--red-glow);">
+          <div class="funnel-step-num" style="color:var(--red);">Nível 4</div>
+          <div class="funnel-step-title">Abordagem</div>
+          <div class="funnel-step-sub">Reunião comercial<br>CEO ou SDR</div>
+          <div class="funnel-step-channel" style="color:var(--red);">Direct Outreach</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab-buttons">
+        <button class="tab-btn active-a" onclick="showTab('a', this)">🔧 Trilha A — Influenciador</button>
+        <button class="tab-btn" onclick="showTab('b', this)">🏭 Trilha B — Decisor</button>
+        <button class="tab-btn" onclick="showTab('c', this)">💼 Trilha C — Blocker</button>
+      </div>
+
+      <!-- TAB A -->
+      <div id="tab-a" class="tab-content active">
+        <div class="trilha-header">
+          <div class="trilha-tier"><strong>Tier Apollo</strong>Tier 2 e 3</div>
+          <div class="trilha-signal"><strong>Sinal de progressão:</strong> Download da Calculadora HRN ou Checklist APR → Make notifica SDR automaticamente</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Etapa APM</th>
+                <th>Consciência</th>
+                <th>Dor Atacada</th>
+                <th>Conteúdo</th>
+                <th>Canal</th>
+                <th>CTA / Próximo passo</th>
+                <th>Quem</th>
+                <th>Sem.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-blue">A1</span></td>
+                <td>Reconhecimento</td>
+                <td><span style="color:var(--yellow);font-size:11px;">Problema-Aware</span></td>
+                <td>Medo de multa e trabalho braçal de inventário em Excel cru</td>
+                <td><strong>Post LinkedIn</strong> (texto + imagem): "Você ainda faz levantamento de risco no olhômetro? Os 3 erros que o MPT mais multa."</td>
+                <td><span class="tag">Orgânico CEO</span><span class="tag">Company Page</span><span class="tag">LinkedIn Ads</span></td>
+                <td>"Veja o passo a passo → newsletter"</td>
+                <td>V4 redige<br>CEO posta</td>
+                <td><span class="badge badge-gray">Sem 1</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-blue">A2</span></td>
+                <td>Engaj. Inicial</td>
+                <td><span style="color:var(--orange);font-size:11px;">Solução-Aware</span></td>
+                <td>Não ter padrão claro para calcular HRN com segurança técnica</td>
+                <td><strong>Newsletter</strong> (800–1000 palavras): "Passo a passo: Como calcular o HRN com o Método Global 360° (exemplo real: prensa excêntrica)"</td>
+                <td><span class="tag">LinkedIn Newsletter</span><span class="tag">Retargeting Meta</span></td>
+                <td>"Baixe a Calculadora HRN → LP1"</td>
+                <td>V4 + input técnico Global</td>
+                <td><span class="badge badge-gray">Sem 2</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-blue">A3</span></td>
+                <td>Engaj. Significativo</td>
+                <td><span style="color:var(--blue);font-size:11px;">Produto-Aware</span></td>
+                <td>Precisam da ferramenta para usar amanhã, sem reconstruir do zero</td>
+                <td><strong>LP Gated (Great Pages):</strong> "Calculadora HRN + Checklist APR — as ferramentas de 3.800 adequações" · Formulário: Nome, Empresa, Cargo, Email, Tel</td>
+                <td><span class="tag">Link newsletter</span><span class="tag">Meta Retargeting</span></td>
+                <td>Thank You Page → "Conheça o Curso NR-12 →"</td>
+                <td>Giullio · Make automatiza Apollo</td>
+                <td><span class="badge badge-gray">Sem 3</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-blue">A4</span></td>
+                <td>MQA → SQL</td>
+                <td><span style="color:var(--red);font-size:11px;">Mais Consciente</span></td>
+                <td>—</td>
+                <td><strong>Apollo Sequence SDR</strong> (4 steps, 10 dias): Entrega → Case de uso → LinkedIn → "15 min diagnóstico"</td>
+                <td><span class="tag">Apollo email</span><span class="tag">LinkedIn step</span></td>
+                <td>Reunião de diagnóstico + mapear decisor/blocker</td>
+                <td>SDR / Giullio</td>
+                <td><span class="badge badge-gray">Sem 3–4</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB B -->
+      <div id="tab-b" class="tab-content">
+        <div class="trilha-header">
+          <div class="trilha-tier"><strong>Tier Apollo</strong>Tier 1 + 2</div>
+          <div class="trilha-signal"><strong>Sinal de progressão:</strong> Visita à página do curso OU resposta ao outreach do CEO Guilherme</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Etapa APM</th>
+                <th>Consciência</th>
+                <th>Dor Atacada</th>
+                <th>Conteúdo</th>
+                <th>Canal</th>
+                <th>CTA / Próximo passo</th>
+                <th>Quem</th>
+                <th>Sem.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-orange">B1</span></td>
+                <td>Reconhecimento</td>
+                <td><span style="color:var(--yellow);font-size:11px;">Problema-Aware</span></td>
+                <td>O mito de que adequação trava máquina e derruba OEE</td>
+                <td><strong>Post LinkedIn (Vídeo/Carrossel):</strong> "Adequar não precisa matar sua eficiência. Veja essa prensa que roda 12% mais rápida depois da adequação."</td>
+                <td><span class="tag">Orgânico CEO</span><span class="tag">LinkedIn Ads</span><span class="tag">TLA</span></td>
+                <td>"Como preservamos a produtividade → newsletter"</td>
+                <td>V4 · Global fornece dado real</td>
+                <td><span class="badge badge-gray">Sem 1</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-orange">B2</span></td>
+                <td>Engaj. Inicial</td>
+                <td><span style="color:var(--orange);font-size:11px;">Solução-Aware</span></td>
+                <td>Receio de projeto inacabado, parada não planejada, consultor que some</td>
+                <td><strong>Newsletter</strong> (700–900 palavras): "Por que 80% das adequações falham na Implantação — e como o Método 360° garante que a linha não para."</td>
+                <td><span class="tag">LinkedIn Newsletter</span><span class="tag">Retargeting Meta</span></td>
+                <td>"Conheça o Método → vitrine/curso"</td>
+                <td>V4 + cases reais de Guilherme</td>
+                <td><span class="badge badge-gray">Sem 2</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-orange">B3</span></td>
+                <td>Engaj. Significativo</td>
+                <td><span style="color:var(--blue);font-size:11px;">Produto-Aware</span></td>
+                <td>Busca parceiro técnico sênior, não executor genérico</td>
+                <td><strong>Vitrine de Autoridade (Página do Curso):</strong> Ele lê a grade e percebe: "Se esses caras formam consultores, são a maior autoridade."</td>
+                <td><span class="tag">LinkedIn Retargeting</span><span class="tag">Link newsletter</span></td>
+                <td>Pixel captura signal → MQA → Make notifica CEO</td>
+                <td>Pixel LinkedIn + Meta · Make monitora</td>
+                <td><span class="badge badge-gray">Sem 3</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-orange">B4</span></td>
+                <td>MQA → SQL</td>
+                <td><span style="color:var(--red);font-size:11px;">Mais Consciente</span></td>
+                <td>—</td>
+                <td><strong>LinkedIn DM personalizado CEO Guilherme:</strong> "[Nome], trabalhamos com [SETOR] que tinham o desafio de adequar sem parar linha — resultado foi [X%] de melhoria de OEE. Alinhamento de 20 min?"</td>
+                <td><span class="tag">LinkedIn DM</span><span class="tag">Email Apollo</span></td>
+                <td>Reunião de venda (SQL)</td>
+                <td>CEO Guilherme (T1) · Executivo (T2)</td>
+                <td><span class="badge badge-gray">Sem 3–4</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB C -->
+      <div id="tab-c" class="tab-content">
+        <div class="trilha-header">
+          <div class="trilha-tier"><strong>Tier Apollo</strong>Tier 1 premium</div>
+          <div class="trilha-signal"><strong>Sinal de progressão:</strong> Download do Relatório Financeiro OU abertura de 2+ emails — CEO Guilherme assina todos</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Etapa APM</th>
+                <th>Consciência</th>
+                <th>Dor Atacada</th>
+                <th>Conteúdo</th>
+                <th>Canal</th>
+                <th>CTA / Próximo passo</th>
+                <th>Quem</th>
+                <th>Sem.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-purple">C1</span></td>
+                <td>Reconhecimento</td>
+                <td><span style="color:var(--yellow);font-size:11px;">Problema-Aware</span></td>
+                <td>Vê NR-12 como custo, não como proteção do CNPJ</td>
+                <td><strong>Post LinkedIn (texto/infográfico):</strong> "O risco invisível no balanço: o custo real de uma interdição do MPT por NR-12. [Dados regionais SC/SP 2025]"</td>
+                <td><span class="tag">LinkedIn Ads (C-Level)</span><span class="tag">Orgânico CEO</span></td>
+                <td>"Veja o estudo de impacto financeiro → artigo"</td>
+                <td>V4 · dados reais MPT</td>
+                <td><span class="badge badge-gray">Sem 1</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-purple">C2</span></td>
+                <td>Engaj. Inicial</td>
+                <td><span style="color:var(--orange);font-size:11px;">Solução-Aware</span></td>
+                <td>Medo de passivo trabalhista vs custo do projeto</td>
+                <td><strong>Newsletter/Artigo:</strong> "O custo da Não-Conformidade: Como a falta de inventário gera passivos milionários — e quem assina o CPF por isso."</td>
+                <td><span class="tag">LinkedIn Newsletter</span><span class="tag">LinkedIn Retargeting</span></td>
+                <td>"Baixe o Estudo de Mercado → LP2"</td>
+                <td>V4 + dados MPT/MTE reais</td>
+                <td><span class="badge badge-gray">Sem 2</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-purple">C3</span></td>
+                <td>Engaj. Significativo</td>
+                <td><span style="color:var(--blue);font-size:11px;">Produto-Aware</span></td>
+                <td>Precisam de previsibilidade financeira para aprovar CAPEX</td>
+                <td><strong>LP Gated Premium (Great Pages):</strong> "Relatório: Impacto financeiro da NR-12 nas indústrias do Sul/Sudeste em 2026" · Formulário completo</td>
+                <td><span class="tag">Link artigo C2</span><span class="tag">LinkedIn Retargeting</span></td>
+                <td>Download → Lead scoring → CEO notificado (Tier 1)</td>
+                <td>Giullio · Make → Apollo CRM</td>
+                <td><span class="badge badge-gray">Sem 3</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-purple">C4</span></td>
+                <td>MQA → SQL</td>
+                <td><span style="color:var(--red);font-size:11px;">Mais Consciente</span></td>
+                <td>—</td>
+                <td><strong>Email personalizado CEO Guilherme:</strong> "[Nome], nosso Método 360° opera com escopo fechado e cronograma fixo — sem estouro. A blindagem do CNPJ/CPF vem como resultado. Como está o CAPEX de segurança este ano?"</td>
+                <td><span class="tag">Email Apollo</span><span class="tag">LinkedIn follow-up</span></td>
+                <td>Reunião de negócios / apresentação financeira</td>
+                <td>CEO Guilherme (todos os tiers)</td>
+                <td><span class="badge badge-gray">Sem 3–4</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: CRONOGRAMA -->
+<section id="cronograma">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">03 · Cronograma</div>
+      <div class="section-title">Semana a Semana — Mês 1</div>
+      <div class="section-desc">Legenda: <span class="tag">⚙️ Setup técnico</span> <span class="tag">🖊️ Produção de conteúdo</span> <span class="tag">📢 Publicação</span> <span class="tag">📞 Outreach / Vendas</span> <span class="tag">📊 Análise</span></div>
+    </div>
+
+    <!-- SEMANA 1 -->
+    <div class="week-card">
+      <div class="week-header">
+        <div class="week-num">Semana 1</div>
+        <div class="week-title">Fundação + Primeiros Posts</div>
+        <div class="week-obj">Listas Apollo montadas · Infraestrutura live · 3 posts publicados</div>
+      </div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr><th>Dia</th><th>Ação</th><th>Responsável</th><th>Canal</th><th>Persona</th></tr></thead>
+          <tbody>
+            <tr><td>Seg</td><td>⚙️ Setup Apollo: filtros Tier 1/2/3, lista piloto de 50 contatos</td><td>Giullio</td><td>Apollo.io</td><td><span class="badge badge-gray">Todos</span></td></tr>
+            <tr><td>Seg</td><td>⚙️ Criar LP1 (Calculadora HRN + Checklist APR) no Great Pages + formulário + thank you page com CTA curso</td><td>Giullio</td><td>Great Pages</td><td><span class="badge badge-blue">Influenciador</span></td></tr>
+            <tr><td>Seg</td><td>⚙️ Configurar Make: Great Pages form → Apollo CRM + notificação CEO (Tier 1)</td><td>Giullio</td><td>Make</td><td>—</td></tr>
+            <tr><td>Ter</td><td>🖊️ Briefing e escrita dos Posts A1 + B1 + C1 (1 por persona)</td><td>V4 / Copywriter</td><td>Google Docs</td><td>—</td></tr>
+            <tr><td>Qua</td><td>📢 Publicar <strong>Post A1</strong> — "3 erros que o MPT mais multa" · CEO LinkedIn + Company Page</td><td>CEO Guilherme</td><td>LinkedIn</td><td><span class="badge badge-blue">Influenciador</span></td></tr>
+            <tr><td>Qui</td><td>📢 Publicar <strong>Post B1</strong> — "Adequar não mata eficiência" · vídeo ou carrossel · CEO LinkedIn</td><td>CEO Guilherme</td><td>LinkedIn</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Sex</td><td>📢 Publicar <strong>Post C1</strong> — "Risco invisível no balanço" · LinkedIn Ads ativos</td><td>CEO + Gestor Mídia</td><td>LinkedIn + Ads</td><td><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Sex</td><td>⚙️ Instalar pixels: LinkedIn Insight Tag + Meta Pixel nas LPs + página do curso</td><td>Gestor de Mídia</td><td>Great Pages</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-deliverable">✅ Entregável: Lista Apollo piloto ativa · 3 posts publicados · LP1 live · Make funcionando</div>
+    </div>
+
+    <!-- SEMANA 2 -->
+    <div class="week-card">
+      <div class="week-header">
+        <div class="week-num">Semana 2</div>
+        <div class="week-title">Newsletter + Retargeting + Apollo Warmup</div>
+        <div class="week-obj">2 newsletters publicadas · Sequences disparando · CEO conectando Tier 1</div>
+      </div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr><th>Dia</th><th>Ação</th><th>Responsável</th><th>Canal</th><th>Persona</th></tr></thead>
+          <tbody>
+            <tr><td>Seg</td><td>🖊️ Escrever Newsletter A2: "Passo a passo: calculando o HRN com o Método 360°" (com input técnico da Global)</td><td>V4 + Global</td><td>Google Docs</td><td><span class="badge badge-blue">Influenciador</span></td></tr>
+            <tr><td>Seg</td><td>⚙️ Configurar <strong>Sequência B</strong> Apollo — Decisor: 5 emails + 2 LinkedIn steps (14 dias)</td><td>Giullio / SDR</td><td>Apollo.io</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Ter</td><td>⚙️ Configurar <strong>Sequência C</strong> Apollo — Blocker: 4 emails + 1 LinkedIn step (12 dias)</td><td>Giullio / SDR</td><td>Apollo.io</td><td><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Ter</td><td>📢 Publicar <strong>Newsletter A2</strong> + post CEO com link</td><td>CEO Guilherme / V4</td><td>LinkedIn Newsletter</td><td><span class="badge badge-blue">Influenciador</span></td></tr>
+            <tr><td>Qua</td><td>📢 Ativar <strong>Retargeting Meta L1</strong> (awareness, sem CTA comercial) para quem interagiu com A1/B1/C1</td><td>Gestor de Mídia</td><td>Meta Ads</td><td><span class="badge badge-gray">Todos</span></td></tr>
+            <tr><td>Qua</td><td>📞 CEO Guilherme: iniciar conexões LinkedIn com 5–10 contatos <strong>Tier 1</strong>. Nota personalizada por conta.</td><td>CEO Guilherme</td><td>LinkedIn Sales Nav.</td><td><span class="badge badge-orange">Decisor T1</span></td></tr>
+            <tr><td>Qui</td><td>🖊️ Escrever Newsletter B2: "Por que 80% das adequações falham na Implantação"</td><td>V4 + Guilherme (case)</td><td>Google Docs</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Sex</td><td>📢 Publicar <strong>Newsletter B2</strong> + link no CEO LinkedIn + Company Page</td><td>CEO Guilherme / V4</td><td>LinkedIn Newsletter</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Sex</td><td>⚙️ Disparar <strong>Sequência B</strong> para lista Tier 2 Decisores (15–20 contatos piloto)</td><td>Giullio / SDR</td><td>Apollo sequences</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-deliverable">✅ Entregável: 2 newsletters publicadas · Sequences Tier 2 disparando · CEO conectando Tier 1 · Retargeting ativo</div>
+    </div>
+
+    <!-- SEMANA 3 -->
+    <div class="week-card">
+      <div class="week-header">
+        <div class="week-num">Semana 3</div>
+        <div class="week-title">Landing Pages + MQA + Ativação Tier 1</div>
+        <div class="week-obj">LP2 live · Primeiros leads capturados · CEO ativa Tier 1</div>
+      </div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr><th>Dia</th><th>Ação</th><th>Responsável</th><th>Canal</th><th>Persona</th></tr></thead>
+          <tbody>
+            <tr><td>Seg</td><td>⚙️ Criar <strong>LP2</strong> Great Pages: "Relatório de Impacto Financeiro NR-12 — 2026" + formulário + thank you page</td><td>Giullio</td><td>Great Pages</td><td><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Seg</td><td>🖊️ Escrever Newsletter C2: "Custo da não-conformidade — passivos milionários e CPF em risco"</td><td>V4 + dados MPT</td><td>Google Docs</td><td><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Ter</td><td>📢 Publicar <strong>Newsletter C2</strong> + post CEO com copy C-Level</td><td>CEO Guilherme / V4</td><td>LinkedIn Newsletter</td><td><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Ter</td><td>📢 Ativar <strong>LinkedIn Thought Leader Ads</strong> nos posts de melhor desempenho da semana 1–2</td><td>Gestor de Mídia</td><td>LinkedIn Ads</td><td><span class="badge badge-gray">Todos</span></td></tr>
+            <tr><td>Qua</td><td>📞 CEO Guilherme: enviar <strong>mensagem de ativação</strong> para Tier 1 que aceitou conexão. Compartilha newsletter/isca relevante. Sem pitch — só valor.</td><td>CEO Guilherme</td><td>LinkedIn DM</td><td><span class="badge badge-orange">Decisor T1</span><span class="badge badge-purple">Blocker T1</span></td></tr>
+            <tr><td>Qua</td><td>📢 Atualizar Retargeting Meta para <strong>Nível L2</strong> (solução / mini-case) para quem interagiu na semana 2</td><td>Gestor de Mídia</td><td>Meta Ads</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Qui</td><td>📊 Apollo CRM: quantos contatos abriram emails, avançaram de estágio. Ajustar subject lines se abertura &lt;25%.</td><td>Giullio / SDR</td><td>Apollo CRM</td><td>—</td></tr>
+            <tr><td>Sex</td><td>📞 SDR: primeiro outreach com leads que baixaram <strong>LP1</strong> (Calculadora HRN) — Sequence MQA via Apollo</td><td>SDR</td><td>Apollo sequences</td><td><span class="badge badge-blue">Influenciador</span></td></tr>
+            <tr><td>Sex</td><td>🖊️ Briefing LP3 (E-book NR-12 360°): estrutura e copy para produção na semana 4</td><td>Giullio / V4</td><td>Google Docs</td><td><span class="badge badge-gray">Topo funil</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-deliverable">✅ Entregável: LP2 live · Primeiros leads capturados · CEO ativando Tier 1 · LinkedIn Ads rodando · SDR em campo</div>
+    </div>
+
+    <!-- SEMANA 4 -->
+    <div class="week-card">
+      <div class="week-header">
+        <div class="week-num">Semana 4</div>
+        <div class="week-title">Análise + Reengajamento + Primeiras Reuniões</div>
+        <div class="week-obj">Primeiras SQAs convertidas · LP3 live · Relatório do Mês 1</div>
+      </div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr><th>Dia</th><th>Ação</th><th>Responsável</th><th>Canal</th><th>Persona</th></tr></thead>
+          <tbody>
+            <tr><td>Seg</td><td>📊 Análise: abertura Apollo (meta 35%+) · downloads LP1/LP2 · conexões Tier 1 (meta 60%+) · crescimento newsletter</td><td>Giullio</td><td>Apollo + LinkedIn</td><td>—</td></tr>
+            <tr><td>Seg</td><td>⚙️ Criar <strong>LP3</strong> Great Pages: E-book NR-12 360° — topo de funil, acesso mais amplo</td><td>V4 / Giullio</td><td>Great Pages</td><td><span class="badge badge-gray">Topo funil</span></td></tr>
+            <tr><td>Ter</td><td>📢 Post de <strong>prova social</strong>: case de cliente (com autorização) — foco em produtividade preservada</td><td>CEO Guilherme / V4</td><td>LinkedIn CEO + Page</td><td><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Ter</td><td>📞 CEO: follow-up Tier 1 que não respondeu semana 3. Pergunta aberta: "Alguma mudança na planta que vale conversa?"</td><td>CEO Guilherme</td><td>LinkedIn DM</td><td><span class="badge badge-orange">Decisor T1</span><span class="badge badge-purple">Blocker T1</span></td></tr>
+            <tr><td>Qua</td><td>⚙️ Configurar <strong>Sequence Reengajamento</strong> Apollo: para contatos sem atividade 14+ dias → nova isca (LP3)</td><td>Giullio / SDR</td><td>Apollo.io</td><td><span class="badge badge-gray">Qualquer tier</span></td></tr>
+            <tr><td>Qua</td><td>📢 Retargeting <strong>Nível L3</strong> (diagnóstico gratuito): para quem visitou LP sem converter + abriu newsletter 3x sem baixar</td><td>Gestor de Mídia</td><td>Meta + LinkedIn Ads</td><td><span class="badge badge-blue">Influenciador</span><span class="badge badge-orange">Decisor</span></td></tr>
+            <tr><td>Qui</td><td>📞 Follow-up leads LP2 (Relatório Blocker) — Sequence C4, email CEO Guilherme assina</td><td>CEO / SDR</td><td>Apollo sequences</td><td><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Qui</td><td>📅 Realizar primeiras <strong>calls de diagnóstico</strong> com leads que responderam ao outreach</td><td>CEO / Executivo Vendas</td><td>Calendly / Meet</td><td><span class="badge badge-orange">Decisor</span><span class="badge badge-purple">Blocker</span></td></tr>
+            <tr><td>Sex</td><td>📊 Relatório Mês 1: compilar métricas, ajustar ICP, preparar briefing do Mês 2</td><td>Giullio / V4</td><td>Google Docs</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="week-deliverable">✅ Entregável: LP3 live · Primeiras reuniões realizadas · Análise completa do Mês 1 com dados reais</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: SEQUENCES -->
+<section id="sequences">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">04 · Apollo Sequences</div>
+      <div class="section-title">Scripts por Persona</div>
+      <div class="section-desc">Clique para expandir cada email. Variáveis dinâmicas marcadas com [COLCHETES] — preencher no Apollo antes de disparar.</div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:12px;">🔧 Sequência A — Influenciador (Tier 2/3) · 4 steps · 12 dias</div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-blue">Email 1</span><span class="seq-day">Dia 1</span><span class="seq-subject">Uma ferramenta que vai facilitar seu próximo levantamento de APR</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Uma ferramenta que vai facilitar seu próximo levantamento de APR</span>
+
+Olá, [NOME_PRIMEIRO].
+
+Vi que você atua em [CARGO] na [EMPRESA] — área de segurança é exatamente onde concentramos nosso trabalho.
+
+Sei que fazer inventário de máquinas e calcular HRN de forma confiável ainda é um processo que consome muito tempo (e margem de erro humano).
+
+Por isso compartilho com você as ferramentas que usamos em 3.800 adequações de NR-12 em indústrias do Sul e Sudeste:
+
+→ [Calculadora HRN + Checklist APR](link LP1) — download gratuito
+
+São as mesmas ferramentas que nossos consultores certificados usam no campo.
+
+Boa semana,
+[NOME_SDR] | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-blue">Email 2</span><span class="seq-day">Dia 4</span><span class="seq-subject">Como uma empresa metalúrgica usou esse checklist na prática</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Como uma empresa metalúrgica usou esse checklist na prática</span>
+
+[NOME_PRIMEIRO], seguindo nossa conversa anterior —
+
+Uma empresa metalúrgica em Blumenau usou exatamente esse checklist para mapear 180 máquinas em 3 semanas, com apenas 1 técnico de SST. O que antes levava meses.
+
+O resultado foi um inventário completo com HRN calculado por máquina, pronto para apresentar ao MPT.
+
+Se o [EMPRESA] passa por algo similar, valeria um bate-papo de 15 min onde mostramos como aplicar isso na prática — e quais máquinas priorizar.
+
+Você teria disponibilidade na próxima semana?
+
+[NOME_SDR] | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge" style="background:rgba(33,150,243,0.15);color:var(--blue);border:1px solid var(--blue-dim);">LinkedIn</span><span class="seq-day">Dia 6</span><span class="seq-subject">Solicitação de conexão personalizada</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Nota de conexão LinkedIn:
+
+<span class="seq-highlight">"Olá [NOME], vejo que você atua em segurança industrial na [EMPRESA] — compartilhamos bastante conteúdo sobre NR-12 e APR que pode ser útil para o seu trabalho. Aceita conectar?"</span></div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-blue">Email 3</span><span class="seq-day">Dia 9</span><span class="seq-subject">Pergunta rápida sobre a NR-12 na [EMPRESA]</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Pergunta rápida sobre a NR-12 na [EMPRESA]</span>
+
+[NOME_PRIMEIRO], para ser direto:
+
+A [EMPRESA] já tem um inventário de máquinas atualizado com APR e HRN calculado por risco?
+
+Pergunto porque empresas do setor [SETOR] na região têm recebido notificações do MPT nos últimos meses — e o inventário é o primeiro item verificado.
+
+Se quiser, posso enviar um diagnóstico gratuito de como sua empresa está em relação aos pontos críticos de NR-12.
+
+[NOME_SDR] | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-blue">Email 4</span><span class="seq-day">Dia 12</span><span class="seq-subject">Última tentativa — deixo o link aqui</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Última tentativa — deixo o link aqui</span>
+
+Olá [NOME_PRIMEIRO],
+
+Não quero incomodar mais, então deixo apenas o link para o diagnóstico gratuito caso faça sentido no futuro:
+
+→ [Agendar diagnóstico](link Calendly) — 15 min com um especialista em NR-12
+
+Ficamos à disposição sempre que precisar.
+
+[NOME_SDR] | Global S.A.</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:12px;">🏭 Sequência B — Decisor (Tier 2) · 5 steps · 14 dias · CEO assina E3/E4/E5</div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-orange">Email 1</span><span class="seq-day">Dia 1</span><span class="seq-subject">[EMPRESA] — adequação NR-12 sem derrubar a produtividade</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">[EMPRESA] — adequação NR-12 sem derrubar a produtividade</span>
+
+[NOME_PRIMEIRO],
+
+Sei que a maioria das empresas de segurança chega com a mesma história: "adequamos tudo" — e deixa a linha mais lenta do que antes.
+
+Nosso Método Global 360° foi desenvolvido especificamente para indústrias de [SETOR] que precisam adequar sem parar linha de produção.
+
+Em 3.800 projetos, nenhuma parada não programada. OEE preservado ou melhorado.
+
+Achei que poderia ser relevante compartilhar com você → [link newsletter B2]
+
+[NOME_SDR] | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-orange">Email 2</span><span class="seq-day">Dia 4</span><span class="seq-subject">Como uma [SETOR] adequou 150 máquinas sem parar a linha</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Como uma [SETOR] adequou 150 máquinas sem parar a linha</span>
+
+[NOME_PRIMEIRO],
+
+Uma [SETOR] em [CIDADE] tinha exatamente esse desafio: 150 máquinas para adequar e metas de produção intocáveis.
+
+Usando nosso método de implantação modular, adequamos por setor — enquanto uma área parava por 2 dias para adequação, o restante da planta operava normalmente.
+
+Resultado: conformidade total com NR-12 em 4 meses. Produção +8% pelo fim do projeto (sensores detectando falhas antes que virassem paradas).
+
+Vale uma conversa de 20 minutos sobre o cenário da [EMPRESA]?
+
+[NOME_SDR] | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-orange">Email 3</span><span class="seq-day">Dia 9</span><span class="seq-subject">Uma pergunta sobre o cenário da [EMPRESA]</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Uma pergunta sobre o cenário da [EMPRESA]</span>
+
+[NOME_PRIMEIRO], direto ao ponto:
+
+Vocês têm alguma pressão de auditoria, cliente OEM ou MPT relacionada a NR-12 no momento?
+
+Pergunto porque empresas de [SETOR] com o porte da [EMPRESA] geralmente estão em algum ponto do processo — seja mapeando, seja já com notificação.
+
+Se quiser, faço um diagnóstico gratuito de conformidade em 15 min para você ter clareza de onde estão os maiores riscos.
+
+Quando tem disponibilidade?
+
+CEO Guilherme | Global S.A.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:12px;">💼 Sequência C — Blocker CFO (Todos os Tiers) · 3 steps · 10 dias · CEO assina todos</div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-purple">Email 1</span><span class="seq-day">Dia 1</span><span class="seq-subject">O risco financeiro de NR-12 na [EMPRESA] — números que vale conhecer</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">O risco financeiro de NR-12 na [EMPRESA] — números que vale conhecer</span>
+
+[NOME_PRIMEIRO],
+
+Trabalho com indústrias de [SETOR] há 18 anos em adequação NR-12, e um padrão que vejo com frequência: o projeto de segurança entra na planilha como custo, mas o custo real está em não fazê-lo.
+
+Uma interdição do MPT pode custar de R$ 500K a R$ 2M entre multas, paralisação e passivo trabalhista — sem contar a responsabilidade penal dos sócios.
+
+Preparei um estudo de mercado com dados financeiros do impacto da NR-12 nas indústrias do Sul/Sudeste em 2026. Achei que poderia ser útil para o seu planejamento de CAPEX:
+
+→ [Baixar Relatório](link LP2)
+
+CEO Guilherme | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-purple">Email 2</span><span class="seq-day">Dia 5</span><span class="seq-subject">Re: O risco financeiro de NR-12 na [EMPRESA]</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Re: O risco financeiro de NR-12 na [EMPRESA]</span>
+
+[NOME_PRIMEIRO],
+
+Um ponto que costuma ser decisivo para quem aprova o CAPEX de segurança:
+
+Nosso Método 360° opera com escopo fechado e cronograma fixo. O contrato define exatamente o que será entregue, em qual prazo, pelo valor acordado. Sem estouro de orçamento.
+
+Isso é raro no setor. A maioria dos projetos de adequação termina maior e mais caro do que começou.
+
+Valeria 15 minutos para apresentar como estruturamos isso financeiramente?
+
+CEO Guilherme | Global S.A.</div>
+      </div>
+      <div class="seq-accordion" onclick="toggleSeq(this)">
+        <div class="seq-header"><span class="seq-step-badge badge-purple">Email 3</span><span class="seq-day">Dia 10</span><span class="seq-subject">Sobre o CAPEX de segurança na [EMPRESA]</span><span class="seq-toggle">▼</span></div>
+        <div class="seq-body">Assunto: <span class="seq-highlight">Sobre o CAPEX de segurança na [EMPRESA]</span>
+
+[NOME_PRIMEIRO], última mensagem da minha parte.
+
+Se houver planejamento de CAPEX para adequação de máquinas — seja agora ou nos próximos meses — estou à disposição para uma conversa direta sobre números, prazos e escopo.
+
+[link Calendly] — 20 minutos sem compromisso.
+
+CEO Guilherme | Global S.A.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: MÍDIA PAGA -->
+<section id="midia">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">05 · Briefing — Gestor de Mídia Paga</div>
+      <div class="section-title">Estratégia de Anúncios</div>
+    </div>
+
+    <div class="quote">"Alguém que viu você 10 vezes vai responder ao CEO no LinkedIn com muito mais probabilidade do que alguém que nunca ouviu falar da Global." — O objetivo da mídia <strong>não é volume de leads</strong>, é criar familiaridade antes do outreach.</div>
+
+    <div style="font-size:14px;font-weight:700;margin-bottom:16px;">Distribuição de Budget</div>
+    <div class="budget-bars" style="margin-bottom:32px;">
+      <div class="budget-bar-row">
+        <div class="budget-bar-label">LinkedIn Ads (TLA + Matched)</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill bar-linkedin" style="width:50%;"></div></div>
+        <div class="budget-bar-pct" style="color:#0077B5;">50%</div>
+      </div>
+      <div class="budget-bar-row">
+        <div class="budget-bar-label">Meta Ads (Retargeting L1/L2/L3)</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill bar-meta" style="width:35%;"></div></div>
+        <div class="budget-bar-pct" style="color:#1877F2;">35%</div>
+      </div>
+      <div class="budget-bar-row">
+        <div class="budget-bar-label">Google Display</div>
+        <div class="budget-bar-track"><div class="budget-bar-fill bar-google" style="width:15%;"></div></div>
+        <div class="budget-bar-pct" style="color:#4285F4;">15%</div>
+      </div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;margin-bottom:16px;">Criativos em 3 Camadas (Retargeting)</div>
+    <div class="retargeting-levels" style="margin-bottom:32px;">
+      <div class="rt-level rt-l1">
+        <div class="rt-badge">L1 · Awareness</div>
+        <div class="rt-name">Conteúdo Educativo</div>
+        <div class="rt-desc">Sem CTA comercial. "O que o MPT verifica em uma vistoria NR-12." Cria familiaridade com a marca.</div>
+        <div class="rt-cta"><strong>CTA:</strong> "Saiba mais" → Newsletter</div>
+        <div class="rt-cta" style="margin-top:4px;"><strong>Para quem:</strong> Toda a lista Apollo (cold)</div>
+      </div>
+      <div class="rt-level rt-l2">
+        <div class="rt-badge">L2 · Solução</div>
+        <div class="rt-name">Mini-Case / Resultado</div>
+        <div class="rt-desc">"Como preservamos a produtividade em 3.800 adequações." Quem curtiu ou comentou L1.</div>
+        <div class="rt-cta"><strong>CTA:</strong> "Veja como funciona" → Vitrine/Curso</div>
+        <div class="rt-cta" style="margin-top:4px;"><strong>Para quem:</strong> Engajou com L1 ou visitou site</div>
+      </div>
+      <div class="rt-level rt-l3">
+        <div class="rt-badge">L3 · Oferta</div>
+        <div class="rt-name">Diagnóstico Gratuito</div>
+        <div class="rt-desc">"15 min que podem evitar uma interdição do MPT." Fundo de funil, CTA direto.</div>
+        <div class="rt-cta"><strong>CTA:</strong> "Agendar diagnóstico" → Calendly</div>
+        <div class="rt-cta" style="margin-top:4px;"><strong>Para quem:</strong> Visitou LP sem converter</div>
+      </div>
+    </div>
+
+    <div style="font-size:14px;font-weight:700;margin-bottom:16px;">Audiences Configuradas</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Audience</th><th>Configuração</th><th>Plataforma</th><th>Objetivo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Matched Audience — Lista Apollo</strong></td><td>Upload de emails/empresas do Apollo (Tier 1+2)</td><td><span class="tag">LinkedIn</span><span class="tag">Meta</span></td><td>Aparecer diretamente para os contatos da lista</td></tr>
+          <tr><td>Retargeting LP1</td><td>Pixel Great Pages — visitou LP Calculadora HRN</td><td><span class="tag">Meta</span><span class="tag">LinkedIn</span></td><td>Interessado mas não converteu</td></tr>
+          <tr><td>Retargeting LP2</td><td>Pixel Great Pages — visitou LP Relatório Financeiro</td><td><span class="tag">Meta</span><span class="tag">LinkedIn</span></td><td>Blocker em consideração</td></tr>
+          <tr><td>Retargeting Curso</td><td>Pixel plataforma de curso</td><td><span class="tag">Meta</span><span class="tag">LinkedIn</span></td><td>Decisor em avaliação de parceiro</td></tr>
+          <tr><td>Lookalike Lista Apollo</td><td>Similar às contas Tier 1/2</td><td><span class="tag">Meta</span></td><td>Expansão de cobertura</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: MAKE -->
+<section id="make">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">06 · Automações Make</div>
+      <div class="section-title">5 Fluxos do Mês 1</div>
+    </div>
+
+    <div class="make-flow">
+      <div class="make-priority-dot dot-red"></div>
+      <div class="make-flow-content">
+        <div class="make-flow-name">1 · Lead Capture LP1</div>
+        <div class="make-flow-trigger">Trigger: <strong>Formulário Great Pages (Calculadora HRN) preenchido</strong></div>
+        <div class="make-actions">
+          <div class="make-action">Criar contato Apollo CRM com tag "Lead-LP1" + "Influenciador" + estágio MQA</div>
+          <div class="make-action">Verificar se empresa está na lista Tier 1/2/3</div>
+          <div class="make-action">Se Tier 2/3: iniciar Sequence A automaticamente</div>
+          <div class="make-action">Se Tier 1: notificar CEO Guilherme via WhatsApp com nome + empresa + cargo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="make-flow">
+      <div class="make-priority-dot dot-red"></div>
+      <div class="make-flow-content">
+        <div class="make-flow-name">2 · Lead Capture LP2</div>
+        <div class="make-flow-trigger">Trigger: <strong>Formulário Great Pages (Relatório Financeiro) preenchido</strong></div>
+        <div class="make-actions">
+          <div class="make-action">Criar contato Apollo CRM com tag "Lead-LP2" + "Blocker" + estágio MQA</div>
+          <div class="make-action">Iniciar Sequence C (CEO Guilherme assina todos os emails)</div>
+          <div class="make-action">Notificar CEO Guilherme em todos os tiers — Blocker é sempre abordagem sênior</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="make-flow">
+      <div class="make-priority-dot dot-red"></div>
+      <div class="make-flow-content">
+        <div class="make-flow-name">3 · Course Interest Alert</div>
+        <div class="make-flow-trigger">Trigger: <strong>Clique no link do curso na Thank You Page da LP1 ou LP2</strong></div>
+        <div class="make-actions">
+          <div class="make-action">Adicionar tag "Interesse-Curso" no Apollo CRM</div>
+          <div class="make-action">Notificar CEO Guilherme via WhatsApp imediatamente: nome + empresa + "clicou no curso"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="make-flow">
+      <div class="make-priority-dot dot-yellow"></div>
+      <div class="make-flow-content">
+        <div class="make-flow-name">4 · Reengagement Trigger</div>
+        <div class="make-flow-trigger">Trigger: <strong>Contato no Apollo CRM sem atividade por 30 dias</strong></div>
+        <div class="make-actions">
+          <div class="make-action">Iniciar Sequence de Reengajamento (LP3 e-book como nova isca)</div>
+          <div class="make-action">Adicionar tag "Reengajamento" no contato</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="make-flow">
+      <div class="make-priority-dot dot-red"></div>
+      <div class="make-flow-content">
+        <div class="make-flow-name">5 · Deal Created Alert</div>
+        <div class="make-flow-trigger">Trigger: <strong>Deal criado no Apollo CRM pipeline</strong></div>
+        <div class="make-actions">
+          <div class="make-action">Notificação WhatsApp + Slack para CEO Guilherme + time comercial Global</div>
+          <div class="make-action">Mensagem contém: nome, empresa, valor estimado, responsável</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: MÉTRICAS -->
+<section id="metricas">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">07 · Métricas</div>
+      <div class="section-title">O Que Medir e o Que Significa</div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-stage">Reconhecimento</div>
+        <div class="metric-row">
+          <div><div class="metric-name">Impressões LinkedIn CEO + empresa</div><div class="metric-source">LinkedIn Analytics</div></div>
+          <div class="metric-target" style="color:var(--text3);">Baseline</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-name">Alcance LinkedIn Ads (Matched Audience)</div><div class="metric-source">Campaign Manager</div></div>
+          <div class="metric-target">80%+</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-stage">Engajamento Inicial</div>
+        <div class="metric-row">
+          <div><div class="metric-name">Aceite de conexão CEO → Tier 1</div><div class="metric-source">LinkedIn</div></div>
+          <div class="metric-target" style="color:var(--green);">60%+</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-name">Taxa de abertura Apollo sequences T2</div><div class="metric-source">Apollo CRM</div></div>
+          <div class="metric-target" style="color:var(--green);">35%+</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-stage">Engajamento Significativo</div>
+        <div class="metric-row">
+          <div><div class="metric-name">Novos subscribers LinkedIn Newsletter</div><div class="metric-source">LinkedIn Analytics</div></div>
+          <div class="metric-target">+50/mês</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-name">Downloads LP1 + LP2</div><div class="metric-source">Great Pages + Apollo</div></div>
+          <div class="metric-target">20+ total</div>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-stage">MQA → SQA → Oportunidade</div>
+        <div class="metric-row">
+          <div><div class="metric-name">MQAs geradas (baixou isca ou sinalizou)</div><div class="metric-source">Apollo CRM</div></div>
+          <div class="metric-target" style="color:var(--orange);">20+</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-name">Reuniões agendadas (SQA)</div><div class="metric-source">Calendly</div></div>
+          <div class="metric-target" style="color:var(--red);">5–8</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-name">Deals abertos Apollo CRM</div><div class="metric-source">Apollo pipeline</div></div>
+          <div class="metric-target" style="color:var(--red);">2–4</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mqa-box">
+      <div class="mqa-title">✓ Definição de MQA — Marketing Qualified Account</div>
+      <div class="mqa-item"><span class="mqa-check">✅</span><span>Baixou material isca (LP1 — Calculadora HRN, ou LP2 — Relatório Financeiro)</span></div>
+      <div class="mqa-item"><span class="mqa-check">✅</span><span>Abriu 3 ou mais emails da Apollo sequence</span></div>
+      <div class="mqa-item"><span class="mqa-check">✅</span><span>Visitou a página do curso (capturado pelo pixel)</span></div>
+      <div class="mqa-item"><span class="mqa-check">✅</span><span>Respondeu a qualquer email da sequence (mesmo que negativo)</span></div>
+      <div class="mqa-item"><span class="mqa-check">✅</span><span>Aceitou conexão do CEO E interagiu com 1 ou mais post</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: CHECKLIST -->
+<section id="checklist">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">08 · Checklist de Entregáveis</div>
+      <div class="section-title">Materiais a Produzir — Mês 1</div>
+      <div class="section-desc">Marque conforme for concluindo. O estado é salvo localmente no seu navegador.</div>
+    </div>
+
+    <div class="checklist-grid">
+      <div class="checklist-section">
+        <div class="checklist-title">🖊️ Conteúdo <span id="count-content">0/7</span></div>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Post A1 — "3 erros que o MPT mais multa" (Influenciador)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Post B1 — "Adequação não mata eficiência" (Decisor) — vídeo ou carrossel</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Post C1 — "Risco invisível no balanço" (Blocker) — dados financeiros</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Newsletter A2 — "Passo a passo HRN com o Método 360°"</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Newsletter B2 — "Por que 80% das adequações falham na Implantação"</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Newsletter C2 — "Custo da não-conformidade e passivo jurídico"</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Post de prova social — case de cliente real (com autorização)</span></label>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-title">⚙️ Infraestrutura <span id="count-infra">0/6</span></div>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">LP1 — Calculadora HRN + Checklist APR (Great Pages, gated)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">LP2 — Relatório Financeiro NR-12 (Great Pages, gated)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">LP3 — E-book NR-12 360° (Great Pages, gated)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Thank You Pages LP1 + LP2 + LP3 com CTA para curso</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">LinkedIn Insight Tag instalado nas 3 LPs + página do curso</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Meta Pixel instalado nas 3 LPs + página do curso</span></label>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-title">🎯 Apollo.io <span id="count-apollo">0/7</span></div>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Lista Tier 1 (5–10 contas) — aprovada pelo CEO Guilherme</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Lista Tier 2 (15–20 contas) — segmentada por setor</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Lista Tier 3 (50–100 contas) — fit básico</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Sequência A configurada (Influenciador — 4 steps)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Sequência B configurada (Decisor — 5 steps)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Sequência C configurada (Blocker — 3 steps, CEO assina)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">SPF/DKIM/DMARC configurados no domínio globalsa.com.br</span></label>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-title">🔗 Make + Mídia <span id="count-make">0/10</span></div>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Fluxo Make 1 — Lead Capture LP1</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Fluxo Make 2 — Lead Capture LP2</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Fluxo Make 3 — Course Interest Alert</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Fluxo Make 4 — Reengagement Trigger</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Fluxo Make 5 — Deal Created Alert</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Matched Audience configurada no LinkedIn (lista Apollo)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Matched Audience configurada no Meta (lista Apollo)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Retargeting L1/L2/L3 configurado nas plataformas</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">Criativos: 1 vídeo (B1), 1 carrossel (A1), 2 estáticas (C1)</span></label>
+        <label class="check-item"><input type="checkbox" onchange="updateCheck(this)"><span class="check-label">LinkedIn Thought Leader Ads nos melhores posts orgânicos</span></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>Squad Romans Empire · Builders Hub Antigravity</strong><br>
+    Global S.A. — Engenharia de Conteúdo ABM · Mês 1 · Maio 2026
+  </div>
+</footer>
+
+<script>
+  // TABS
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.className = 'tab-btn');
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active-' + id);
+  }
+
+  // ACCORDION
+  function toggleSeq(el) {
+    el.classList.toggle('open');
+  }
+
+  // CHECKLIST
+  function updateCheck(cb) {
+    const item = cb.closest('.check-item');
+    item.classList.toggle('done', cb.checked);
+    updateCounts();
+    saveState();
+  }
+
+  function updateCounts() {
+    const sections = [
+      { id: 'count-content', section: 0 },
+      { id: 'count-infra', section: 1 },
+      { id: 'count-apollo', section: 2 },
+      { id: 'count-make', section: 3 },
+    ];
+    document.querySelectorAll('.checklist-section').forEach((sec, i) => {
+      const all = sec.querySelectorAll('input[type="checkbox"]');
+      const checked = sec.querySelectorAll('input[type="checkbox"]:checked');
+      const span = sec.querySelector('.checklist-title span');
+      if (span) span.textContent = checked.length + '/' + all.length;
+    });
+  }
+
+  function saveState() {
+    const checkboxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+    const state = Array.from(checkboxes).map(cb => cb.checked);
+    localStorage.setItem('global-sa-checklist', JSON.stringify(state));
+  }
+
+  function loadState() {
+    const saved = localStorage.getItem('global-sa-checklist');
+    if (!saved) return;
+    const state = JSON.parse(saved);
+    const checkboxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+    checkboxes.forEach((cb, i) => {
+      if (state[i]) {
+        cb.checked = true;
+        cb.closest('.check-item').classList.add('done');
+      }
+    });
+    updateCounts();
+  }
+
+  // NAV smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // INIT
+  loadState();
+  updateCounts();
+</script>
+</body>
+</html>
