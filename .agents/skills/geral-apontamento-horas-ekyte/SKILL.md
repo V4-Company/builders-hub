@@ -1,7 +1,7 @@
----
-name: ekyte-apontamento-horas
+﻿---
+name: geral-apontamento-horas-ekyte
 description: Aponta horas/timesheet em tarefas do Ekyte via API interna, com validacao de task, periodo, duplicidade e verificacao pos-criacao. Use sempre que o Fabio pedir "aponte horas", "aponta 1h", "apontamento", "timesheet", "das 13 as 14", "registra tempo" ou citar um ID de tarefa Ekyte junto com intervalo/duracao.
-area: ekyte
+area: geral
 author: fabio
 version: 1.0.0
 ---
@@ -58,13 +58,13 @@ Tambem aceita variaveis de ambiente `EKYTE_TOKEN`, `EKYTE_COMPANY_ID` e `EKYTE_E
 3. Rode o script em `--dry-run` se for a primeira vez daquele padrao de payload ou se algo parecer ambiguo:
 
 ```powershell
-python ".codex/skills/ekyte-apontamento-horas/scripts/apontar_horas_ekyte.py" --task-id 9509098 --date 2026-06-04 --start 13:00 --end 14:00 --dry-run
+python ".claude/skills/geral-apontamento-horas-ekyte/scripts/apontar_horas_ekyte.py" --task-id 9509098 --date 2026-06-04 --start 13:00 --end 14:00 --dry-run
 ```
 
 4. Para criar de fato:
 
 ```powershell
-python ".codex/skills/ekyte-apontamento-horas/scripts/apontar_horas_ekyte.py" --task-id 9509098 --date 2026-06-04 --start 13:00 --end 14:00
+python ".claude/skills/geral-apontamento-horas-ekyte/scripts/apontar_horas_ekyte.py" --task-id 9509098 --date 2026-06-04 --start 13:00 --end 14:00
 ```
 
 5. Leia o JSON retornado. So finalize como sucesso se `created_id` vier preenchido e `verified` for `true`.
