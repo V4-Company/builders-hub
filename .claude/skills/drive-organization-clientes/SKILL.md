@@ -37,6 +37,8 @@ Use esta skill para auditar ou criar a estrutura padrao de pastas em Drives de c
 
 ## Estrutura padrao
 
+Para ver o arquetipo completo com objetivo de cada area, regras de uso e criterios de organizacao, leia `references/arquetipo-estrutura.md`.
+
 ```text
 01. Onboarding
 02. Estrategia
