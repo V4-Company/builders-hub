@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media System — V4</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #2d2d2d;
+            --accent: #ff6b35;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --border: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --bg: #0f0f0f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        /* HEADER */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        header h1 span { color: var(--accent); }
+
+        .tab-navigation {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover { color: var(--accent); }
+        .tab-btn.active { color: var(--accent); }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        /* MAIN */
+        main { padding: 40px 0; min-height: calc(100vh - 200px); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* GRID E CARDS */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+
+        .card-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-segment { background: rgba(255, 107, 53, 0.2); color: var(--accent); }
+        .badge-pending { background: rgba(243, 156, 18, 0.2); color: var(--warning); }
+        .badge-done { background: rgba(46, 204, 113, 0.2); color: var(--success); }
+
+        /* FORMS */
+        .form-section {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        textarea { resize: vertical; min-height: 100px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #ff5520; transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover { background: var(--accent); color: white; }
+        .btn-small { padding: 8px 16px; font-size: 12px; }
+
+        /* STATS */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value { font-size: 32px; font-weight: 700; color: var(--accent); margin-bottom: 5px; }
+        .stat-label { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* OUTPUT BOX */
+        .output-box {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .output-box.highlight {
+            border-color: var(--accent);
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover { background: #ff5520; }
+
+        /* FRAMEWORK SELECTOR */
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .framework-option {
+            background: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .framework-option:hover { border-color: var(--accent); }
+        .framework-option.selected { border-color: var(--accent); background: rgba(255, 107, 53, 0.1); }
+        .framework-option input[type="radio"] { display: none; }
+
+        /* RESULT ITEM */
+        .result-item {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .result-item strong { color: var(--accent); display: block; margin-bottom: 8px; }
+        .result-item p { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+        .empty-state h3 { font-size: 18px; margin-bottom: 10px; color: var(--text-primary); }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 6px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            font-weight: 600;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* SECTION TITLES */
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        /* PIPELINE */
+        .pipeline-section { margin-bottom: 30px; }
+
+        .deadline-banner {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .deadline-info { display: flex; flex-direction: column; gap: 4px; }
+        .deadline-title { font-size: 18px; font-weight: 700; }
+        .deadline-sub { font-size: 13px; color: var(--text-secondary); }
+
+        .deadline-countdown {
+            font-size: 24px;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .deadline-ok { background: rgba(46, 204, 113, 0.15); color: var(--success); }
+        .deadline-warn { background: rgba(243, 156, 18, 0.15); color: var(--warning); }
+        .deadline-late { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+
+        .pipeline-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .pipeline-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 15px; }
+        .pipeline-items { display: flex; flex-direction: column; gap: 10px; }
+
+        .pipeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--primary);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .pipeline-item:hover { border-color: var(--accent); }
+        .pipeline-item-label { font-size: 13px; font-weight: 600; }
+
+        .pipeline-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .pipeline-status.done { background: rgba(46, 204, 113, 0.2); color: var(--success); }
+        .pipeline-status.pending { background: rgba(243, 156, 18, 0.2); color: var(--warning); }
+        .pipeline-status.late { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
+        .pipeline-progress {
+            margin-top: 12px;
+            background: var(--primary);
+            border-radius: 4px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .pipeline-progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .tab-navigation { gap: 10px; overflow-x: auto; }
+            header h1 { font-size: 18px; }
+            .deadline-banner { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📊 <span>Social Media System</span> — V4</h1>
+            <nav class="tab-navigation">
+                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-btn" data-tab="briefing">Briefing</button>
+                <button class="tab-btn" data-tab="copy-generator">Copy Generator</button>
+                <button class="tab-btn" data-tab="resultados">Resultados</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="dashboard" class="tab-content active">
+            <h2 class="section-title">📋 Dashboard de Clientes</h2>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalClients">0</div>
+                    <div class="stat-label">Clientes Cadastrados</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalBriefs">0</div>
+                    <div class="stat-label">Briefings Gerados</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalResults">0</div>
+                    <div class="stat-label">Resultados Registrados</div>
+                </div>
+            </div>
+
+            <div class="form-section pipeline-section">
+                <h2>🚀 Pipeline de Produção — Deadline Mensal</h2>
+                <div class="deadline-banner" id="deadlineBanner"></div>
+                <div id="pipelineGrid" class="grid"></div>
+                <div id="pipelineEmpty"></div>
+            </div>
+
+            <div class="form-section">
+                <h2>✅ Adicionar Novo Cliente</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome do Cliente</label>
+                        <input type="text" id="clientName" placeholder="ex: ADAPT Treinamentos">
+                    </div>
+                    <div class="form-group">
+                        <label>Segmento</label>
+                        <select id="clientSegment">
+                            <option value="">Selecione um segmento</option>
+                            <option value="Fitness/Saúde">Fitness/Saúde</option>
+                            <option value="Distribuição">Distribuição</option>
+                            <option value="Alimentos/Bebidas">Alimentos/Bebidas</option>
+                            <option value="E-commerce">E-commerce</option>
+                            <option value="Serviços">Serviços</option>
+                            <option value="Educação">Educação</option>
+                            <option value="Varejo">Varejo</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Plataformas</label>
+                        <input type="text" id="clientPlatforms" placeholder="ex: Instagram, TikTok, LinkedIn">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Objetivo Principal</label>
+                    <textarea id="clientObjective" placeholder="Descreva o que você quer alcançar com este cliente..."></textarea>
+                </div>
+                <button class="btn-primary" onclick="addClient()">Adicionar Cliente</button>
+            </div>
+
+            <h2 style="font-size: 22px; margin-bottom: 20px;">🗂️ Seus Clientes</h2>
+            <div id="clientsList" class="grid"></div>
+        </div>
+
+        <!-- TAB 2: BRIEFING -->
+        <div id="briefing" class="tab-content">
+            <h2 class="section-title">📋 Briefing Inteligente</h2>
+
+            <div class="form-section">
+                <h2>🎯 Preencha o Briefing</h2>
+
+                <div class="form-group">
+                    <label>Qual Cliente?</label>
+                    <select id="briefingClient">
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo de Conteúdo</label>
+                        <select id="contentType">
+                            <option value="Post Feed">Post Feed</option>
+                            <option value="Stories">Stories</option>
+                            <option value="Reels/TikTok">Reels/TikTok</option>
+                            <option value="Carrossel">Carrossel</option>
+                            <option value="Link Post">Link Post</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Objetivo deste Conteúdo</label>
+                        <select id="contentObjective">
+                            <option value="Awareness">Awareness (Conhecimento)</option>
+                            <option value="Engagement">Engagement (Engajamento)</option>
+                            <option value="Conversão">Conversão (Venda/Ação)</option>
+                            <option value="Retenção">Retenção (Fidelização)</option>
+                            <option value="Educação">Educação (Valor)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>📖 Contexto Estratégico</label>
+                    <textarea id="briefingContext" placeholder="Por que estamos criando este conteúdo? Qual é o pano de fundo? Que problema resolvemos? O que diferencia este cliente?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>💬 Mensagem Principal</label>
+                    <textarea id="briefingMessage" placeholder="Qual é a ideia central? O que queremos que o público sinta ou faça?"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🎨 Tom de Voz</label>
+                        <select id="toneOfVoice">
+                            <option value="Profissional">Profissional</option>
+                            <option value="Amigável">Amigável</option>
+                            <option value="Criativo">Criativo</option>
+                            <option value="Urgente">Urgente</option>
+                            <option value="Educativo">Educativo</option>
+                            <option value="Inspiracional">Inspiracional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>👥 Público-Alvo</label>
+                        <input type="text" id="targetAudience" placeholder="ex: Mulheres 25-40, PMEs, Fitness enthusiasts">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>⚠️ Pontos de Atenção</label>
+                    <textarea id="briefingWarnings" placeholder="O que NÃO fazer? Que palavras evitar? Que tom NÃO funciona com este cliente?"></textarea>
+                </div>
+
+                <button class="btn-primary" onclick="generateBriefing()">Gerar Briefing Estruturado</button>
+            </div>
+
+            <div id="briefingOutput"></div>
+        </div>
+
+        <!-- TAB 3: COPY GENERATOR -->
+        <div id="copy-generator" class="tab-content">
+            <h2 class="section-title">✍️ Gerador de Copy</h2>
+
+            <div class="form-section">
+                <h2>🎨 Escolha o Framework</h2>
+                <div class="framework-grid">
+                    <label class="framework-option selected">
+                        <input type="radio" name="framework" value="AIDA" checked>
+                        <div style="font-weight: 700; margin-bottom: 8px;">AIDA</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">Atenção → Interesse → Desejo → Ação</div>
+                    </label>
+                    <label class="framework-option">
+                        <input type="radio" name="framework" value="PAS">
+                        <div style="font-weight: 700; margin-bottom: 8px;">PAS</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">Problema → Agitação → Solução</div>
+                    </label>
+                    <label class="framework-option">
+                        <input type="radio" name="framework" value="Storytelling">
+                        <div style="font-weight: 700; margin-bottom: 8px;">Story</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">Personagem → Conflito → Resolução</div>
+                    </label>
+                    <label class="framework-option">
+                        <input type="radio" name="framework" value="Prova Social">
+                        <div style="font-weight: 700; margin-bottom: 8px;">Prova Social</div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">Resultado → Evidência → CTA</div>
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Qual Cliente?</label>
+                        <select id="copyClient">
+                            <option value="">Selecione um cliente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Formato</label>
+                        <select id="copyFormat">
+                            <option value="Curta (até 30 palavras)">Curta (até 30 palavras)</option>
+                            <option value="Média (até 150 palavras)">Média (até 150 palavras)</option>
+                            <option value="Longa (até 300 palavras)">Longa (até 300 palavras)</option>
+                            <option value="CTA puro">CTA puro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ideia / Produto / Serviço</label>
+                    <textarea id="copyIdea" placeholder="O que você quer vender ou promover? Qual é a proposta de valor?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Detalhes Importantes</label>
+                    <textarea id="copyDetails" placeholder="Benefícios-chave, diferenciais, números, características especiais..."></textarea>
+                </div>
+
+                <button class="btn-primary" onclick="generateCopy()">Gerar Copy</button>
+            </div>
+
+            <div id="copyOutput"></div>
+        </div>
+
+        <!-- TAB 4: RESULTADOS -->
+        <div id="resultados" class="tab-content">
+            <h2 class="section-title">📈 Rastreador de Resultados</h2>
+
+            <div class="form-section">
+                <h2>🔖 Registrar Resultado</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <select id="resultClient">
+                            <option value="">Selecione um cliente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data</label>
+                        <input type="date" id="resultDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Conteúdo / Campanha</label>
+                    <input type="text" id="resultContent" placeholder="ex: Reels — Série Dicas de Treino">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Métrica Principal</label>
+                        <input type="text" id="resultMetric" placeholder="ex: Engajamento, Cliques, Conversões, Reach">
+                    </div>
+                    <div class="form-group">
+                        <label>Resultado</label>
+                        <input type="text" id="resultNumber" placeholder="ex: 1.245 ou 15%">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>O que Funcionou?</label>
+                    <textarea id="resultSuccess" placeholder="Por que funcionou? O que podemos repetir? Que padrão vemos?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Próximos Passos</label>
+                    <textarea id="resultNext" placeholder="Como replicar? O que melhorar? Que teste fazer?"></textarea>
+                </div>
+
+                <button class="btn-primary" onclick="addResult()">Registrar Resultado</button>
+            </div>
+
+            <div id="resultsList"></div>
+        </div>
+
+    </main>
+
+    <script>
+        // DADOS (persistência via localStorage)
+        let clients  = JSON.parse(localStorage.getItem('v4sm_clients'))  || [];
+        let briefs   = JSON.parse(localStorage.getItem('v4sm_briefs'))   || [];
+        let results  = JSON.parse(localStorage.getItem('v4sm_results'))  || [];
+        let pipeline = JSON.parse(localStorage.getItem('v4sm_pipeline')) || {};
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            setupTabs();
+            setupFrameworkSelect();
+            updateDashboard();
+            updatePipeline();
+            populateClientSelects();
+            displayResults();
+            document.getElementById('resultDate').valueAsDate = new Date();
+        });
+
+        // TABS
+        function setupTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        function setupFrameworkSelect() {
+            document.querySelectorAll('.framework-option input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll('.framework-option').forEach(opt => opt.classList.remove('selected'));
+                    this.closest('.framework-option').classList.add('selected');
+                });
+            });
+        }
+
+        // ─── CLIENTES ───────────────────────────────────────────────────────────────
+
+        function addClient() {
+            const name      = document.getElementById('clientName').value.trim();
+            const segment   = document.getElementById('clientSegment').value;
+            const platforms = document.getElementById('clientPlatforms').value.trim();
+            const objective = document.getElementById('clientObjective').value.trim();
+
+            if (!name || !segment || !platforms || !objective) {
+                showToast('Preencha todos os campos!', 'error');
+                return;
+            }
+
+            clients.push({ id: Date.now(), name, segment, platforms, objective, created: new Date().toLocaleDateString('pt-BR') });
+            localStorage.setItem('v4sm_clients', JSON.stringify(clients));
+
+            ['clientName', 'clientPlatforms', 'clientObjective'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('clientSegment').value = '';
+
+            updateDashboard();
+            updatePipeline();
+            populateClientSelects();
+            showToast('Cliente adicionado!');
+        }
+
+        function deleteClient(id) {
+            if (!confirm('Remover este cliente?')) return;
+            clients = clients.filter(c => c.id !== id);
+            localStorage.setItem('v4sm_clients', JSON.stringify(clients));
+            updateDashboard();
+            updatePipeline();
+            populateClientSelects();
+            showToast('Cliente removido');
+        }
+
+        function updateDashboard() {
+            document.getElementById('totalClients').textContent = clients.length;
+            document.getElementById('totalBriefs').textContent  = briefs.length;
+            document.getElementById('totalResults').textContent = results.length;
+
+            const list = document.getElementById('clientsList');
+            list.innerHTML = '';
+
+            if (clients.length === 0) {
+                list.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>Nenhum cliente cadastrado</h3><p>Adicione seu primeiro cliente acima</p></div>';
+                return;
+            }
+
+            clients.forEach(c => {
+                const nBriefs  = briefs.filter(b => b.clientId === c.id).length;
+                const nResults = results.filter(r => r.clientId === c.id).length;
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${c.name}</h3>
+                    <div class="card-meta">
+                        <span class="badge badge-segment">${c.segment}</span>
+                        <span>${c.created}</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">📱 ${c.platforms}</p>
+                    <p style="font-size:12px;margin-bottom:8px;">📋 ${nBriefs} Briefings &nbsp;|&nbsp; 📈 ${nResults} Resultados</p>
+                    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:15px;line-height:1.4;">${c.objective}</p>
+                    <button class="btn-secondary btn-small" onclick="deleteClient(${c.id})">Remover</button>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function populateClientSelects() {
+            ['briefingClient', 'copyClient', 'resultClient'].forEach(id => {
+                const sel = document.getElementById(id);
+                const current = sel.value;
+                sel.innerHTML = '<option value="">Selecione um cliente</option>';
+                clients.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    sel.appendChild(opt);
+                });
+                sel.value = current;
+            });
+        }
+
+        // ─── BRIEFING ───────────────────────────────────────────────────────────────
+
+        function generateBriefing() {
+            const clientId = document.getElementById('briefingClient').value;
+            const context  = document.getElementById('briefingContext').value.trim();
+            const message  = document.getElementById('briefingMessage').value.trim();
+
+            if (!clientId || !context || !message) {
+                showToast('Preencha Cliente, Contexto e Mensagem!', 'error');
+                return;
+            }
+
+            const client = clients.find(c => c.id == clientId);
+            const brief  = {
+                id:          Date.now(),
+                clientId:    parseInt(clientId),
+                clientName:  client.name,
+                contentType: document.getElementById('contentType').value,
+                objective:   document.getElementById('contentObjective').value,
+                context,
+                message,
+                tone:        document.getElementById('toneOfVoice').value,
+                audience:    document.getElementById('targetAudience').value.trim(),
+                warnings:    document.getElementById('briefingWarnings').value.trim(),
+                created:     new Date().toLocaleDateString('pt-BR')
+            };
+
+            briefs.push(brief);
+            localStorage.setItem('v4sm_briefs', JSON.stringify(briefs));
+
+            const text = `📋 BRIEFING ESTRUTURADO — ${brief.clientName}
+────────────────────────────────────────────
+
+🎯 OBJETIVO DO CONTEÚDO
+${brief.objective}
+
+📖 CONTEXTO ESTRATÉGICO
+${brief.context}
+
+💬 MENSAGEM PRINCIPAL
+"${brief.message}"
+
+👥 PÚBLICO-ALVO
+${brief.audience || 'Não especificado'}
+
+🎨 TOM DE VOZ
+${brief.tone}
+
+📱 TIPO DE CONTEÚDO
+${brief.contentType}
+
+⚠️ PONTOS DE ATENÇÃO
+${brief.warnings || 'Nenhum aviso específico'}
+
+────────────────────────────────────────────
+✅ Briefing gerado em ${brief.created}`;
+
+            document.getElementById('briefingOutput').innerHTML = `
+                <div class="form-section" style="margin-top:30px;">
+                    <div class="output-box highlight" id="briefingText">${text}</div>
+                    <button class="copy-btn" onclick="copyEl('briefingText')">📋 Copiar Briefing</button>
+                </div>
+            `;
+
+            clearForm(['briefingClient', 'briefingContext', 'briefingMessage', 'targetAudience', 'briefingWarnings']);
+            updateDashboard();
+            showToast('Briefing gerado!');
+        }
+
+        // ─── COPY GENERATOR ─────────────────────────────────────────────────────────
+
+        function generateCopy() {
+            const clientId = document.getElementById('copyClient').value;
+            const idea     = document.getElementById('copyIdea').value.trim();
+            const details  = document.getElementById('copyDetails').value.trim();
+            const format   = document.getElementById('copyFormat').value;
+
+            if (!clientId || !idea) {
+                showToast('Selecione um cliente e descreva a ideia!', 'error');
+                return;
+            }
+
+            const client    = clients.find(c => c.id == clientId);
+            const framework = document.querySelector('input[name="framework"]:checked').value;
+            let variations  = [];
+
+            const d = details || 'benefícios exclusivos do produto/serviço';
+
+            if (framework === 'AIDA') {
+                variations = [
+                    { label: 'Variação 1 — Gancho de curiosidade', text: `Você já se perguntou por que ${idea}?\n\n${d}\n\nNão perca essa oportunidade. 👉 Clique no link da bio!` },
+                    { label: 'Variação 2 — Urgência + Desejo', text: `🔥 ${idea}\n\n${d}\n\nVagas limitadas. Garanta a sua agora! ⬇️` },
+                    { label: 'Variação 3 — Benefício direto', text: `Quer ${idea}?\n\n✅ ${d}\n\nChega de esperar. Comece hoje. 🚀` }
+                ];
+            } else if (framework === 'PAS') {
+                variations = [
+                    { label: 'Variação 1 — Dor direta', text: `Ainda sofrendo com ${idea}?\n\n⚡ Isso custa caro: ${d}\n\nA solução chegou. Descubra aqui 👇` },
+                    { label: 'Variação 2 — Agitação emocional', text: `${idea} te trava todo dia?\n\nA verdade é que ${d}\n\nMas existe saída. Vem ver 👇` },
+                    { label: 'Variação 3 — Solução no foco', text: `Problema: ${idea}\n\n❌ Sem ${d}, você fica pra trás.\n\n✅ Com a gente, não. Saiba como 👇` }
+                ];
+            } else if (framework === 'Storytelling') {
+                variations = [
+                    { label: 'Variação 1 — Transformação pessoal', text: `Era uma vez alguém que também tinha ${idea}...\n\nAté que descobriu: ${d}\n\nE nunca mais voltou. A sua história começa aqui. ✨` },
+                    { label: 'Variação 2 — Conflito e virada', text: `${idea} — essa era a realidade.\n\nO conflito: ${d}\n\nA virada: tudo mudou quando tomou uma decisão. E a sua? 🔄` },
+                    { label: 'Variação 3 — Identidade', text: `Quem disse que ${idea} é normal?\n\n${d}\n\nSua história merece um final diferente. Escreva aqui. 📖` }
+                ];
+            } else if (framework === 'Prova Social') {
+                variations = [
+                    { label: 'Variação 1 — Número como âncora', text: `+${d} pessoas já resolveram ${idea} com a gente.\n\n⭐ Resultados reais, sem promessa vazia.\n\nVocê é o próximo? 👇` },
+                    { label: 'Variação 2 — Voz do cliente', text: `"${idea} deixou de ser problema depois que encontrei isso."\n\n— Cliente real.\n\n${d} ✅ Quer o mesmo resultado? Acesse agora.` },
+                    { label: 'Variação 3 — Evidência + Convite', text: `Resultado provado: ${idea}\n\n📊 ${d}\n\nJunte-se a quem já chegou lá. 🏆 Vem com a gente!` }
+                ];
+            }
+
+            const text = `✍️ COPY GENERATOR — ${client.name}
+Framework: ${framework} | Formato: ${format}
+────────────────────────────────────────────
+${variations.map(v => `\n${v.label}\n${v.text}`).join('\n\n────────────────────────────────────────────')}
+
+────────────────────────────────────────────
+💡 Dica: Teste as 3 variações e compare o engajamento!`;
+
+            document.getElementById('copyOutput').innerHTML = `
+                <div class="form-section" style="margin-top:30px;">
+                    <div class="output-box highlight" id="copyText">${text}</div>
+                    <button class="copy-btn" onclick="copyEl('copyText')">📋 Copiar Todas</button>
+                </div>
+            `;
+
+            showToast('Copy gerada!');
+        }
+
+        // ─── RESULTADOS ─────────────────────────────────────────────────────────────
+
+        function addResult() {
+            const clientId = document.getElementById('resultClient').value;
+            const date     = document.getElementById('resultDate').value;
+            const content  = document.getElementById('resultContent').value.trim();
+            const metric   = document.getElementById('resultMetric').value.trim();
+            const number   = document.getElementById('resultNumber').value.trim();
+
+            if (!clientId || !date || !content || !metric || !number) {
+                showToast('Preencha todos os campos obrigatórios!', 'error');
+                return;
+            }
+
+            const client = clients.find(c => c.id == clientId);
+            results.push({
+                id:        Date.now(),
+                clientId:  parseInt(clientId),
+                clientName: client.name,
+                date,
+                content,
+                metric,
+                number,
+                success:   document.getElementById('resultSuccess').value.trim(),
+                next:      document.getElementById('resultNext').value.trim()
+            });
+
+            localStorage.setItem('v4sm_results', JSON.stringify(results));
+            clearForm(['resultClient', 'resultContent', 'resultMetric', 'resultNumber', 'resultSuccess', 'resultNext']);
+            document.getElementById('resultDate').valueAsDate = new Date();
+            displayResults();
+            updateDashboard();
+            showToast('Resultado registrado!');
+        }
+
+        function displayResults() {
+            const list = document.getElementById('resultsList');
+            list.innerHTML = '';
+
+            if (results.length === 0) {
+                list.innerHTML = '<div class="empty-state"><h3>Nenhum resultado registrado</h3><p>Comece a acompanhar seus resultados acima</p></div>';
+                return;
+            }
+
+            [...results].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(r => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `
+                    <strong>${r.clientName} — ${new Date(r.date + 'T00:00:00').toLocaleDateString('pt-BR')}</strong>
+                    <p><strong style="color:#fff">Conteúdo:</strong> ${r.content}</p>
+                    <p><strong style="color:#fff">Métrica:</strong> ${r.metric}</p>
+                    <p><strong style="color:var(--accent);font-size:16px;">Resultado: ${r.number}</strong></p>
+                    ${r.success ? `<p><strong style="color:#fff">O que funcionou:</strong> ${r.success}</p>` : ''}
+                    ${r.next    ? `<p><strong style="color:#fff">Próximos passos:</strong> ${r.next}</p>`    : ''}
+                    <button class="btn-secondary btn-small" onclick="deleteResult(${r.id})" style="margin-top:10px;">Remover</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteResult(id) {
+            if (!confirm('Remover este resultado?')) return;
+            results = results.filter(r => r.id !== id);
+            localStorage.setItem('v4sm_results', JSON.stringify(results));
+            displayResults();
+            updateDashboard();
+            showToast('Resultado removido');
+        }
+
+        // ─── PIPELINE DE PRODUÇÃO ────────────────────────────────────────────────────
+
+        const MONTH_NAMES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        const MONTH_SHORT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+        function getDeadlineInfo() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            const deadline = new Date(year, month, 15, 23, 59, 59);
+            const targetMonth = (month + 1) % 12;
+            const targetYear = month === 11 ? year + 1 : year;
+            const diffMs = deadline.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+            const cycleKey = `${targetYear}-${String(targetMonth + 1).padStart(2, '0')}`;
+            return { deadline, deadlineStr: `15/${MONTH_SHORT[month]}`, targetMonthName: MONTH_NAMES[targetMonth], targetYear, diffDays, isLate: diffDays < 0, cycleKey };
+        }
+
+        function getPipelineEntry(clientId, cycleKey) {
+            const key = `${clientId}_${cycleKey}`;
+            if (!pipeline[key]) pipeline[key] = { prePauta: false, pauta: false, criativos: false };
+            return pipeline[key];
+        }
+
+        function togglePipelineStatus(clientId, field) {
+            const info = getDeadlineInfo();
+            const key = `${clientId}_${info.cycleKey}`;
+            if (!pipeline[key]) pipeline[key] = { prePauta: false, pauta: false, criativos: false };
+            pipeline[key][field] = !pipeline[key][field];
+            localStorage.setItem('v4sm_pipeline', JSON.stringify(pipeline));
+            updatePipeline();
+        }
+
+        function updatePipeline() {
+            const info = getDeadlineInfo();
+            const banner = document.getElementById('deadlineBanner');
+
+            let countdownClass, countdownText;
+            if (info.diffDays > 5) { countdownClass = 'deadline-ok'; countdownText = `${info.diffDays} dias`; }
+            else if (info.diffDays > 0) { countdownClass = 'deadline-warn'; countdownText = `${info.diffDays} dias`; }
+            else if (info.diffDays === 0) { countdownClass = 'deadline-warn'; countdownText = 'HOJE'; }
+            else { countdownClass = 'deadline-late'; countdownText = `${Math.abs(info.diffDays)}d atrasado`; }
+
+            banner.innerHTML = `
+                <div class="deadline-info">
+                    <div class="deadline-title">📅 Deadline: ${info.deadlineStr} — Conteúdo de ${info.targetMonthName.toUpperCase()} ${info.targetYear}</div>
+                    <div class="deadline-sub">Pré-pauta, Pauta e Criativos devem estar prontos até o dia 15</div>
+                </div>
+                <div class="deadline-countdown ${countdownClass}">${countdownText}</div>
+            `;
+
+            const grid = document.getElementById('pipelineGrid');
+            const empty = document.getElementById('pipelineEmpty');
+            grid.innerHTML = '';
+
+            if (clients.length === 0) {
+                empty.innerHTML = '<div class="empty-state"><p style="color:var(--text-secondary)">Cadastre clientes para acompanhar o pipeline</p></div>';
+                return;
+            }
+            empty.innerHTML = '';
+
+            clients.forEach(c => {
+                const entry = getPipelineEntry(c.id, info.cycleKey);
+                const done = [entry.prePauta, entry.pauta, entry.criativos].filter(Boolean).length;
+                const pct = Math.round((done / 3) * 100);
+                const barColor = pct === 100 ? 'var(--success)' : info.isLate ? '#e74c3c' : 'var(--accent)';
+
+                const makeItem = (isDone, field, label) => {
+                    const cls = isDone ? 'done' : (info.isLate ? 'late' : 'pending');
+                    const txt = isDone ? '✓ Pronto' : (info.isLate ? '✗ Atrasado' : '○ Pendente');
+                    return `<div class="pipeline-item" onclick="togglePipelineStatus(${c.id},'${field}')">
+                        <span class="pipeline-item-label">${label}</span>
+                        <span class="pipeline-status ${cls}">${txt}</span>
+                    </div>`;
+                };
+
+                const card = document.createElement('div');
+                card.className = 'pipeline-card';
+                card.innerHTML = `
+                    <h4>${c.name} <span style="font-size:12px;color:var(--text-secondary);font-weight:400;">— ${info.targetMonthName}</span></h4>
+                    <div class="pipeline-items">
+                        ${makeItem(entry.prePauta, 'prePauta', 'Pré-pauta')}
+                        ${makeItem(entry.pauta, 'pauta', 'Pauta')}
+                        ${makeItem(entry.criativos, 'criativos', 'Criativos')}
+                    </div>
+                    <div class="pipeline-progress">
+                        <div class="pipeline-progress-bar" style="width:${pct}%;background:${barColor};"></div>
+                    </div>
+                    <div style="text-align:right;margin-top:8px;font-size:12px;color:var(--text-secondary);">${done}/3 concluídos</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ─── UTILS ──────────────────────────────────────────────────────────────────
+
+        function clearForm(ids) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+        }
+
+        function copyEl(elId) {
+            const text = document.getElementById(elId).innerText;
+            navigator.clipboard.writeText(text).then(() => showToast('Copiado!'));
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.style.background = type === 'error' ? '#e74c3c' : 'var(--success)';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
