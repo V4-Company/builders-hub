@@ -1,0 +1,200 @@
+:root {
+  --bg-base: #FF2A1A;
+  --bg-depth: #3B0000;
+  --bg-deep-red: #A10F14;
+  --text-primary: #FFFFFF;
+  --text-muted: rgba(255,255,255,0.72);
+  --accent-gold: #FFD48A;
+  --accent-yellow: #FFF200;
+  --danger: #FF8A80;
+  --surface-glass: rgba(255,255,255,0.12);
+  --surface-glass-soft: rgba(255,255,255,0.08);
+  --surface-glass-strong: rgba(255,255,255,0.18);
+  --line: rgba(255,255,255,0.14);
+  --shadow: 0 18px 50px rgba(18,0,0,0.28);
+  --blur: 18px;
+  --radius-card: 28px;
+  --radius-pill: 999px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg-depth); }
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,242,0,0.22), transparent 24rem),
+    radial-gradient(circle at 88% 18%, rgba(255,212,138,0.16), transparent 20rem),
+    linear-gradient(145deg, var(--bg-base) 0%, var(--bg-deep-red) 42%, var(--bg-depth) 100%);
+}
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.22;
+  background-image: linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; border-radius: 14px; }
+button { font-family: inherit; cursor: pointer; }
+
+/* TOPBAR FIXO — cliente + periodo visivel em toda slide */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px clamp(24px,4vw,56px);
+  background: rgba(59,0,0,0.58);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(var(--blur));
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-gold); }
+.topbar .brand .mark { color: var(--accent-gold); font-weight: 900; }
+.topbar .brand .brand-logo { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.topbar .deck-meta { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--text-muted); }
+.deck-counter { font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
+.investimento-toggle {
+  border: 1px solid var(--accent-gold); background: transparent; color: var(--accent-gold);
+  padding: 7px 14px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; transition: background .2s, color .2s;
+}
+.investimento-toggle:hover { background: var(--accent-gold); color: var(--bg-deep-red); }
+
+/* DECK / SLIDES */
+.deck { position: relative; height: 100vh; }
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 110px clamp(32px,6vw,120px) 90px;
+  opacity: 0; visibility: hidden; transform: translateY(14px);
+  transition: opacity .45s ease, transform .45s ease;
+  pointer-events: none; overflow-y: auto;
+}
+.slide.active { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+.slide.slide-disabled { display: none; }
+.slide-eyebrow { color: var(--accent-gold); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 16px; }
+.slide h2 { margin: 0 0 18px; font-family: "IBM Plex Sans", sans-serif; font-weight: 700; font-stretch: 75%; letter-spacing: -0.05em; font-size: clamp(30px,5vw,56px); line-height: 1.02; max-width: 900px; color: var(--text-primary); }
+.slide-sub { color: var(--text-muted); font-size: 16px; line-height: 1.5; max-width: 720px; margin-bottom: 36px; }
+.slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; min-height: 0; }
+
+/* CAPA */
+.slide-capa h1 { margin: 0; font-family: "IBM Plex Sans", sans-serif; font-weight: 700; font-stretch: 75%; letter-spacing: -0.06em; font-size: clamp(42px,7vw,84px); line-height: 0.94; max-width: 920px; color: var(--text-primary); }
+.slide-capa .capa-meta { display: flex; gap: 36px; margin-top: 32px; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.slide-capa .capa-meta strong { color: var(--accent-gold); display: block; font-size: 17px; text-transform: none; letter-spacing: 0; margin-top: 6px; font-weight: 700; }
+
+/* GRIDS */
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+
+/* CARDS — glass morphism */
+.card {
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--surface-glass-strong), var(--surface-glass-soft));
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--blur));
+  padding: 22px;
+}
+.card.accent { border-color: var(--accent-gold); }
+.card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+.card-text { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+.card-image { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: rgba(0,0,0,0.25); margin-bottom: 12px; } /* opcional — Melhores Conteudos nao usa por padrao */
+
+/* KPI */
+.kpi-card {
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--surface-glass-strong), var(--surface-glass-soft));
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--blur));
+  padding: 24px; text-align: center;
+}
+.kpi-value { font-family: "IBM Plex Sans", sans-serif; font-weight: 700; font-stretch: 75%; letter-spacing: -0.04em; font-size: clamp(28px,4vw,44px); line-height: 1; color: var(--text-primary); }
+.kpi-value.red { color: var(--accent-yellow); } /* classe legada — agora renderiza em amarelo de destaque (Red Command Center) */
+.kpi-label { color: var(--accent-gold); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 8px; }
+
+/* TAGS / CHIPS */
+.tag { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: var(--radius-pill); border: 1px solid var(--line); background: var(--surface-glass-soft); color: var(--text-primary); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.tag.red { color: var(--accent-gold); border-color: rgba(255,212,138,0.4); } /* classe legada — agora dourada */
+.tag.white { color: var(--text-muted); }
+.tag.danger { color: var(--danger); border-color: rgba(255,138,128,0.4); } /* uso real: risco "Alto" */
+.tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; margin-bottom: 28px; }
+
+/* LIST ROW — substitui tabela (cronograma, riscos) */
+.list-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(59,0,0,0.24); margin-bottom: 10px; }
+.list-row .list-main { flex: 1; min-width: 0; }
+.list-row .list-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.list-row .list-detail { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+.list-row .list-tags { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* GRAFICO DE BARRAS — Numeros do Periodo */
+.bar-chart { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+.bar-row { display: flex; align-items: center; gap: 14px; }
+.bar-label { min-width: 110px; font-size: 13px; font-weight: 700; text-align: right; color: var(--text-muted); }
+.bar-track { flex: 1; height: 32px; background: var(--surface-glass-soft); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.bar-fill { height: 100%; background: rgba(255,212,138,0.35); display: flex; align-items: center; padding-left: 12px; font-size: 12px; font-weight: 700; color: var(--accent-gold); border-radius: 8px 0 0 8px; min-width: fit-content; white-space: nowrap; }
+
+/* MELHORES CONTEUDOS — post com ranking e justificativa, sem imagem */
+.post-card { position: relative; }
+.post-rank {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent-gold); color: var(--bg-deep-red);
+  font-weight: 700; font-size: 14px; margin-bottom: 14px;
+}
+.post-justificativa { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+.post-justificativa strong { color: var(--text-primary); }
+.post-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.04em; }
+.post-link:hover { text-decoration: underline; }
+.post-stats { display: flex; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.post-stat { flex: 1; text-align: center; }
+.post-stat-value { font-size: 17px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
+.post-stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-top: 3px; }
+
+/* PLANO DE ACAO — um slide por acao */
+.acao-numero { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--accent-gold); color: var(--accent-gold); font-weight: 700; font-size: 14px; margin-bottom: 18px; }
+
+/* FLUXO / MAPA MENTAL — passos conectados (Plano de Acao, quando a acao e um processo) */
+.flow-diagram { display: flex; align-items: stretch; flex-wrap: wrap; gap: 0; margin-bottom: 22px; }
+.flow-step {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  padding: 18px 16px; border: 1px solid var(--line); border-radius: 16px; background: rgba(59,0,0,0.24);
+  min-width: 150px; flex: 1;
+}
+.flow-step-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 6px; }
+.flow-step-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.flow-step-text { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+.flow-arrow { display: flex; align-items: center; justify-content: center; width: 36px; flex-shrink: 0; color: var(--accent-gold); font-size: 20px; }
+
+/* NOVIDADES — tendencia pesquisada + aplicacao */
+.trend-block { margin-top: 10px; }
+.trend-block .trend-label { color: var(--accent-gold); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.trend-block .trend-text { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+.trend-block + .trend-block { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+
+/* NAVEGACAO */
+.nav-arrow {
+  position: fixed; bottom: 36px; z-index: 50;
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--accent-gold); background: rgba(59,0,0,0.6); color: var(--text-primary);
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  transition: background .2s, color .2s;
+}
+.nav-arrow:hover { background: var(--accent-gold); color: var(--bg-deep-red); }
+.nav-prev { left: clamp(20px,4vw,56px); }
+.nav-next { right: clamp(20px,4vw,56px); }
+.dots { position: fixed; bottom: 48px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 50; }
+.dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); background: transparent; padding: 0; }
+.dot.active { background: var(--accent-gold); border-color: var(--accent-gold); }
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .slide { padding: 130px 24px 110px; }
+  .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .nav-arrow { width: 40px; height: 40px; }
+  .slide-capa .capa-meta { flex-direction: column; gap: 14px; }
+  .bar-label { min-width: 76px; font-size: 11px; }
+}
