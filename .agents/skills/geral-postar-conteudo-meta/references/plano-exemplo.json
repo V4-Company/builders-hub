@@ -1,0 +1,38 @@
+{
+  "cliente": "Cliente Exemplo",
+  "lote": "conteudo-social-exemplo",
+  "pasta_origem": "C:\\Users\\usuario\\Downloads\\lote-conteudo-exemplo",
+  "gerado_em": "2026-01-10",
+  "status": "aguardando publicação",
+  "regras_aplicadas": {
+    "cadencia": "um dia sim, um dia não, pulando sábado e domingo",
+    "horarios": "alternando 10:00 e 15:00",
+    "inicio": "próximo dia útil a partir de 2026-01-10"
+  },
+  "posts": [
+    {
+      "post": 1,
+      "tema": "Exemplo de tema do post estático",
+      "tipo": "ESTATICO",
+      "acao_meta_business": "Criar post",
+      "arquivo": "imagem-exemplo.png",
+      "data": "2026-01-12",
+      "dia_semana": "segunda",
+      "hora": "10:00",
+      "legenda": "Texto de exemplo da legenda, já limpo (sem 'CTA:' e sem travessão).\n\nCall to action final como frase normal.",
+      "hashtags": "#ExemploHashtag1 #ExemploHashtag2 #ExemploHashtag3"
+    },
+    {
+      "post": 2,
+      "tema": "Exemplo de tema do reel",
+      "tipo": "VIDEO",
+      "acao_meta_business": "Criar Reel",
+      "arquivo": "video-exemplo.mp4",
+      "data": "2026-01-14",
+      "dia_semana": "quarta",
+      "hora": "15:00",
+      "legenda": "Texto de exemplo da legenda do reel.",
+      "hashtags": "#ExemploHashtag1 #ExemploHashtag4"
+    }
+  ]
+}
