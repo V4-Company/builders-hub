@@ -1,0 +1,23 @@
+{
+  "skill_name": "geral-creative-intelligence-maestro",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Na pasta do cliente X há onboarding, identidade visual e uma lista preliminar de oito concorrentes. Quero mapear os anúncios ativos, analisar vídeos e códigos visuais e entregar uma Creative Intelligence Room navegável. Faça a entrega completa, mas não publique nada sem minha autorização.",
+      "expected_output": "O workflow executa ou estrutura os seis gates, valida os papéis competitivos, preserva fontes brutas, gera dados e diagnóstico rastreáveis, cria a experiência e faz QA local sem realizar deploy não autorizado.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Atualize o snapshot Creative Intelligence do cliente Y. Já existem inventários, vídeos e transcrições de dois meses atrás; quero incluir anúncios novos sem baixar e processar tudo novamente.",
+      "expected_output": "O workflow detecta o estado existente, preserva o snapshot histórico, coleta incrementalmente, reutiliza assets por hash, processa apenas itens novos ou alterados e regenera diagnóstico, dataset, build e auditoria.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "A sala de inteligência do cliente Z já está pronta. Revise se números, filtros, vídeos, mobile, pacote offline e ressalvas metodológicas estão corretos; não refaça a pesquisa competitiva.",
+      "expected_output": "O maestro encaminha diretamente para QA e Entrega, audita dados versus interface, executa build e testes funcionais/visuais, inspeciona capturas, valida pacote offline e relata falhas sem reiniciar coleta ou diagnóstico desnecessariamente.",
+      "files": []
+    }
+  ]
+}
