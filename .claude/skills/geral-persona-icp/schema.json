@@ -1,0 +1,664 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PersonaICP",
+  "description": "Output estruturado da skill persona-icp: ICP completo com JTBD, persona detalhada, canais de aquisição e mensagem-chave.",
+  "type": "object",
+  "required": [
+    "summary",
+    "icp",
+    "persona",
+    "where_to_find",
+    "key_message",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo executivo de 2-3 frases do ICP e persona. Usado como referência rápida por outras skills."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete em 1 linha com o veredito desta skill (hero do resumo executivo no portal). Ver references/padrao-output.md"
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "description": "KPIs visuais categorizados para o resumo executivo. Cada item: {category, label, value, subtext, tone}.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "posicao",
+              "competicao",
+              "janela",
+              "maturidade",
+              "oportunidade",
+              "risco"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Achados categorizados por intenção (vantagem/contexto/ameaça/ação). Pelo menos 3 dos 4 tipos cobertos.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "icp": {
+      "type": "object",
+      "required": [
+        "demographics",
+        "behavior",
+        "jobs",
+        "pains",
+        "gains"
+      ],
+      "properties": {
+        "demographics": {
+          "type": "object",
+          "description": "Perfil demográfico do cliente ideal.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "B2B",
+                "B2C",
+                "mixed"
+              ],
+              "description": "Tipo de cliente: B2B, B2C, ou misto."
+            },
+            "age_range": {
+              "type": "string",
+              "description": "Faixa etária (B2C) ou faixa de faturamento (B2B)."
+            },
+            "income_or_revenue": {
+              "type": "string",
+              "description": "Renda mensal (B2C) ou faturamento anual (B2B)."
+            },
+            "location": {
+              "type": "string",
+              "description": "Região geográfica principal."
+            },
+            "company_size": {
+              "type": "string",
+              "description": "B2B: número de funcionários. B2C: omitir ou null."
+            },
+            "decision_maker_role": {
+              "type": "string",
+              "description": "B2B: cargo do decisor. B2C: perfil pessoal."
+            },
+            "education": {
+              "type": "string",
+              "description": "Nível de escolaridade típico."
+            },
+            "other": {
+              "type": "object",
+              "description": "Campos adicionais específicos do segmento.",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "behavior": {
+          "type": "object",
+          "description": "Como o ICP se comporta no processo de compra.",
+          "properties": {
+            "decision_process": {
+              "type": "string",
+              "description": "Como toma decisão de compra (racional/emocional, individual/comitê)."
+            },
+            "research_channels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Onde pesquisa antes de comprar."
+            },
+            "main_objections": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Principais objeções na hora da compra."
+            },
+            "switching_triggers": {
+              "type": "string",
+              "description": "O que faz trocar de fornecedor."
+            },
+            "purchase_frequency": {
+              "type": "string",
+              "description": "Frequência de compra e ciclo de decisão."
+            }
+          }
+        },
+        "jobs": {
+          "type": "object",
+          "required": [
+            "functional",
+            "emotional",
+            "social"
+          ],
+          "description": "Jobs-to-be-Done: tarefas que o cliente está tentando cumprir.",
+          "properties": {
+            "functional": {
+              "type": "string",
+              "description": "Job funcional no formato: 'Quando [situação], eu quero [motivação], para que [resultado]'."
+            },
+            "emotional": {
+              "type": "string",
+              "description": "Job emocional: como o cliente quer se sentir durante e após a compra."
+            },
+            "social": {
+              "type": "string",
+              "description": "Job social: como o cliente quer ser visto pelos outros."
+            }
+          }
+        },
+        "pains": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "pain",
+              "intensity"
+            ],
+            "properties": {
+              "pain": {
+                "type": "string",
+                "description": "Descrição da dor na linguagem do cliente."
+              },
+              "intensity": {
+                "type": "string",
+                "enum": [
+                  "critical",
+                  "high",
+                  "medium"
+                ],
+                "description": "Intensidade da dor."
+              },
+              "current_workaround": {
+                "type": "string",
+                "description": "Como o cliente lida com essa dor hoje (se aplicável)."
+              }
+            }
+          },
+          "description": "Dores do ICP, ordenadas da mais intensa para a menos."
+        },
+        "gains": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "gain",
+              "type"
+            ],
+            "properties": {
+              "gain": {
+                "type": "string",
+                "description": "Ganho desejado pelo cliente."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "tangible",
+                  "intangible"
+                ],
+                "description": "Se o ganho é tangível (mensurável) ou intangível (sentimento/percepção)."
+              }
+            }
+          },
+          "description": "Ganhos que o ICP deseja alcançar."
+        }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "required": [
+        "name",
+        "photo_description",
+        "story",
+        "quote"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome fictício da persona."
+        },
+        "photo_description": {
+          "type": "string",
+          "description": "Descrição detalhada para gerar foto da persona (idade, expressão, contexto, vestuário)."
+        },
+        "story": {
+          "type": "string",
+          "description": "História de 1 parágrafo: situação atual, desafios, e por que precisa da solução."
+        },
+        "quote": {
+          "type": "string",
+          "description": "Frase que a persona diria sobre o problema. Deve soar como transcrição real."
+        }
+      }
+    },
+    "where_to_find": {
+      "type": "object",
+      "required": [
+        "digital_channels",
+        "keywords",
+        "influencers",
+        "communities"
+      ],
+      "properties": {
+        "digital_channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Canais digitais específicos onde o ICP está (não genéricos)."
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Palavras-chave que o ICP busca no Google/YouTube."
+        },
+        "influencers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Perfis, podcasts, canais que o ICP acompanha."
+        },
+        "communities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Grupos, fóruns, associações, eventos que o ICP frequenta."
+        }
+      }
+    },
+    "anti_persona": {
+      "type": "object",
+      "description": "Perfis que NÃO são cliente ideal. Define quando o time diz 'não'.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "profiles": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "description": "Cada perfil tem um identificador (profile_name OU label), uma descrição (description OU who) e uma lista de sinais (signals OU red_flags). O renderer do portal aceita ambos os conjuntos.",
+            "properties": {
+              "profile_name": {
+                "type": "string",
+                "description": "Apelido descritivo (ex: 'Caçador de preço'). Alternativa: 'label'."
+              },
+              "label": {
+                "type": "string",
+                "description": "Alternativa a 'profile_name'."
+              },
+              "description": {
+                "type": "string",
+                "description": "Comportamento típico em 2-3 linhas. Alternativa: 'who'."
+              },
+              "who": {
+                "type": "string",
+                "description": "Alternativa a 'description'."
+              },
+              "why_not": {
+                "type": "string",
+                "description": "Por que não é cliente ideal."
+              },
+              "signals": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Sinais concretos que o time usa para identificar esse perfil (3-6 itens). Alternativa: 'red_flags'."
+              },
+              "red_flags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Alternativa a 'signals'."
+              },
+              "operational_rule": {
+                "type": "string",
+                "description": "Como o time identifica e o que faz."
+              }
+            }
+          }
+        },
+        "operational_rule": {
+          "type": "string",
+          "description": "Regra-mãe que alinha o time."
+        }
+      }
+    },
+    "buyer_journey": {
+      "type": "object",
+      "description": "Jornada de decisão da persona do gatilho ao pós-compra.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "required": [
+              "stage",
+              "mental_state",
+              "dominant_question"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string"
+              },
+              "trigger": {
+                "type": "string",
+                "description": "O que inicia esse estágio."
+              },
+              "mental_state": {
+                "type": "string",
+                "description": "Estado mental dominante."
+              },
+              "primary_channel": {
+                "type": "string",
+                "description": "Onde a persona busca informação."
+              },
+              "dominant_question": {
+                "type": "string",
+                "description": "A pergunta que ela tenta responder."
+              },
+              "client_intervention": {
+                "type": "string",
+                "description": "Como o cliente intervém nesse estágio."
+              },
+              "friction_today": {
+                "type": "string",
+                "description": "Atrito/problema atual nesse estágio."
+              },
+              "duration_estimate": {
+                "type": "string",
+                "description": "Tempo típico (horas/dias/semanas)."
+              }
+            }
+          }
+        },
+        "critical_leakage_point": {
+          "description": "Estágio onde o cliente mais perde leads hoje. Aceita duas formas: (a) string livre com diagnóstico textual, ou (b) objeto estruturado com stage/evidence/estimated_loss_pct. A string é mais natural quando o vazamento é qualitativo; o objeto quando há número de perda.",
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Diagnóstico livre do ponto de vazamento (1-3 frases)."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "stage": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "string"
+                },
+                "estimated_loss_pct": {
+                  "type": "number"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "willingness_to_pay": {
+      "type": "object",
+      "description": "Faixas de preço que a persona aceita por serviço/produto principal.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "description": "Cada serviço tem faixa atual, faixa justa percebida e teto premium. Shape preferido: 'current_ticket_range' + 'perceived_fair_range' + 'premium_ceiling' (strings como 'R$180-250' ou 'R$400'). O shape legado (current_price/fair_range/premium_range) ainda é aceito pelo renderer.",
+          "items": {
+            "type": "object",
+            "required": [
+              "service"
+            ],
+            "properties": {
+              "service": {
+                "type": "string",
+                "description": "Nome do serviço precificado."
+              },
+              "current_ticket_range": {
+                "type": "string",
+                "description": "PREFERIDO. Faixa de ticket atual praticada (ex: 'R$180-250')."
+              },
+              "perceived_fair_range": {
+                "type": "string",
+                "description": "PREFERIDO. Faixa que a persona percebe como justa (ex: 'R$180-300')."
+              },
+              "premium_ceiling": {
+                "type": "string",
+                "description": "PREFERIDO. Teto premium que a persona aceita pagar com justificativa (ex: 'R$400 com exame incluso')."
+              },
+              "current_price": {
+                "type": [
+                  "number",
+                  "string"
+                ],
+                "description": "LEGADO. Alternativa a current_ticket_range."
+              },
+              "fair_range": {
+                "type": "string",
+                "description": "LEGADO. Alternativa a perceived_fair_range."
+              },
+              "premium_range": {
+                "type": "string",
+                "description": "LEGADO. Alternativa a premium_ceiling."
+              },
+              "elasticity": {
+                "type": "string",
+                "description": "Elasticidade de preço. Pode ser palavra única (alta/média/baixa) ou frase com nuance separada por '—' ou ':' (ex: 'baixa — aceita pagar mais se entender o porquê'). O portal usa a primeira palavra como tag e o restante como nota explicativa."
+              },
+              "pricing_lever": {
+                "type": "string",
+                "description": "O que justifica cobrar mais (especialização, garantia, bundle, experiência)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "objection_library": {
+      "type": "object",
+      "description": "Catálogo de objeções reais da persona com respostas testadas.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "objections": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": [
+              "objection",
+              "subtext",
+              "good_response"
+            ],
+            "properties": {
+              "objection": {
+                "type": "string",
+                "description": "Como ela diz, na linguagem do cliente."
+              },
+              "subtext": {
+                "type": "string",
+                "description": "O que ela realmente está dizendo."
+              },
+              "bad_response": {
+                "type": "string",
+                "description": "Resposta automática que NÃO funciona."
+              },
+              "good_response": {
+                "type": "string",
+                "description": "Resposta que funciona."
+              },
+              "when_to_use": {
+                "type": "string",
+                "description": "Canal/momento de uso."
+              }
+            }
+          }
+        }
+      }
+    },
+    "key_message": {
+      "type": "object",
+      "required": [
+        "chosen_message",
+        "approach",
+        "alternatives"
+      ],
+      "properties": {
+        "chosen_message": {
+          "type": "string",
+          "description": "Mensagem-chave final aprovada pelo operador (máx 15 palavras)."
+        },
+        "approach": {
+          "type": "string",
+          "enum": [
+            "functional",
+            "emotional",
+            "social",
+            "combined"
+          ],
+          "description": "Abordagem da mensagem escolhida."
+        },
+        "usage_context": {
+          "type": "string",
+          "description": "Onde usar esta mensagem (anúncios, bio, headline, etc.)."
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "approach": {
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "As 3 opções apresentadas ao operador (incluindo a escolhida)."
+        }
+      }
+    },
+    "key_insight": {
+      "type": "object",
+      "description": "Ponto de alavancagem desta skill — o bloco que merece destaque visual para conversa com o stakeholder. Ver PADRAO-OUTPUT.md.",
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "Frase-manchete do ponto (pode virar quote destacada no renderer)"
+        },
+        "context": {
+          "type": "string",
+          "description": "Contexto em 2-3 linhas explicando o cenário"
+        },
+        "numbered_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Razões numeradas (o renderer vira 3 cards numerados)"
+        },
+        "discussion_anchor": {
+          "type": "string",
+          "description": "Por que este é o ponto para stakeholder decidir/validar"
+        }
+      }
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta se a análise revelou fragilidade real do cliente (não há diferencial claro, premissa contraditória, etc.). Nunca omitir se justificado."
+    }
+  }
+}

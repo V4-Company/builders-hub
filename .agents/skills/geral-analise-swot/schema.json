@@ -1,0 +1,566 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SWOT",
+  "description": "Output estruturado da skill swot: análise SWOT completa com síntese estratégica e ações prioritárias.",
+  "type": "object",
+  "required": [
+    "summary",
+    "strengths",
+    "weaknesses",
+    "opportunities",
+    "threats",
+    "strategic_synthesis",
+    "priority_actions",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "competitor_scorecard": {
+      "type": "array",
+      "description": "POP 1.5 — scorecard digital dos concorrentes (3-5 diretos + 1-2 indiretos), com nota 0-10 por dimensão e evidência observável. Inclua o próprio cliente para contraste.",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "scores"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string", "enum": ["cliente", "direto", "indireto", "aspiracional"] },
+          "scores": {
+            "type": "object",
+            "description": "Notas 0-10 por dimensão.",
+            "properties": {
+              "site": { "type": ["number", "null"] },
+              "seo": { "type": ["number", "null"] },
+              "midia_paga": { "type": ["number", "null"] },
+              "social": { "type": ["number", "null"] },
+              "gmn": { "type": ["number", "null"] },
+              "reputacao": { "type": ["number", "null"] },
+              "comunicacao": { "type": ["number", "null"] }
+            }
+          },
+          "evidence": { "type": "object", "description": "1 linha de evidência observável por dimensão pontuada." },
+          "overall": { "type": ["number", "null"], "description": "Média/leitura geral 0-10." }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases da análise SWOT. Usado como referência rápida por outras skills."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete em 1 linha com o veredito desta skill (hero do resumo executivo no portal). Ver references/padrao-output.md"
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "description": "KPIs visuais categorizados para o resumo executivo. Cada item: {category, label, value, subtext, tone}.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "posicao",
+              "competicao",
+              "janela",
+              "maturidade",
+              "oportunidade",
+              "risco"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Achados categorizados por intenção (vantagem/contexto/ameaça/ação). Pelo menos 3 dos 4 tipos cobertos.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "strengths": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "implication"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Frase curta e específica descrevendo a força."
+          },
+          "description": {
+            "type": "string",
+            "description": "Evidência concreta que sustenta essa força (com dados quando possível)."
+          },
+          "implication": {
+            "type": "string",
+            "description": "Como essa força pode ser alavancada na estratégia."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "diagnostico",
+              "briefing",
+              "operador",
+              "v4mos"
+            ],
+            "description": "De onde veio a evidência."
+          }
+        }
+      },
+      "description": "Fatores internos positivos do negócio."
+    },
+    "weaknesses": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "implication"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Frase curta e específica descrevendo a fraqueza."
+          },
+          "description": {
+            "type": "string",
+            "description": "Evidência concreta da fraqueza."
+          },
+          "implication": {
+            "type": "string",
+            "description": "Risco se não tratada + sugestão de mitigação."
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium"
+            ],
+            "description": "Severidade da fraqueza."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "diagnostico",
+              "briefing",
+              "operador",
+              "v4mos"
+            ],
+            "description": "De onde veio a evidência."
+          }
+        }
+      },
+      "description": "Fatores internos negativos do negócio."
+    },
+    "opportunities": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "implication"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Frase curta e específica descrevendo a oportunidade."
+          },
+          "description": {
+            "type": "string",
+            "description": "Por que essa oportunidade existe AGORA."
+          },
+          "implication": {
+            "type": "string",
+            "description": "Como capturar essa oportunidade."
+          },
+          "time_sensitivity": {
+            "type": "string",
+            "enum": [
+              "urgent",
+              "medium_term",
+              "long_term"
+            ],
+            "description": "Janela de oportunidade."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "diagnostico",
+              "briefing",
+              "operador",
+              "v4mos",
+              "market_trend"
+            ],
+            "description": "De onde veio a evidência."
+          }
+        }
+      },
+      "description": "Fatores externos positivos (oportunidades de mercado)."
+    },
+    "threats": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "implication"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Frase curta e específica descrevendo a ameaça."
+          },
+          "description": {
+            "type": "string",
+            "description": "Evidência de que essa ameaça é real."
+          },
+          "implication": {
+            "type": "string",
+            "description": "Como se proteger ou mitigar."
+          },
+          "probability": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Probabilidade de materialização."
+          },
+          "impact": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Impacto se materializar."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "diagnostico",
+              "briefing",
+              "operador",
+              "v4mos",
+              "market_trend"
+            ],
+            "description": "De onde veio a evidência."
+          }
+        }
+      },
+      "description": "Fatores externos negativos (ameaças de mercado)."
+    },
+    "strategic_synthesis": {
+      "type": "object",
+      "required": [
+        "leverage",
+        "protection",
+        "recommended_strategy"
+      ],
+      "properties": {
+        "leverage": {
+          "type": "string",
+          "description": "Parágrafo: como usar forças para capturar oportunidades (Forças x Oportunidades)."
+        },
+        "protection": {
+          "type": "string",
+          "description": "Parágrafo: quais fraquezas amplificam ameaças e como proteger (Fraquezas x Ameaças)."
+        },
+        "recommended_strategy": {
+          "type": "string",
+          "description": "Parágrafo: estratégia recomendada para os próximos 90 dias."
+        }
+      }
+    },
+    "priority_actions": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "swot_basis",
+          "impact",
+          "suggested_timeline"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "O que fazer (específico e acionável)."
+          },
+          "swot_basis": {
+            "type": "string",
+            "description": "Quais quadrantes/itens essa ação endereça (ex: 'Alavanca F2, captura O3, executa SO1')."
+          },
+          "impact": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Impacto esperado da ação."
+          },
+          "suggested_timeline": {
+            "type": "string",
+            "description": "Quando executar (semana 1/2/3 ou prazo específico)."
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dependências desta ação."
+          },
+          "financial_impact": {
+            "type": "object",
+            "description": "Impacto financeiro projetado da ação. Aceita nomenclatura com ou sem sufixo '_brl'.",
+            "properties": {
+              "investment": {
+                "type": "number",
+                "description": "Investimento em R$ (mensal ou único). Alternativa: 'investment_brl'."
+              },
+              "investment_brl": {
+                "type": "number",
+                "description": "Alternativa a 'investment'."
+              },
+              "expected_return_90d": {
+                "type": "number",
+                "description": "Retorno esperado em 90 dias em R$. Alternativa: 'monthly_return_brl' (será multiplicado por 3)."
+              },
+              "monthly_return_brl": {
+                "type": "number",
+                "description": "Retorno mensal em R$. Se presente, retorno 90d = monthly × 3."
+              },
+              "payback_days": {
+                "type": "number",
+                "description": "Dias até o payback."
+              },
+              "roi_multiple": {
+                "type": "number",
+                "description": "Múltiplo de ROI (ex: 5.2 = 5.2x). Se ausente, calculado como retorno/investment."
+              },
+              "note": {
+                "type": "string",
+                "description": "Observação textual opcional."
+              }
+            }
+          },
+          "risk_adjusted_score": {
+            "description": "Score de priorização. Aceita dois formatos: número 0-100 OU objeto com dimensões avaliadas em escala 1-10. O renderer do portal ordena e exibe ambos.",
+            "oneOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Score agregado 0-100."
+              },
+              {
+                "type": "object",
+                "required": [
+                  "score"
+                ],
+                "properties": {
+                  "impact": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "description": "Impacto esperado (1-10)."
+                  },
+                  "probability_of_success": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "description": "Probabilidade de sucesso (1-10)."
+                  },
+                  "reversibility": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "description": "Reversibilidade se der errado (1-10, maior = mais reversível)."
+                  },
+                  "score": {
+                    "type": "number",
+                    "description": "Score final agregado (1-10 ou 0-100)."
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "description": "Ações prioritárias derivadas do cruzamento SWOT/TOWS, ordenadas por risk_adjusted_score."
+    },
+    "tows_matrix": {
+      "type": "object",
+      "description": "Matriz TOWS: cruzamento estratégico dos quadrantes SWOT para derivar estratégias acionáveis.",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Breve explicação do que é a matriz."
+        },
+        "so_strategies": {
+          "type": "array",
+          "description": "Estratégias Ofensivas (Forças × Oportunidades). Onde o cliente ataca.",
+          "items": {
+            "$ref": "#/definitions/towsStrategy"
+          }
+        },
+        "wo_strategies": {
+          "type": "array",
+          "description": "Estratégias de Reforço (Fraquezas × Oportunidades). Onde o cliente investe.",
+          "items": {
+            "$ref": "#/definitions/towsStrategy"
+          }
+        },
+        "st_strategies": {
+          "type": "array",
+          "description": "Estratégias Defensivas (Forças × Ameaças). Onde o cliente protege.",
+          "items": {
+            "$ref": "#/definitions/towsStrategy"
+          }
+        },
+        "wt_strategies": {
+          "type": "array",
+          "description": "Estratégias de Sobrevivência (Fraquezas × Ameaças). Onde o cliente minimiza dano.",
+          "items": {
+            "$ref": "#/definitions/towsStrategy"
+          }
+        }
+      }
+    },
+    "_deprecated_notes": {
+      "type": "string",
+      "description": "NÃO usar. Campos descontinuados que o renderer do portal ignora: 'scenarios', 'financial_summary_90d', 'risk_adjusted_ranking'. A projeção de cenários é feita em gt-diagnostico-midia-paga (budget_reallocation_scenarios); a consolidação financeira é redundante com priority_actions[].financial_impact."
+    },
+    "key_insight": {
+      "type": "object",
+      "description": "Ponto de alavancagem desta skill — o bloco que merece destaque visual para conversa com o stakeholder. Ver PADRAO-OUTPUT.md.",
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "Frase-manchete do ponto (pode virar quote destacada no renderer)"
+        },
+        "context": {
+          "type": "string",
+          "description": "Contexto em 2-3 linhas explicando o cenário"
+        },
+        "numbered_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Razões numeradas (o renderer vira 3 cards numerados)"
+        },
+        "discussion_anchor": {
+          "type": "string",
+          "description": "Por que este é o ponto para stakeholder decidir/validar"
+        }
+      }
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta se a análise revelou fragilidade real do cliente (não há diferencial claro, premissa contraditória, etc.). Nunca omitir se justificado."
+    }
+  },
+  "definitions": {
+    "towsStrategy": {
+      "type": "object",
+      "required": [
+        "id",
+        "strategy"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador (ex: SO1, WT2)."
+        },
+        "strategy": {
+          "type": "string",
+          "description": "Ação específica de cruzamento."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Por que essa estratégia funciona (cita a força/fraqueza e a oportunidade/ameaça)."
+        },
+        "expected_outcome": {
+          "type": "string",
+          "description": "O que muda se executar (resultado tangível)."
+        }
+      }
+    }
+  }
+}

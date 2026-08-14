@@ -1,0 +1,455 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Posicionamento",
+  "description": "Output estruturado do canvas de posicionamento estrategico: declaracoes, PUV, canvas 4P, territorio de marca e taglines.",
+  "type": "object",
+  "required": [
+    "summary",
+    "client_name",
+    "positioning_statements",
+    "chosen_statement",
+    "puv",
+    "canvas_4p",
+    "brand_territory",
+    "taglines",
+    "recommended_tagline",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do posicionamento estratégico. Inclui PUV definida e território de marca escolhido."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete com o veredito do posicionamento em 1 frase (ex: '[Cliente] ocupa território [Especialista Premium do nicho] — janela de 12-18 meses antes da concorrência chegar')."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "posicao",
+              "competicao",
+              "janela",
+              "maturidade",
+              "oportunidade",
+              "risco"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "positioning_map": {
+      "type": "object",
+      "description": "Mapa de posicionamento competitivo 2x2",
+      "properties": {
+        "axis_x": {
+          "type": "string",
+          "description": "Label do eixo horizontal"
+        },
+        "axis_y": {
+          "type": "string",
+          "description": "Label do eixo vertical"
+        },
+        "client_position": {
+          "type": "string",
+          "description": "Quadrante recomendado para o cliente"
+        },
+        "justification": {
+          "type": "string",
+          "description": "Justificativa para a posicao recomendada"
+        },
+        "competitor_positions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "quadrant": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "positioning_statements": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "justification"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Nome/direcao da opcao (ex: O Especialista)"
+          },
+          "statement": {
+            "type": "string",
+            "description": "Declaracao de posicionamento no formato classico"
+          },
+          "justification": {
+            "type": "string",
+            "description": "Justificativa da opcao"
+          },
+          "bet": {
+            "type": "string",
+            "description": "O que esta opcao prioriza"
+          },
+          "risk": {
+            "type": "string",
+            "description": "Onde pode falhar"
+          }
+        }
+      },
+      "description": "3 opcoes de declaracao de posicionamento"
+    },
+    "chosen_statement": {
+      "type": "string",
+      "description": "Declaracao de posicionamento escolhida pelo operador (pode ser uma das 3 ou refinada)"
+    },
+    "puv": {
+      "type": "string",
+      "description": "Proposta Unica de Valor em 1 frase. Deve ser verdadeira, especifica, relevante, memoravel e diferente."
+    },
+    "canvas_4p": {
+      "type": "object",
+      "required": [
+        "product",
+        "price",
+        "place",
+        "promotion"
+      ],
+      "description": "Canvas de posicionamento estrategico nos 4Ps",
+      "properties": {
+        "product": {
+          "type": "object",
+          "required": [
+            "delivers",
+            "transformation",
+            "doesnt_deliver"
+          ],
+          "properties": {
+            "delivers": {
+              "type": "string",
+              "description": "O que entregamos de verdade (alem das features)"
+            },
+            "transformation": {
+              "type": "string",
+              "description": "Qual transformacao o cliente vive (antes e depois)"
+            },
+            "doesnt_deliver": {
+              "type": "string",
+              "description": "O que NAO entregamos (delimitacao honesta)"
+            }
+          }
+        },
+        "price": {
+          "type": "object",
+          "required": [
+            "positioning",
+            "justification"
+          ],
+          "properties": {
+            "positioning": {
+              "type": "string",
+              "enum": [
+                "premium",
+                "mid-market",
+                "value"
+              ],
+              "description": "Posicionamento de preco em relacao ao mercado"
+            },
+            "justification": {
+              "type": "string",
+              "description": "Justificativa do preco na comunicacao"
+            },
+            "anchoring": {
+              "type": "string",
+              "description": "Estrategia de ancoragem de valor (se aplicavel)"
+            }
+          }
+        },
+        "place": {
+          "type": "object",
+          "required": [
+            "main_channel",
+            "support_channel",
+            "avoid_channels"
+          ],
+          "properties": {
+            "main_channel": {
+              "type": "string",
+              "description": "Canal principal de aquisicao recomendado"
+            },
+            "main_channel_justification": {
+              "type": "string",
+              "description": "Por que este canal para este ICP"
+            },
+            "support_channel": {
+              "type": "string",
+              "description": "Canal de suporte/secundario"
+            },
+            "avoid_channels": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "channel",
+                  "reason"
+                ],
+                "properties": {
+                  "channel": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              },
+              "description": "Canais a evitar e por que"
+            }
+          }
+        },
+        "promotion": {
+          "type": "object",
+          "required": [
+            "tone",
+            "top_funnel_message",
+            "bottom_funnel_message"
+          ],
+          "properties": {
+            "tone": {
+              "type": "string",
+              "description": "Tom e estilo de comunicacao"
+            },
+            "top_funnel_message": {
+              "type": "string",
+              "description": "Mensagem de entrada no funil (awareness)"
+            },
+            "bottom_funnel_message": {
+              "type": "string",
+              "description": "Mensagem de conversao (decision)"
+            }
+          }
+        }
+      }
+    },
+    "brand_territory": {
+      "type": "object",
+      "required": [
+        "three_words",
+        "description",
+        "competitor_territories"
+      ],
+      "properties": {
+        "three_words": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "3 palavras que definem o territorio de marca"
+        },
+        "description": {
+          "type": "string",
+          "description": "O que o territorio significa na pratica"
+        },
+        "competitor_territories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "competitor",
+              "territory"
+            ],
+            "properties": {
+              "competitor": {
+                "type": "string"
+              },
+              "territory": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Territorios ja ocupados pelos concorrentes"
+        },
+        "availability_justification": {
+          "type": "string",
+          "description": "Por que o territorio escolhido esta disponivel"
+        }
+      }
+    },
+    "taglines": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "tagline",
+          "justification"
+        ],
+        "properties": {
+          "tagline": {
+            "type": "string",
+            "description": "Texto da tagline"
+          },
+          "tone": {
+            "type": "string",
+            "description": "Tom da tagline"
+          },
+          "justification": {
+            "type": "string",
+            "description": "Por que funciona"
+          },
+          "best_use": {
+            "type": "string",
+            "description": "Onde usar (site, assinatura, anuncios)"
+          }
+        }
+      },
+      "description": "3 opcoes de tagline"
+    },
+    "recommended_tagline": {
+      "type": "string",
+      "description": "Tagline recomendada (escolhida pelo operador)"
+    },
+    "operator_direction": {
+      "type": "object",
+      "description": "Direcoes escolhidas pelo operador durante a co-criacao",
+      "properties": {
+        "strongest_differential": {
+          "type": "string",
+          "description": "Diferencial mais forte segundo o operador"
+        },
+        "desired_position": {
+          "type": "string",
+          "description": "Posicao desejada no mapa competitivo"
+        },
+        "positioning_restrictions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "O que o cliente NAO quer ser associado"
+        },
+        "desired_tone": {
+          "type": "string",
+          "description": "Tom de comunicacao desejado"
+        }
+      }
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora de conclusao"
+    },
+    "key_insight": {
+      "type": "object",
+      "description": "Ponto de alavancagem — território × janela de oportunidade.",
+      "required": [
+        "headline",
+        "context",
+        "numbered_reasons",
+        "discussion_anchor"
+      ],
+      "properties": {
+        "headline": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "numbered_reasons": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          }
+        },
+        "discussion_anchor": {
+          "type": "string"
+        },
+        "feasibility": {
+          "type": "string"
+        }
+      }
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta de honestidade: território aspiracional, diferencial não ainda construído, ou risco de posicionamento forçado."
+    }
+  }
+}

@@ -1,0 +1,585 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PesquisaMercado",
+  "description": "Output estruturado da pesquisa de mercado: TAM/SAM/SOM, concorrentes, tendencias, JTBD e diferenciais reais.",
+  "type": "object",
+  "required": [
+    "summary",
+    "client_name",
+    "segment",
+    "region",
+    "tam_sam_som",
+    "competitors",
+    "trends",
+    "threats",
+    "unexploited_opportunity",
+    "market_jtbd",
+    "real_differentials",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases da pesquisa de mercado. Inclui oportunidade principal e diferencial real do cliente."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete em 1 linha com o veredito da pesquisa (para hero do resumo executivo no portal)"
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "description": "KPIs visuais categorizados para o resumo executivo",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "posicao",
+              "competicao",
+              "janela",
+              "maturidade",
+              "oportunidade",
+              "risco"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Achados categorizados por intenção (vantagem/contexto/ameaça/ação)",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "segment": {
+      "type": "string",
+      "description": "Segmento de atuacao"
+    },
+    "region": {
+      "type": "string",
+      "description": "Regiao de atuacao"
+    },
+    "tam_sam_som": {
+      "type": "object",
+      "description": "Sizing de mercado com metodologia e fontes",
+      "required": [
+        "tam",
+        "sam",
+        "som",
+        "methodology",
+        "sources"
+      ],
+      "properties": {
+        "tam": {
+          "type": "object",
+          "required": [
+            "value_brl",
+            "description"
+          ],
+          "properties": {
+            "value_brl": {
+              "type": "number",
+              "description": "Valor do TAM em reais"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descricao do que o TAM representa"
+            }
+          }
+        },
+        "sam": {
+          "type": "object",
+          "required": [
+            "value_brl",
+            "description",
+            "filters"
+          ],
+          "properties": {
+            "value_brl": {
+              "type": "number",
+              "description": "Valor do SAM em reais"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descricao do que o SAM representa"
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Filtros aplicados para chegar ao SAM (regiao, perfil, etc.)"
+            }
+          }
+        },
+        "som": {
+          "type": "object",
+          "required": [
+            "value_brl",
+            "description",
+            "assumptions"
+          ],
+          "properties": {
+            "value_brl": {
+              "type": "number",
+              "description": "Valor do SOM em reais (anual). Teto de mercado capturavel — NAO derivar da meta do cliente, NAO limitar pela capacidade interna."
+            },
+            "description": {
+              "type": "string",
+              "description": "Descricao do que o SOM representa. Inclua a triangulacao metodologica (capacidade + market share + segmento) e explicite: (1) que nao e derivado da meta do cliente; (2) que e metrica de mercado, nao de capacidade."
+            },
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Premissas usadas para estimar o SOM (posicionamento, competicao, dinamica de nicho, nao premissas operacionais de capacidade)."
+            },
+            "operational_ceiling_note": {
+              "type": "string",
+              "description": "Nota opcional descrevendo o teto de capacidade operacional atual (ex: 'estrutura atual de 3 vets topa em R$ 5,4M — R$ 1,6M entre capacidade e SOM exigem expansao futura'). Separa restricao INTERNA (capacidade) do SOM (mercado)."
+            },
+            "related_but_separate": {
+              "type": "object",
+              "description": "Metricas relacionadas mas SEPARADAS do SOM: meta comercial do cliente de fontes diversas. Ajuda a comparar aspiracao da cliente vs potencial de mercado sem conflatar.",
+              "properties": {
+                "client_annual_revenue_goal_brl_v4mos": {
+                  "type": "number",
+                  "description": "Meta anual registrada no Formulario V4MOS (campo 'Meta 12M')"
+                },
+                "client_annual_revenue_goal_source_v4mos": {
+                  "type": "string",
+                  "description": "Fonte exata (ex: 'Formulario V4MOS - campo Meta 12M preenchido pela cliente')"
+                },
+                "client_monthly_revenue_goal_kickoff": {
+                  "type": "string",
+                  "description": "Meta mensal negociada no kickoff (se houver), em formato livre (ex: 'R$ 90.000 = R$ 1,08M/ano')"
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Narrativa explicando relacao entre metas e SOM — enfatizando que metas sao aspiracao operacional, nao metrica de mercado."
+                }
+              }
+            }
+          }
+        },
+        "methodology": {
+          "type": "string",
+          "enum": [
+            "top-down",
+            "bottom-up",
+            "mixed"
+          ],
+          "description": "Metodologia usada para estimar o mercado"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "url"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Nome da fonte (ex: SEBRAE, IBGE, Statista)"
+              },
+              "url": {
+                "type": "string",
+                "description": "URL da fonte ou referencia"
+              },
+              "year": {
+                "type": "integer",
+                "description": "Ano dos dados"
+              }
+            }
+          },
+          "description": "Fontes usadas para os dados de mercado"
+        }
+      }
+    },
+    "competitors": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "positioning",
+          "channels",
+          "strengths",
+          "weaknesses",
+          "estimated_pricing",
+          "digital_score"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do concorrente"
+          },
+          "positioning": {
+            "type": "string",
+            "description": "Como o concorrente se posiciona (PUV, mensagem principal)"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Canais de aquisicao usados (Google Ads, Meta, organico, etc.)"
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Pontos fortes observados"
+          },
+          "weaknesses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Pontos fracos observados"
+          },
+          "estimated_pricing": {
+            "type": "string",
+            "description": "Estimativa de preco/ticket medio (ex: R$ 2.000/mes)"
+          },
+          "digital_score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Score de presenca digital (1-10)"
+          },
+          "digital_details": {
+            "type": "object",
+            "properties": {
+              "website": {
+                "type": "string"
+              },
+              "instagram": {
+                "type": "string"
+              },
+              "google": {
+                "type": "string"
+              },
+              "active_ads": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Analise de cada concorrente"
+    },
+    "competitive_map": {
+      "type": "object",
+      "description": "Mapa competitivo 2x2",
+      "properties": {
+        "axis_x": {
+          "type": "string",
+          "description": "Eixo horizontal (ex: Generalista vs Especialista)"
+        },
+        "axis_y": {
+          "type": "string",
+          "description": "Eixo vertical (ex: Premium vs Acessivel)"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "quadrant": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "empty_spaces": {
+          "type": "string",
+          "description": "Espacos nao ocupados no mapa"
+        },
+        "crowded_spaces": {
+          "type": "string",
+          "description": "Espacos mais disputados"
+        }
+      }
+    },
+    "trends": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "trend",
+          "evidence"
+        ],
+        "properties": {
+          "trend": {
+            "type": "string",
+            "description": "Descricao da tendencia"
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Evidencia ou fonte que comprova a tendencia"
+          }
+        }
+      },
+      "description": "Tendencias em crescimento no setor"
+    },
+    "threats": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "threat",
+          "potential_impact"
+        ],
+        "properties": {
+          "threat": {
+            "type": "string",
+            "description": "Descricao da ameaca"
+          },
+          "potential_impact": {
+            "type": "string",
+            "description": "Impacto potencial nos proximos 12 meses"
+          }
+        }
+      },
+      "description": "Ameacas que podem impactar o mercado"
+    },
+    "unexploited_opportunity": {
+      "type": "object",
+      "required": [
+        "description",
+        "why_nobody_does_it",
+        "feasibility"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Oportunidade nao explorada pelos concorrentes"
+        },
+        "why_nobody_does_it": {
+          "type": "string",
+          "description": "Motivo pelo qual ninguem explora essa oportunidade"
+        },
+        "feasibility": {
+          "type": "string",
+          "enum": [
+            "alta",
+            "media",
+            "baixa"
+          ],
+          "description": "Viabilidade para o cliente"
+        }
+      }
+    },
+    "market_jtbd": {
+      "type": "object",
+      "required": [
+        "current_solutions",
+        "alternatives"
+      ],
+      "properties": {
+        "current_solutions": {
+          "type": "string",
+          "description": "Como o mercado resolve hoje o problema do cliente"
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "type",
+              "description"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "direct",
+                  "indirect",
+                  "diy",
+                  "inaction"
+                ],
+                "description": "Tipo de alternativa"
+              },
+              "description": {
+                "type": "string",
+                "description": "Descricao da alternativa"
+              }
+            }
+          },
+          "description": "Alternativas que o mercado considera"
+        },
+        "cost_of_inaction": {
+          "type": "string",
+          "description": "O que acontece se o cliente nao resolver o problema"
+        }
+      }
+    },
+    "real_differentials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "differential",
+          "status",
+          "icp_relevance"
+        ],
+        "properties": {
+          "differential": {
+            "type": "string",
+            "description": "Descricao do diferencial"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "potential",
+              "aspirational"
+            ],
+            "description": "Se o diferencial ja existe, e potencial, ou aspiracional"
+          },
+          "icp_relevance": {
+            "type": "string",
+            "description": "Por que este diferencial importa para o ICP"
+          },
+          "action_needed": {
+            "type": "string",
+            "description": "Acao necessaria para ativar o diferencial (se potencial/aspiracional)"
+          }
+        }
+      },
+      "description": "Diferenciais competitivos reais e potenciais"
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta se nao ha diferencial claro ou se a pesquisa revelou fragilidades"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora de conclusao"
+    },
+    "market_share": {
+      "type": "object",
+      "description": "Comparação do faturamento atual do cliente vs SAM/SOM + meta da cliente separada + camada enderecavel opcional.",
+      "properties": {
+        "current_revenue_brl": {
+          "type": "number",
+          "description": "Faturamento atual anual (12 meses) em reais."
+        },
+        "current_share_of_sam_pct": {
+          "type": "number",
+          "description": "% do SAM que o cliente captura hoje."
+        },
+        "target_share_of_sam_pct": {
+          "type": "number",
+          "description": "% do SAM que o SOM representa. Sem 'target_scenario' — SOM e metrica unica, nao cenarios."
+        },
+        "gap_to_som_brl": {
+          "type": "number",
+          "description": "Diferenca absoluta entre SOM e faturamento atual."
+        },
+        "gap_to_som_pct": {
+          "type": "number",
+          "description": "% de crescimento sobre atual necessario para atingir SOM."
+        },
+        "commentary": {
+          "type": "string",
+          "description": "Narrativa do market share: onde esta, onde pode chegar, porque."
+        },
+        "client_annual_revenue_goal_brl": {
+          "type": "number",
+          "description": "Meta comercial anual registrada pela cliente — SEPARADA do SOM. Use a meta oficial (V4MOS se houver). NAO usar como SOM."
+        },
+        "client_annual_revenue_goal_source": {
+          "type": "string",
+          "description": "Fonte documentada da meta do cliente (ex: 'Formulario V4MOS - campo Meta 12M', 'Kickoff V4', 'Briefing inicial'). Obrigatorio quando client_annual_revenue_goal_brl esta presente."
+        },
+        "client_goal_vs_som_note": {
+          "type": "string",
+          "description": "Narrativa explicando a relacao entre a meta da cliente e o SOM. Se houver MAIS de uma meta em fontes diferentes (V4MOS + kickoff), registrar ambas aqui com suas fontes respectivas."
+        },
+        "enderecavel_value_brl": {
+          "type": "number",
+          "description": "Tamanho do Mercado Enderecavel (subset do SAM onde a oferta do cliente e relevante). Usar quando SAM tem perfis heterogeneos e o cliente escolhe competir apenas em um subsegmento (tipicamente premium humanizado + upgrading medium)."
+        },
+        "enderecavel_composition": {
+          "type": "string",
+          "description": "Como chegou ao valor do enderecavel — composicao dos subsegmentos somados (ex: 'Premium humanizado R$17M + 20% do medio R$2,9M = R$20M')."
+        },
+        "enderecavel_note": {
+          "type": "string",
+          "description": "Explicacao pedagogica da camada enderecavel — renderizada no portal abaixo do grafico Market Share. Tipicamente explica: (1) que o SAM tem perfis diversos; (2) quais perfis o cliente NAO persegue por decisao estrategica; (3) separa barreira de escolha (SAM->Enderecavel) de barreira competitiva (Enderecavel->SOM)."
+        }
+      }
+    }
+  }
+}
