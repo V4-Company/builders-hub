@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CRM Setup",
+  "description": "Output estruturado da configuração de CRM Kommo: pipeline, tags, réguas de automação e checklist de teste.",
+  "type": "object",
+  "required": [
+    "summary",
+    "pipeline_stages",
+    "tags",
+    "welcome_sequence",
+    "nurture_sequence",
+    "test_checklist",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do setup do CRM. Inclui número de etapas do pipeline e réguas configuradas."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pipeline_stages": {
+      "type": "array",
+      "description": "Etapas do pipeline de vendas no Kommo.",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "order",
+          "name",
+          "description"
+        ],
+        "properties": {
+          "order": {
+            "type": "integer",
+            "description": "Ordem da etapa no pipeline"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da etapa (ex: 'Lead', 'Qualificado')"
+          },
+          "description": {
+            "type": "string",
+            "description": "O que significa estar nesta etapa"
+          },
+          "auto_actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Ações automáticas disparadas nesta etapa"
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "object",
+      "required": [
+        "origin",
+        "score",
+        "products",
+        "temperature"
+      ],
+      "properties": {
+        "origin": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags de origem do lead"
+        },
+        "score": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Níveis de score SDR"
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Produtos/serviços de interesse"
+        },
+        "temperature": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Temperatura do lead"
+        }
+      }
+    },
+    "welcome_sequence": {
+      "type": "array",
+      "description": "Régua de boas-vindas com 3 mensagens automáticas.",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "order",
+          "timing",
+          "channel",
+          "message"
+        ],
+        "properties": {
+          "order": {
+            "type": "integer",
+            "description": "Ordem da mensagem na sequência"
+          },
+          "timing": {
+            "type": "string",
+            "description": "Quando disparar (ex: 'imediata', '24h_sem_resposta')"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "whatsapp",
+              "email",
+              "whatsapp + email"
+            ],
+            "description": "Canal de envio"
+          },
+          "message": {
+            "type": "string",
+            "description": "Texto completo da mensagem"
+          }
+        }
+      }
+    },
+    "nurture_sequence": {
+      "type": "array",
+      "description": "Régua de nutrição de 30 dias com 4 touchpoints.",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "week",
+          "channel",
+          "message_type"
+        ],
+        "properties": {
+          "week": {
+            "type": "integer",
+            "description": "Semana do touchpoint (1-4)"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "whatsapp",
+              "email",
+              "whatsapp + email"
+            ],
+            "description": "Canal de envio"
+          },
+          "message_type": {
+            "type": "string",
+            "enum": [
+              "conteudo_de_valor",
+              "caso_de_sucesso",
+              "diferencial_produto",
+              "oferta_cta"
+            ],
+            "description": "Tipo de conteúdo do touchpoint"
+          },
+          "whatsapp_message": {
+            "type": "string",
+            "description": "Texto da mensagem WhatsApp"
+          },
+          "email_subject": {
+            "type": "string",
+            "description": "Assunto do email (quando aplicável)"
+          },
+          "email_body": {
+            "type": "string",
+            "description": "Corpo do email (quando aplicável)"
+          }
+        }
+      }
+    },
+    "test_checklist": {
+      "type": "array",
+      "description": "Checklist de testes para validar a configuração.",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "test",
+          "steps"
+        ],
+        "properties": {
+          "test": {
+            "type": "string",
+            "description": "Nome do teste"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Passos do teste"
+          },
+          "passed": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Se o teste passou (preenchido pelo operador)"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,352 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ClienteOculto",
+  "description": "Output estruturado da skill cliente-oculto: simulacao de mystery shopping com perfil do comprador, script de simulacao e avaliacao detalhada.",
+  "type": "object",
+  "required": [
+    "summary",
+    "buyer_profile",
+    "simulation_script",
+    "evaluation",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo executivo de 2-3 frases: nota geral, principal ponto forte, principal ponto critico e impacto estimado do SDR IA."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "buyer_profile": {
+      "type": "object",
+      "required": [
+        "name",
+        "situation",
+        "urgency",
+        "budget",
+        "main_objection"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome ficticio do comprador simulado."
+        },
+        "situation": {
+          "type": "string",
+          "description": "Contexto plausivel que justifica o interesse no produto/servico."
+        },
+        "urgency": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "Nivel de urgencia do comprador simulado."
+        },
+        "urgency_reason": {
+          "type": "string",
+          "description": "Motivo concreto da urgencia (ou falta dela)."
+        },
+        "budget": {
+          "type": "string",
+          "description": "Budget declarado ou implicito do comprador simulado."
+        },
+        "main_objection": {
+          "type": "string",
+          "description": "Objecao principal que sera levantada durante a simulacao."
+        },
+        "knowledge_level": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "description": "Nivel de conhecimento do comprador sobre o produto/servico."
+        }
+      }
+    },
+    "simulation_script": {
+      "type": "object",
+      "required": [
+        "opening_message",
+        "followup_30min",
+        "followup_2h",
+        "questions"
+      ],
+      "properties": {
+        "opening_message": {
+          "type": "string",
+          "description": "Mensagem de abertura natural que o ICP real enviaria."
+        },
+        "followup_30min": {
+          "type": "string",
+          "description": "Mensagem de follow-up caso nao haja resposta em 30 minutos."
+        },
+        "followup_2h": {
+          "type": "string",
+          "description": "Mensagem de follow-up caso nao haja resposta em 2 horas."
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "question",
+              "objective"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "description": "Pergunta que o comprador simulado fara."
+              },
+              "objective": {
+                "type": "string",
+                "description": "O que essa pergunta testa (conhecimento do produto, objecao de preco, follow-up, etc.)."
+              }
+            }
+          },
+          "description": "Perguntas estrategicas para testar diferentes aspectos do atendimento."
+        },
+        "buyer_behavior_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Regras de comportamento do comprador simulado (atraso de resposta, cautela, etc.)."
+        }
+      }
+    },
+    "simulation_metadata": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da simulacao (ISO 8601)."
+        },
+        "channel": {
+          "type": "string",
+          "description": "Canal onde a simulacao foi executada (WhatsApp, formulario, email, Instagram DM)."
+        },
+        "attendant_name": {
+          "type": "string",
+          "description": "Nome do atendente que respondeu (ou 'nao se identificou')."
+        },
+        "total_duration_minutes": {
+          "type": "integer",
+          "description": "Duracao total da conversa em minutos."
+        },
+        "conversation_transcript": {
+          "type": "string",
+          "description": "Transcricao completa da conversa com horarios."
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "required": [
+        "overall_score",
+        "strengths",
+        "critical_improvements",
+        "sdr_impact_per_improvement"
+      ],
+      "properties": {
+        "overall_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Nota geral de 0 a 10."
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "excellent",
+            "good",
+            "regular",
+            "poor",
+            "critical"
+          ],
+          "description": "Classificacao textual baseada na nota."
+        },
+        "criteria_scores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "criterion",
+              "score",
+              "observation"
+            ],
+            "properties": {
+              "criterion": {
+                "type": "string",
+                "description": "Nome do criterio avaliado."
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Nota de 0 a 10 para este criterio."
+              },
+              "observation": {
+                "type": "string",
+                "description": "Observacao detalhada sobre o desempenho neste criterio."
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Trecho da conversa que evidencia a avaliacao."
+              }
+            }
+          },
+          "description": "Notas individuais por criterio de avaliacao."
+        },
+        "strengths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "description": "Ponto forte observado com evidencia da conversa."
+          },
+          "description": "Lista de pontos fortes identificados no atendimento."
+        },
+        "critical_improvements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "description": "Ponto critico de melhoria em ordem de impacto."
+          },
+          "description": "Lista de pontos criticos de melhoria ordenados por impacto."
+        },
+        "sdr_impact_per_improvement": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "improvement",
+              "sdr_solution",
+              "estimated_impact"
+            ],
+            "properties": {
+              "improvement": {
+                "type": "string",
+                "description": "Ponto critico que o SDR IA vai resolver."
+              },
+              "sdr_solution": {
+                "type": "string",
+                "description": "Como especificamente o SDR IA vai resolver este ponto."
+              },
+              "estimated_impact": {
+                "type": "string",
+                "description": "Impacto estimado da melhoria (ex: '+20% na taxa de contato')."
+              }
+            }
+          },
+          "description": "Mapeamento de como o SDR IA vai resolver cada ponto critico."
+        },
+        "overall_sdr_impact": {
+          "type": "object",
+          "properties": {
+            "response_time_before": {
+              "type": "string",
+              "description": "Tempo de resposta observado na simulacao."
+            },
+            "response_time_after": {
+              "type": "string",
+              "description": "Tempo de resposta projetado com SDR IA (< 5 segundos)."
+            },
+            "contact_rate_before": {
+              "type": "number",
+              "description": "Taxa de contato estimada atual (%)."
+            },
+            "contact_rate_after": {
+              "type": "number",
+              "description": "Taxa de contato projetada com SDR IA (%)."
+            },
+            "financial_impact_monthly": {
+              "type": "number",
+              "description": "Impacto financeiro mensal estimado em reais."
+            }
+          }
+        }
+      }
+    }
+  }
+}

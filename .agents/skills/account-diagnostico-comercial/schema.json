@@ -1,0 +1,554 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DiagnosticoComercial",
+  "description": "Output estruturado da skill diagnostico-comercial: diagnostico do funil de vendas com benchmarks, mapa de objecoes, criterios de qualificacao e SLA.",
+  "type": "object",
+  "required": [
+    "summary",
+    "funnel_diagnosis",
+    "objection_map",
+    "qualification_criteria",
+    "sla",
+    "action_plan",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo executivo de 2-3 frases do diagnostico. Inclui gargalo principal, criterio 5 estrelas resumido e SLA de 5 estrelas."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "funnel_diagnosis": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "stage",
+          "current_rate",
+          "benchmark",
+          "bottleneck",
+          "root_cause"
+        ],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "description": "Nome da etapa do funil (ex: 'Lead para Primeiro Contato', 'Qualificacao para Proposta')."
+          },
+          "current_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Taxa de conversao atual em percentual."
+          },
+          "benchmark": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Taxa de conversao benchmark do setor em percentual."
+          },
+          "gap": {
+            "type": "number",
+            "description": "Diferenca entre a taxa atual e o benchmark (positivo = acima, negativo = abaixo)."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "above_benchmark",
+              "at_benchmark",
+              "below_benchmark",
+              "critical"
+            ],
+            "description": "Classificacao do desempenho da etapa."
+          },
+          "bottleneck": {
+            "type": "string",
+            "description": "Descricao especifica do gargalo identificado nesta etapa."
+          },
+          "root_cause": {
+            "type": "string",
+            "description": "Causa raiz mais provavel do gargalo."
+          },
+          "financial_impact_monthly": {
+            "type": "number",
+            "description": "Impacto financeiro estimado em reais por mes (receita perdida)."
+          }
+        }
+      },
+      "description": "Diagnostico de cada etapa do funil com taxas de conversao vs benchmarks."
+    },
+    "funnel_extended": {
+      "type": "array",
+      "description": "Funil estendido em 6-7 etapas para visualizacao no estilo 'Destrava Receita' (R->L). Opcional. Quando presente, o portal renderiza chevrons em vez do funil tradicional.",
+      "minItems": 4,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["stage", "volume", "rate_label"],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "description": "Nome da etapa (ex: Exposicao, Atencao, Interesse, Qualificacao, Compromisso, Decisao, Retencao)."
+          },
+          "volume": {
+            "type": "number",
+            "description": "Volume absoluto na etapa (mensal — todas as etapas devem usar o mesmo recorte)."
+          },
+          "volume_label": {
+            "type": "string",
+            "description": "Label de volume formatado (ex: '52.929/mês'). Se ausente, o renderer formata automaticamente."
+          },
+          "rate_label": {
+            "type": "string",
+            "description": "Label de taxa formatado (ex: '2,01% CTR', '24%', 'base', '100% [E]')."
+          },
+          "subtext": {
+            "type": "string",
+            "description": "Subtexto curto explicativo (fonte do dado, ressalva metodologica, etc.)."
+          },
+          "status": {
+            "type": ["string", "null"],
+            "enum": ["above_benchmark", "at_benchmark", "below_benchmark", "critical", null],
+            "description": "Status da etapa (mesma taxonomia do funnel_diagnosis). Null para etapas sem benchmark mapeado."
+          },
+          "estimated": {
+            "type": "boolean",
+            "description": "True se o valor é estimativa (renderer aplica tratamento visual diferenciado)."
+          },
+          "is_active_constraint": {
+            "type": "boolean",
+            "description": "True para a etapa que representa a 'Restrição Ativa' (gargalo principal). Apenas uma etapa deve ser true."
+          }
+        }
+      }
+    },
+    "primary_bottleneck": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "type": "string",
+          "description": "Etapa do funil onde esta o gargalo principal."
+        },
+        "description": {
+          "type": "string",
+          "description": "Descricao do gargalo principal."
+        },
+        "estimated_improvement": {
+          "type": "string",
+          "description": "Estimativa de melhoria se corrigido (ex: '+15% na conversao geral = +R$12.000/mes')."
+        }
+      }
+    },
+    "objection_map": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "objection",
+          "type",
+          "funnel_moment",
+          "recommended_response",
+          "sdr_prevention"
+        ],
+        "properties": {
+          "objection": {
+            "type": "string",
+            "description": "A objecao exata como o lead a expressa."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "price",
+              "urgency",
+              "authority",
+              "trust",
+              "need",
+              "competitor"
+            ],
+            "description": "Tipo da objecao segundo classificacao BANT+."
+          },
+          "funnel_moment": {
+            "type": "string",
+            "enum": [
+              "first_contact",
+              "qualification",
+              "proposal",
+              "negotiation"
+            ],
+            "description": "Em que momento do funil a objecao tipicamente aparece."
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Frequencia estimada com que essa objecao aparece."
+          },
+          "recommended_response": {
+            "type": "string",
+            "description": "Script curto de resposta recomendada para o vendedor humano (2-3 frases)."
+          },
+          "sdr_prevention": {
+            "type": "string",
+            "description": "Como o SDR IA deve abordar preventivamente para evitar que a objecao surja."
+          },
+          "example_dialogue": {
+            "type": "object",
+            "properties": {
+              "lead_says": {
+                "type": "string",
+                "description": "Frase tipica do lead ao apresentar a objecao."
+              },
+              "sdr_responds": {
+                "type": "string",
+                "description": "Resposta do SDR IA para a objecao."
+              }
+            }
+          }
+        }
+      },
+      "description": "Mapa completo de objecoes com tipo, momento, resposta e prevencao."
+    },
+    "objection_pattern": {
+      "type": "object",
+      "properties": {
+        "most_frequent_type": {
+          "type": "string",
+          "description": "Tipo de objecao mais frequente."
+        },
+        "most_critical_moment": {
+          "type": "string",
+          "description": "Momento do funil mais critico para objecoes."
+        },
+        "deal_killer_objection": {
+          "type": "string",
+          "description": "Objecao que mais mata vendas."
+        },
+        "main_recommendation": {
+          "type": "string",
+          "description": "Recomendacao principal para reduzir objecoes."
+        }
+      }
+    },
+    "qualification_criteria": {
+      "type": "object",
+      "required": [
+        "five_star",
+        "four_star",
+        "three_star",
+        "one_two_star"
+      ],
+      "properties": {
+        "five_star": {
+          "type": "object",
+          "required": [
+            "profile",
+            "mandatory_signals",
+            "action",
+            "example"
+          ],
+          "properties": {
+            "profile": {
+              "type": "string",
+              "description": "Descricao curta do perfil 5 estrelas."
+            },
+            "mandatory_signals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sinais obrigatorios — TODOS devem estar presentes."
+            },
+            "action": {
+              "type": "string",
+              "description": "Acao imediata ao identificar este lead."
+            },
+            "example": {
+              "type": "string",
+              "description": "Exemplo concreto de um lead 5 estrelas tipico."
+            }
+          }
+        },
+        "four_star": {
+          "type": "object",
+          "required": [
+            "profile",
+            "signals",
+            "min_signals",
+            "action",
+            "example"
+          ],
+          "properties": {
+            "profile": {
+              "type": "string",
+              "description": "Descricao curta do perfil 4 estrelas."
+            },
+            "signals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sinais possiveis — pelo menos min_signals devem estar presentes."
+            },
+            "min_signals": {
+              "type": "integer",
+              "description": "Quantidade minima de sinais presentes para 4 estrelas."
+            },
+            "action": {
+              "type": "string",
+              "description": "Acao ao identificar este lead."
+            },
+            "example": {
+              "type": "string",
+              "description": "Exemplo concreto de um lead 4 estrelas tipico."
+            }
+          }
+        },
+        "three_star": {
+          "type": "object",
+          "required": [
+            "profile",
+            "signals",
+            "min_signals",
+            "action",
+            "example"
+          ],
+          "properties": {
+            "profile": {
+              "type": "string",
+              "description": "Descricao curta do perfil 3 estrelas."
+            },
+            "signals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sinais possiveis para 3 estrelas."
+            },
+            "min_signals": {
+              "type": "integer",
+              "description": "Quantidade minima de sinais presentes para 3 estrelas."
+            },
+            "action": {
+              "type": "string",
+              "description": "Acao ao identificar este lead."
+            },
+            "example": {
+              "type": "string",
+              "description": "Exemplo concreto de um lead 3 estrelas tipico."
+            }
+          }
+        },
+        "one_two_star": {
+          "type": "object",
+          "required": [
+            "profile",
+            "disqualification_signals",
+            "action",
+            "example"
+          ],
+          "properties": {
+            "profile": {
+              "type": "string",
+              "description": "Descricao curta do perfil 1-2 estrelas."
+            },
+            "disqualification_signals": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sinais de desqualificacao — qualquer um e suficiente."
+            },
+            "action": {
+              "type": "string",
+              "description": "Acao ao identificar este lead."
+            },
+            "example": {
+              "type": "string",
+              "description": "Exemplo concreto de um lead 1-2 estrelas tipico."
+            }
+          }
+        },
+        "tiebreaker_rules": {
+          "type": "object",
+          "properties": {
+            "three_vs_four": {
+              "type": "string",
+              "description": "Regra de desempate entre 3 e 4 estrelas."
+            },
+            "two_vs_three": {
+              "type": "string",
+              "description": "Regra de desempate entre 2 e 3 estrelas."
+            }
+          }
+        }
+      }
+    },
+    "sla": {
+      "type": "object",
+      "required": [
+        "five_star_minutes",
+        "four_star_hours",
+        "three_star_hours"
+      ],
+      "properties": {
+        "five_star_minutes": {
+          "type": "integer",
+          "description": "Tempo maximo de resposta em minutos para leads 5 estrelas."
+        },
+        "five_star_responsible": {
+          "type": "string",
+          "description": "Responsavel por atender leads 5 estrelas."
+        },
+        "five_star_channel": {
+          "type": "string",
+          "description": "Canal de contato para leads 5 estrelas."
+        },
+        "four_star_hours": {
+          "type": "number",
+          "description": "Tempo maximo de resposta em horas para leads 4 estrelas."
+        },
+        "four_star_responsible": {
+          "type": "string",
+          "description": "Responsavel por atender leads 4 estrelas."
+        },
+        "three_star_hours": {
+          "type": "number",
+          "description": "Tempo maximo para leads 3 estrelas entrarem em regua automatica (em horas)."
+        },
+        "escalation_5star_minutes": {
+          "type": "integer",
+          "description": "Tempo em minutos apos o qual escalar se lead 5 estrelas nao foi contatado."
+        },
+        "escalation_4star_hours": {
+          "type": "number",
+          "description": "Tempo em horas apos o qual escalar se lead 4 estrelas nao foi contatado."
+        },
+        "escalation_responsible": {
+          "type": "string",
+          "description": "Para quem escalar se o SLA for violado."
+        }
+      }
+    },
+    "action_plan": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "responsible",
+          "timeline",
+          "measurement"
+        ],
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Prioridade da acao (1 = maior impacto)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Descricao especifica da acao."
+          },
+          "responsible": {
+            "type": "string",
+            "description": "Quem e responsavel pela execucao (vendedor, SDR IA, gestor, consultor)."
+          },
+          "timeline": {
+            "type": "string",
+            "description": "Prazo realista para implementacao."
+          },
+          "measurement": {
+            "type": "string",
+            "description": "Como medir se a acao deu resultado."
+          },
+          "expected_impact": {
+            "type": "string",
+            "description": "Estimativa quantitativa do impacto esperado."
+          }
+        }
+      },
+      "description": "Plano de acao comercial com 3-5 acoes priorizadas por impacto."
+    }
+  }
+}

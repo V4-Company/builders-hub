@@ -1,0 +1,539 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SDRIAConfig",
+  "description": "Output estruturado da skill sdr-ia-config: configuracao do Patagon, integracao Kommo, alertas e resultados dos testes.",
+  "type": "object",
+  "required": [
+    "summary",
+    "patagon_config",
+    "kommo_integration",
+    "alerts_config",
+    "test_results",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo executivo de 2-3 frases: agente configurado, integracao ativa, resultado dos testes."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "patagon_config": {
+      "type": "object",
+      "required": [
+        "agent_name",
+        "scoring_rules"
+      ],
+      "properties": {
+        "agent_name": {
+          "type": "string",
+          "description": "Nome do agente SDR IA no Patagon (ex: 'Ana da Empresa X')."
+        },
+        "agent_description": {
+          "type": "string",
+          "description": "Descricao interna do agente no Patagon."
+        },
+        "persona_instructions": {
+          "type": "string",
+          "description": "Texto completo das instrucoes de personalidade configuradas no Patagon."
+        },
+        "welcome_message": {
+          "type": "string",
+          "description": "Mensagem de boas-vindas configurada no Patagon."
+        },
+        "qualification_questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "integer",
+                "description": "Ordem da pergunta."
+              },
+              "question": {
+                "type": "string",
+                "description": "Texto da pergunta configurada."
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Se a pergunta e obrigatoria."
+              }
+            }
+          },
+          "description": "Perguntas de qualificacao configuradas no fluxo."
+        },
+        "scoring_rules": {
+          "type": "object",
+          "required": [
+            "five_star",
+            "four_star",
+            "three_star",
+            "two_star",
+            "one_star"
+          ],
+          "properties": {
+            "five_star": {
+              "type": "object",
+              "properties": {
+                "criteria": {
+                  "type": "string",
+                  "description": "Criterios para score 5 estrelas."
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Acao automatica para 5 estrelas."
+                }
+              }
+            },
+            "four_star": {
+              "type": "object",
+              "properties": {
+                "criteria": {
+                  "type": "string",
+                  "description": "Criterios para score 4 estrelas."
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Acao automatica para 4 estrelas."
+                }
+              }
+            },
+            "three_star": {
+              "type": "object",
+              "properties": {
+                "criteria": {
+                  "type": "string",
+                  "description": "Criterios para score 3 estrelas."
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Acao automatica para 3 estrelas."
+                }
+              }
+            },
+            "two_star": {
+              "type": "object",
+              "properties": {
+                "criteria": {
+                  "type": "string",
+                  "description": "Criterios para score 2 estrelas."
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Acao automatica para 2 estrelas."
+                }
+              }
+            },
+            "one_star": {
+              "type": "object",
+              "properties": {
+                "criteria": {
+                  "type": "string",
+                  "description": "Criterios para score 1 estrela."
+                },
+                "action": {
+                  "type": "string",
+                  "description": "Acao automatica para 1 estrela."
+                }
+              }
+            }
+          },
+          "description": "Regras de scoring configuradas no Patagon."
+        },
+        "objection_responses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "objection": {
+                "type": "string",
+                "description": "Objecao configurada."
+              },
+              "response": {
+                "type": "string",
+                "description": "Resposta configurada."
+              }
+            }
+          },
+          "description": "Respostas de objecoes configuradas no Patagon."
+        },
+        "followup_config": {
+          "type": "object",
+          "properties": {
+            "after_1h": {
+              "type": "string"
+            },
+            "after_24h": {
+              "type": "string"
+            },
+            "after_3d": {
+              "type": "string"
+            },
+            "max_followups": {
+              "type": "integer"
+            }
+          },
+          "description": "Configuracao de follow-ups automaticos."
+        },
+        "handoff_config": {
+          "type": "object",
+          "properties": {
+            "handoff_message": {
+              "type": "string",
+              "description": "Mensagem de transicao para humano."
+            },
+            "destination_name": {
+              "type": "string",
+              "description": "Nome do vendedor destino."
+            },
+            "destination_whatsapp": {
+              "type": "string",
+              "description": "WhatsApp do vendedor destino."
+            }
+          }
+        }
+      }
+    },
+    "kommo_integration": {
+      "type": "object",
+      "required": [
+        "field_mapping",
+        "api_configured"
+      ],
+      "properties": {
+        "api_configured": {
+          "type": "boolean",
+          "description": "Se a API key do Kommo foi configurada e a conexao testada com sucesso."
+        },
+        "pipeline_name": {
+          "type": "string",
+          "description": "Nome do pipeline no Kommo onde os leads entram."
+        },
+        "field_mapping": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "patagon_field",
+              "kommo_field"
+            ],
+            "properties": {
+              "patagon_field": {
+                "type": "string",
+                "description": "Nome do campo no Patagon."
+              },
+              "kommo_field": {
+                "type": "string",
+                "description": "Nome do campo no Kommo."
+              },
+              "field_type": {
+                "type": "string",
+                "description": "Tipo do campo (texto, telefone, tag, nota, data)."
+              },
+              "is_custom_field": {
+                "type": "boolean",
+                "description": "Se o campo no Kommo e personalizado (criado para esta integracao)."
+              }
+            }
+          },
+          "description": "Mapeamento de campos entre Patagon e Kommo."
+        },
+        "stage_mapping": {
+          "type": "object",
+          "properties": {
+            "qualified_stage": {
+              "type": "string",
+              "description": "Etapa do pipeline para leads 4-5 estrelas."
+            },
+            "nurture_stage": {
+              "type": "string",
+              "description": "Etapa do pipeline para leads 3 estrelas."
+            },
+            "cold_stage": {
+              "type": "string",
+              "description": "Etapa do pipeline para leads 1-2 estrelas."
+            }
+          }
+        },
+        "auto_tags": {
+          "type": "object",
+          "properties": {
+            "by_score": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": "Tags automaticas por score (ex: {'5_star': ['Lead Quente', '5 estrelas']})."
+            },
+            "by_source": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Tags automaticas por UTM source (ex: {'google': 'Google Ads'})."
+            }
+          }
+        }
+      }
+    },
+    "alerts_config": {
+      "type": "object",
+      "required": [
+        "template",
+        "seller_whatsapp",
+        "sla_minutes"
+      ],
+      "properties": {
+        "template": {
+          "type": "string",
+          "description": "Template da mensagem de alerta enviada ao vendedor."
+        },
+        "seller_name": {
+          "type": "string",
+          "description": "Nome do vendedor que recebe alertas."
+        },
+        "seller_whatsapp": {
+          "type": "string",
+          "description": "Numero de WhatsApp do vendedor."
+        },
+        "backup_name": {
+          "type": "string",
+          "description": "Nome do backup caso vendedor nao responda no SLA."
+        },
+        "backup_whatsapp": {
+          "type": "string",
+          "description": "Numero de WhatsApp do backup."
+        },
+        "sla_minutes": {
+          "type": "integer",
+          "description": "Tempo maximo em minutos para o vendedor responder ao lead."
+        },
+        "escalation_minutes": {
+          "type": "integer",
+          "description": "Tempo em minutos apos o qual escalar para backup."
+        },
+        "business_hours": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string",
+              "description": "Horario de inicio do atendimento (ex: '08:00')."
+            },
+            "end": {
+              "type": "string",
+              "description": "Horario de fim do atendimento (ex: '19:00')."
+            }
+          }
+        },
+        "trigger_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Condicoes para disparar alerta (ex: 'score >= 4', 'qualificacao concluida')."
+        }
+      }
+    },
+    "test_results": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "lead_number",
+          "score",
+          "kommo_entry",
+          "alert_sent",
+          "response_time"
+        ],
+        "properties": {
+          "lead_number": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Numero do lead de teste (1-5)."
+          },
+          "profile_description": {
+            "type": "string",
+            "description": "Descricao curta do perfil simulado."
+          },
+          "expected_score": {
+            "type": "string",
+            "description": "Score esperado para este perfil."
+          },
+          "score": {
+            "type": "string",
+            "description": "Score real atribuido pelo agente."
+          },
+          "score_correct": {
+            "type": "boolean",
+            "description": "Se o score real correspondeu ao esperado."
+          },
+          "kommo_entry": {
+            "type": "boolean",
+            "description": "Se o lead entrou corretamente no Kommo."
+          },
+          "kommo_fields_complete": {
+            "type": "boolean",
+            "description": "Se todos os campos foram preenchidos no Kommo."
+          },
+          "kommo_stage_correct": {
+            "type": "boolean",
+            "description": "Se o lead entrou na etapa correta do pipeline."
+          },
+          "alert_sent": {
+            "type": "boolean",
+            "description": "Se o alerta foi enviado ao vendedor (quando aplicavel)."
+          },
+          "response_time": {
+            "type": "string",
+            "description": "Tempo de resposta do agente (ex: '3s', '5s')."
+          },
+          "tone_consistent": {
+            "type": "boolean",
+            "description": "Se o tom de voz estava consistente com o brandbook."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "partial"
+            ],
+            "description": "Status do teste: pass, fail ou partial."
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Problemas encontrados neste teste (vazio se pass)."
+          }
+        }
+      },
+      "description": "Resultados dos 5 testes de leads simulados."
+    },
+    "overall_test_result": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "needs_adjustments",
+        "failed"
+      ],
+      "description": "Resultado geral dos testes."
+    },
+    "issues_found": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de problemas encontrados nos testes (vazio se todos passaram)."
+    },
+    "adjustments_made": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ajustes feitos apos problemas encontrados nos testes."
+    },
+    "go_live": {
+      "type": "object",
+      "properties": {
+        "approved": {
+          "type": "boolean",
+          "description": "Se o go-live foi aprovado pelo operador e cliente."
+        },
+        "activated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data/hora de ativacao do agente (ISO 8601)."
+        },
+        "monitoring_plan": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Plano de monitoramento pos go-live."
+        }
+      }
+    }
+  }
+}
