@@ -1,0 +1,320 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Criativos de Anúncios",
+  "description": "Output estruturado do pack de criativos: 5 variações com hooks diferentes, prompts de geração e guia de teste A/B.",
+  "type": "object",
+  "required": [
+    "summary",
+    "variations",
+    "ab_test_guide",
+    "total_pieces",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do briefing de criativos. Inclui número de variações e formato/gancho principal."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "variations": {
+      "type": "array",
+      "description": "5 variações de criativo, cada uma com um tipo de hook diferente.",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "hook_type",
+          "hook_text",
+          "short_copy",
+          "medium_copy",
+          "headline",
+          "description",
+          "button_cta",
+          "visual_concept",
+          "recommended_format"
+        ],
+        "properties": {
+          "hook_type": {
+            "type": "string",
+            "enum": [
+              "dor",
+              "resultado",
+              "curiosidade",
+              "social_proof",
+              "urgencia"
+            ],
+            "description": "Tipo de hook testado nesta variação"
+          },
+          "hook_text": {
+            "type": "string",
+            "description": "Primeira frase/headline que para o scroll — máx 10 palavras",
+            "maxLength": 80
+          },
+          "short_copy": {
+            "type": "string",
+            "description": "Copy curta até 50 palavras para formatos compactos"
+          },
+          "medium_copy": {
+            "type": "string",
+            "description": "Copy média 50-100 palavras para formatos com mais espaço"
+          },
+          "headline": {
+            "type": "string",
+            "description": "Headline do anúncio — máx 30 caracteres",
+            "maxLength": 30
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do anúncio — máx 90 caracteres",
+            "maxLength": 90
+          },
+          "button_cta": {
+            "type": "string",
+            "description": "Texto do botão CTA"
+          },
+          "visual_concept": {
+            "type": "string",
+            "description": "Descrição detalhada da imagem/composição visual para geração"
+          },
+          "recommended_format": {
+            "type": "string",
+            "enum": [
+              "feed_square",
+              "feed_portrait",
+              "stories",
+              "carousel"
+            ],
+            "description": "Formato visual recomendado"
+          },
+          "midjourney_prompt": {
+            "type": "string",
+            "description": "Prompt completo para Midjourney com parâmetros"
+          },
+          "ideogram_prompt": {
+            "type": "string",
+            "description": "Prompt para Ideogram (quando há texto no criativo)"
+          },
+          "canva_guide": {
+            "type": "string",
+            "description": "Instruções de montagem final no Canva"
+          }
+        }
+      }
+    },
+    "ab_test_guide": {
+      "type": "object",
+      "required": [
+        "combinations",
+        "success_metrics",
+        "test_duration",
+        "cut_criteria"
+      ],
+      "properties": {
+        "combinations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Combinações sugeridas de teste A/B"
+        },
+        "success_metrics": {
+          "type": "object",
+          "properties": {
+            "ctr_min": {
+              "type": "string",
+              "description": "CTR mínimo aceitável"
+            },
+            "cpc_max": {
+              "type": "string",
+              "description": "CPC máximo aceitável"
+            }
+          }
+        },
+        "test_duration": {
+          "type": "string",
+          "description": "Duração mínima do teste"
+        },
+        "cut_criteria": {
+          "type": "string",
+          "description": "Critério para eliminar variações de baixa performance"
+        }
+      }
+    },
+    "total_pieces": {
+      "type": "integer",
+      "description": "Total de peças no pack (variações × formatos)",
+      "minimum": 15
+    },
+    "produced_creatives": {
+      "type": "object",
+      "description": "Registro dos PNGs efetivamente produzidos (após etapa semi-manual de geração). Opcional — só presente após operador entregar os assets. Cruza com copy-anuncios via 'linked_variation' e 'pair_with_creative'.",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "1-2 frases — quantos foram, formatos, onde estão hospedados."
+        },
+        "feed_instagram": {
+          "type": "array",
+          "description": "Criativos de feed Instagram (4:5 / 1080×1350).",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^feed-\\d{2}$",
+                "description": "Convenção: feed-01, feed-02, ..."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL pública do PNG (Vercel CDN da landing-{slug})."
+              },
+              "format": {
+                "type": "string",
+                "enum": [
+                  "feed_square",
+                  "feed_portrait"
+                ]
+              },
+              "dimensions": {
+                "type": "string",
+                "description": "Ex: '1080×1350'."
+              },
+              "linked_variation": {
+                "type": "string",
+                "description": "hook_type da variação correspondente em 'variations[]'."
+              },
+              "caption_label": {
+                "type": "string",
+                "description": "Frase curta resumindo o conceito visual (vai no card do portal)."
+              },
+              "use_with_copy": {
+                "type": "string",
+                "description": "Orientação de pareamento com copy (etapa funil + hook)."
+              }
+            }
+          }
+        },
+        "stories_instagram": {
+          "type": "array",
+          "description": "Criativos de stories Instagram (9:16 / 1080×1920).",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^story-\\d{2}$",
+                "description": "Convenção: story-01, story-02, ..."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "format": {
+                "type": "string",
+                "enum": [
+                  "stories"
+                ]
+              },
+              "dimensions": {
+                "type": "string"
+              },
+              "linked_variation": {
+                "type": "string"
+              },
+              "caption_label": {
+                "type": "string"
+              },
+              "use_with_copy": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manual de Marca (Brandbook + MIV unificados)",
+  "description": "Output unificado: Brandbook estratégico (porquê) + MIV técnico (como) no formato de 5 blocos da Estrutura MIV.",
+  "type": "object",
+  "required": [
+    "summary",
+    "scope",
+    "block1_strategic_foundations",
+    "block2_verbal_identity",
+    "block3_visual_identity_core",
+    "block4_applications",
+    "block5_governance",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 2-3 frases. Cliente pelo nome, principais decisões."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "early-stage",
+        "established"
+      ],
+      "description": "Escopo do manual: early-stage (Blocos 1-3 completos + 4 reduzido + 5 enxuto) ou established (todos os blocos completos)."
+    },
+    "block1_strategic_foundations": {
+      "type": "object",
+      "required": [
+        "presentation",
+        "essence",
+        "positioning",
+        "audience_persona"
+      ],
+      "properties": {
+        "presentation": {
+          "type": "object",
+          "required": [
+            "manifesto_short",
+            "manifesto_narrative",
+            "navigation_instructions"
+          ],
+          "properties": {
+            "opening_letter": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "manifesto_short": {
+              "type": "string",
+              "minLength": 20,
+              "maxLength": 200
+            },
+            "manifesto_narrative": {
+              "type": "string",
+              "minLength": 200
+            },
+            "navigation_instructions": {
+              "type": "string"
+            }
+          }
+        },
+        "essence": {
+          "type": "object",
+          "required": [
+            "purpose",
+            "vision",
+            "mission",
+            "values",
+            "promise",
+            "big_idea",
+            "brand_pillars"
+          ],
+          "properties": {
+            "purpose": {
+              "type": "string"
+            },
+            "vision": {
+              "type": "string"
+            },
+            "mission": {
+              "type": "string"
+            },
+            "values": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "behavior_yes",
+                  "behavior_no"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "behavior_yes": {
+                    "type": "string"
+                  },
+                  "behavior_no": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "promise": {
+              "type": "string"
+            },
+            "big_idea": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "brand_pillars": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "description"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "positioning": {
+          "type": "object",
+          "required": [
+            "statement",
+            "territory",
+            "archetype_dominant",
+            "competitive_matrix",
+            "puv"
+          ],
+          "properties": {
+            "statement": {
+              "type": "string"
+            },
+            "territory": {
+              "type": "string"
+            },
+            "archetype_dominant": {
+              "type": "object",
+              "required": [
+                "name",
+                "justification"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "justification": {
+                  "type": "string"
+                }
+              }
+            },
+            "archetype_secondary": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "justification": {
+                  "type": "string"
+                }
+              }
+            },
+            "competitive_matrix": {
+              "type": "object",
+              "required": [
+                "axis_x",
+                "axis_y",
+                "client_position",
+                "competitors"
+              ],
+              "properties": {
+                "axis_x": {
+                  "type": "string"
+                },
+                "axis_y": {
+                  "type": "string"
+                },
+                "client_position": {
+                  "type": "string"
+                },
+                "competitors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "quadrant"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "quadrant": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "puv": {
+              "type": "string"
+            }
+          }
+        },
+        "audience_persona": {
+          "type": "object",
+          "required": [
+            "primary_persona"
+          ],
+          "properties": {
+            "primary_persona": {
+              "type": "object",
+              "required": [
+                "name",
+                "age",
+                "income",
+                "occupation",
+                "main_pain",
+                "purchase_motivators"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "photo_description": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "string"
+                },
+                "income": {
+                  "type": "string"
+                },
+                "occupation": {
+                  "type": "string"
+                },
+                "main_pain": {
+                  "type": "string"
+                },
+                "purchase_motivators": {
+                  "type": "string"
+                }
+              }
+            },
+            "secondary_persona": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "anti_persona": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "buyer_journey_summary": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "history_culture": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "origin": {
+              "type": "string"
+            },
+            "milestones": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "culture": {
+              "type": "string"
+            },
+            "legacy": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "block2_verbal_identity": {
+      "type": "object",
+      "required": [
+        "personality",
+        "tone_of_voice",
+        "editorial_guidelines",
+        "slogan_tagline_signatures"
+      ],
+      "properties": {
+        "personality": {
+          "type": "object",
+          "required": [
+            "scales",
+            "as_a_person"
+          ],
+          "properties": {
+            "scales": {
+              "type": "array",
+              "minItems": 5,
+              "items": {
+                "type": "object",
+                "required": [
+                  "trait_low",
+                  "trait_high",
+                  "position"
+                ],
+                "properties": {
+                  "trait_low": {
+                    "type": "string"
+                  },
+                  "trait_high": {
+                    "type": "string"
+                  },
+                  "position": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  }
+                }
+              }
+            },
+            "archetype_applied": {
+              "type": "string"
+            },
+            "as_a_person": {
+              "type": "string"
+            }
+          }
+        },
+        "tone_of_voice": {
+          "type": "object",
+          "required": [
+            "pillars",
+            "channel_variations",
+            "say_dont_say"
+          ],
+          "properties": {
+            "pillars": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "definition",
+                  "manifestation"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "definition": {
+                    "type": "string"
+                  },
+                  "manifestation": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "channel_variations": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "object",
+                "required": [
+                  "channel",
+                  "adaptation"
+                ],
+                "properties": {
+                  "channel": {
+                    "type": "string"
+                  },
+                  "adaptation": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "say_dont_say": {
+              "type": "array",
+              "minItems": 8,
+              "items": {
+                "type": "object",
+                "required": [
+                  "situation",
+                  "say",
+                  "dont_say",
+                  "reason"
+                ],
+                "properties": {
+                  "situation": {
+                    "type": "string"
+                  },
+                  "say": {
+                    "type": "string"
+                  },
+                  "dont_say": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "editorial_guidelines": {
+          "type": "object",
+          "required": [
+            "vocabulary_categorized",
+            "form_of_address"
+          ],
+          "properties": {
+            "vocabulary_categorized": {
+              "type": "object",
+              "required": [
+                "essence_words",
+                "valued_repeated",
+                "audience_connection"
+              ],
+              "properties": {
+                "essence_words": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 5
+                },
+                "valued_repeated": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 5
+                },
+                "audience_connection": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 5
+                }
+              }
+            },
+            "official_glossary": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "term",
+                  "definition"
+                ],
+                "properties": {
+                  "term": {
+                    "type": "string"
+                  },
+                  "definition": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "forbidden_terms": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "term",
+                  "use_instead"
+                ],
+                "properties": {
+                  "term": {
+                    "type": "string"
+                  },
+                  "use_instead": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "form_of_address": {
+              "type": "string"
+            },
+            "emoji_punctuation": {
+              "type": "string"
+            },
+            "grammar_rules": {
+              "type": "string"
+            }
+          }
+        },
+        "naming_taxonomy": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "storytelling": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "story_arc": {
+              "type": "object",
+              "properties": {
+                "act1_before": {
+                  "type": "string"
+                },
+                "act2_different": {
+                  "type": "string"
+                },
+                "act3_after": {
+                  "type": "string"
+                }
+              }
+            },
+            "frameworks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "opening_hooks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "slogan_tagline_signatures": {
+          "type": "object",
+          "required": [
+            "tagline"
+          ],
+          "properties": {
+            "slogan": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tagline": {
+              "type": "string"
+            },
+            "verbal_signatures": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "block3_visual_identity_core": {
+      "type": "object",
+      "required": [
+        "logo",
+        "incorrect_uses",
+        "color_system",
+        "typography"
+      ],
+      "properties": {
+        "logo": {
+          "type": "object",
+          "required": [
+            "concept",
+            "style_description",
+            "visual_attributes",
+            "design_principles",
+            "anatomy",
+            "clear_space",
+            "min_max_size",
+            "official_versions",
+            "logo_directions"
+          ],
+          "properties": {
+            "concept": {
+              "type": "string",
+              "description": "Conceito do logo em 1-2 parágrafos: o que ele expressa estrategicamente"
+            },
+            "style_description": {
+              "type": "string",
+              "minLength": 200,
+              "description": "Descrição do ESTILO visual do logo: linguagem (serif/sans/script/symbolic), peso, tratamento, atemporalidade. Deve ter pelo menos 200 caracteres e descrever a personalidade visual concreta."
+            },
+            "visual_attributes": {
+              "type": "object",
+              "required": [
+                "form_language",
+                "weight",
+                "balance",
+                "color_application",
+                "personality_in_form"
+              ],
+              "properties": {
+                "form_language": {
+                  "type": "string",
+                  "description": "Geométrico, orgânico, mixed, etc."
+                },
+                "weight": {
+                  "type": "string"
+                },
+                "balance": {
+                  "type": "string"
+                },
+                "negative_space": {
+                  "type": "string"
+                },
+                "color_application": {
+                  "type": "string"
+                },
+                "personality_in_form": {
+                  "type": "string",
+                  "description": "Como cada adjetivo do tom de voz se traduz na forma"
+                },
+                "scalability": {
+                  "type": "string"
+                },
+                "differentiation_from_competitors": {
+                  "type": "string"
+                }
+              }
+            },
+            "design_principles": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "string"
+              },
+              "description": "Princípios de design que orientam o logo (ex: 'sobriedade acima de fofura', 'tipografia faz o trabalho pesado'). 4+ itens."
+            },
+            "anatomy": {
+              "type": "object",
+              "properties": {
+                "symbol": {
+                  "type": "string"
+                },
+                "wordmark": {
+                  "type": "string"
+                },
+                "lockup": {
+                  "type": "string"
+                }
+              }
+            },
+            "construction_grid": {
+              "type": "string"
+            },
+            "clear_space": {
+              "type": "string"
+            },
+            "min_max_size": {
+              "type": "object",
+              "properties": {
+                "min_digital_px": {
+                  "type": "string"
+                },
+                "min_print_mm": {
+                  "type": "string"
+                },
+                "max_recommended": {
+                  "type": "string"
+                }
+              }
+            },
+            "official_versions": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "use_case"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "use_case": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "logo_directions": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": [
+                  "direction",
+                  "concept",
+                  "prompt"
+                ],
+                "properties": {
+                  "direction": {
+                    "type": "string"
+                  },
+                  "concept": {
+                    "type": "string"
+                  },
+                  "prompt": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "chosen_direction": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "incorrect_uses": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "rule",
+              "visual_demo",
+              "reason"
+            ],
+            "properties": {
+              "rule": {
+                "type": "string"
+              },
+              "visual_demo": {
+                "type": "string",
+                "description": "Como o renderer vai demonstrar visualmente — ex: 'distort_x', 'recolor_red', 'drop_shadow', 'low_contrast', 'rotated', 'outlined'"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "color_system": {
+          "type": "object",
+          "required": [
+            "primary",
+            "neutrals",
+            "proportions",
+            "wcag_contrast_matrix"
+          ],
+          "properties": {
+            "primary": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "hex",
+                  "rgb",
+                  "cmyk",
+                  "role",
+                  "justification"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "hex": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "rgb": {
+                    "type": "string"
+                  },
+                  "cmyk": {
+                    "type": "string"
+                  },
+                  "pantone": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "hsl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "justification": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "secondary": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "neutrals": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "functional": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "proportions": {
+              "type": "object",
+              "required": [
+                "dominant_pct",
+                "support_pct",
+                "accent_pct",
+                "dominant_color",
+                "support_color",
+                "accent_color"
+              ],
+              "properties": {
+                "dominant_pct": {
+                  "type": "number"
+                },
+                "support_pct": {
+                  "type": "number"
+                },
+                "accent_pct": {
+                  "type": "number"
+                },
+                "dominant_color": {
+                  "type": "string"
+                },
+                "support_color": {
+                  "type": "string"
+                },
+                "accent_color": {
+                  "type": "string"
+                }
+              }
+            },
+            "gradients": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "wcag_contrast_matrix": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "object",
+                "required": [
+                  "foreground",
+                  "background",
+                  "ratio",
+                  "level"
+                ],
+                "properties": {
+                  "foreground": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "background": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "ratio": {
+                    "type": "number"
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "AAA",
+                      "AA",
+                      "AA Large",
+                      "Fail"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "typography": {
+          "type": "object",
+          "required": [
+            "primary_family",
+            "hierarchy"
+          ],
+          "properties": {
+            "primary_family": {
+              "type": "object",
+              "required": [
+                "name",
+                "source",
+                "google_fonts_url",
+                "embed_url",
+                "weights_permitted"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome da fonte (deve estar disponível no Google Fonts)"
+                },
+                "source": {
+                  "type": "string",
+                  "const": "Google Fonts",
+                  "description": "Sempre Google Fonts — fontes proprietárias não são permitidas"
+                },
+                "google_fonts_url": {
+                  "type": "string",
+                  "pattern": "^https://fonts\\.google\\.com/",
+                  "description": "URL da página da fonte no Google Fonts (ex: https://fonts.google.com/specimen/Fraunces)"
+                },
+                "embed_url": {
+                  "type": "string",
+                  "pattern": "^https://fonts\\.googleapis\\.com/",
+                  "description": "URL CSS para embedar (ex: https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap)"
+                },
+                "weights_permitted": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "license": {
+                  "type": "string"
+                }
+              }
+            },
+            "secondary_family": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string",
+                  "const": "Google Fonts"
+                },
+                "google_fonts_url": {
+                  "type": "string",
+                  "pattern": "^https://fonts\\.google\\.com/"
+                },
+                "embed_url": {
+                  "type": "string",
+                  "pattern": "^https://fonts\\.googleapis\\.com/"
+                },
+                "weights_permitted": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "license": {
+                  "type": "string"
+                }
+              }
+            },
+            "hierarchy": {
+              "type": "array",
+              "minItems": 5,
+              "items": {
+                "type": "object",
+                "required": [
+                  "level",
+                  "font",
+                  "weight",
+                  "size_px",
+                  "use_case"
+                ],
+                "properties": {
+                  "level": {
+                    "type": "string"
+                  },
+                  "font": {
+                    "type": "string"
+                  },
+                  "weight": {
+                    "type": "string"
+                  },
+                  "size_px": {
+                    "type": "number"
+                  },
+                  "line_height": {
+                    "type": "string"
+                  },
+                  "use_case": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "fallbacks": {
+              "type": "string"
+            },
+            "justification": {
+              "type": "string"
+            }
+          }
+        },
+        "iconography": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "style": {
+              "type": "string"
+            },
+            "stroke_weight_px": {
+              "type": "number"
+            },
+            "corner_style": {
+              "type": "string"
+            },
+            "grid": {
+              "type": "string"
+            },
+            "color_default": {
+              "type": "string"
+            }
+          }
+        },
+        "graphic_system": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "photography": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "art_direction": {
+              "type": "string"
+            },
+            "mood_keywords": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "do_dont": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "do",
+                      "dont"
+                    ]
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "illustration": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "block4_applications": {
+      "type": "object",
+      "required": [
+        "principle",
+        "applications"
+      ],
+      "properties": {
+        "principle": {
+          "type": "string"
+        },
+        "applications": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "category",
+              "name",
+              "specs",
+              "mockup"
+            ],
+            "properties": {
+              "category": {
+                "type": "string",
+                "enum": [
+                  "stationery",
+                  "digital_ui",
+                  "social_media",
+                  "sales_marketing",
+                  "signage",
+                  "events"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "specs": {
+                "type": "string"
+              },
+              "mockup": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "description"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "business_card",
+                      "email_signature",
+                      "ig_avatar_bio",
+                      "ig_feed_post",
+                      "ig_story",
+                      "favicon_scaling",
+                      "one_pager",
+                      "whatsapp_business",
+                      "gmb_card",
+                      "deck_cover",
+                      "branded_giveaway"
+                    ]
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "object",
+                    "description": "Dados específicos do mockup (texto da bio, headline do post, etc.)"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "block5_governance": {
+      "type": "object",
+      "required": [
+        "brand_owner",
+        "approval_process"
+      ],
+      "properties": {
+        "brand_owner": {
+          "type": "string"
+        },
+        "approval_process": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "step",
+              "responsible"
+            ],
+            "properties": {
+              "step": {
+                "type": "string"
+              },
+              "responsible": {
+                "type": "string"
+              },
+              "estimated_time": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "review_cadence": {
+          "type": "string"
+        },
+        "committee": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
