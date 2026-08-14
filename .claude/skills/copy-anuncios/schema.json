@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Copy de Anúncios",
+  "description": "Output estruturado de copy de anúncios: variações por fase de funil e plataforma, com limites de caracteres.",
+  "type": "object",
+  "required": [
+    "summary",
+    "funnel_stages",
+    "copy_rules_applied",
+    "total_variations",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases da copy de anúncios. Inclui número de variações geradas e principais ganchos usados."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "funnel_stages": {
+      "type": "array",
+      "description": "Fases do funil com variações de copy por plataforma.",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "objective",
+          "tone",
+          "platforms"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "topo_de_funil",
+              "meio_de_funil",
+              "fundo_de_funil",
+              "remarketing"
+            ],
+            "description": "Fase do funil"
+          },
+          "objective": {
+            "type": "string",
+            "description": "Objetivo da fase"
+          },
+          "tone": {
+            "type": "string",
+            "description": "Tom recomendado para esta fase"
+          },
+          "platforms": {
+            "type": "array",
+            "description": "Plataformas de mídia com variações.",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "variations"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "enum": [
+                    "meta_ads",
+                    "google_ads"
+                  ],
+                  "description": "Plataforma de mídia"
+                },
+                "variations": {
+                  "type": "array",
+                  "description": "Variações de copy para esta plataforma.",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "type"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Tipo de variação (text_primary, responsive_search, etc.)"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "Texto principal do anúncio"
+                      },
+                      "headline": {
+                        "type": "string",
+                        "description": "Título do anúncio"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Descrição do anúncio"
+                      },
+                      "cta": {
+                        "type": "string",
+                        "description": "Call-to-action do botão"
+                      },
+                      "headlines": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Títulos para Google Ads responsivo"
+                      },
+                      "descriptions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Descrições para Google Ads responsivo"
+                      },
+                      "char_count": {
+                        "type": "object",
+                        "description": "Contagem de caracteres por campo",
+                        "properties": {
+                          "text": {
+                            "type": "integer"
+                          },
+                          "headline": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "hook_type": {
+                        "type": "string",
+                        "description": "Ângulo emocional/argumentativo do copy (dor, prova_social, oferta_direta, etc). Cruza com 'linked_variation' do produced_creatives."
+                      },
+                      "match_intent": {
+                        "type": "string",
+                        "description": "(Google Ads) Intenção de busca alvo desta RSA — informacional, comparativa, transacional."
+                      },
+                      "char_count_headlines": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "description": "(Google Ads) Contagem de chars por headline, na ordem do array."
+                      },
+                      "char_count_descriptions": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "description": "(Google Ads) Contagem de chars por description, na ordem do array."
+                      },
+                      "pair_with_creative": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "IDs dos criativos visuais (feed-0N / story-0N) que devem rodar com esta copy. Cruza com produced_creatives.feed_instagram[].id e .stories_instagram[].id em designer-criativos-anuncios. Omitir quando não houver criativo dedicado."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "copy_rules_applied": {
+      "type": "array",
+      "description": "5 regras de copy aplicadas neste conjunto.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 5
+    },
+    "total_variations": {
+      "type": "integer",
+      "description": "Total de ANÚNCIOS COMPLETOS prontos pra subir (não conta cada elemento textual). 1 Meta = 1 anúncio. 1 Google RSA = 1 anúncio (mesmo tendo 5 headlines + 3 descriptions dentro). Use 'variations_breakdown' para detalhar a composição.",
+      "minimum": 1
+    },
+    "variations_breakdown": {
+      "type": "object",
+      "description": "Quebra detalhada da contagem de total_variations — desambigua 'anúncio completo' vs 'elemento textual'.",
+      "properties": {
+        "meta_ads": {
+          "type": "integer",
+          "description": "Quantidade de anúncios Meta (cada um é uma variação completa)."
+        },
+        "google_ads_rsa": {
+          "type": "integer",
+          "description": "Quantidade de RSAs Google (cada uma é 1 anúncio que rotaciona internamente)."
+        },
+        "google_ads_textual_elements": {
+          "type": "integer",
+          "description": "Soma dos headlines + descriptions DENTRO das RSAs (informativo — não conta como anúncio separado)."
+        },
+        "note": {
+          "type": "string",
+          "description": "Explicação curta da convenção de contagem."
+        }
+      }
+    },
+    "sheets_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL da planilha Google Sheets exportada"
+    },
+    "how_to_read_this_doc": {
+      "type": "object",
+      "description": "Bloco didático que explica ao cliente como ler e usar este documento. Renderizado como primeira seção da skill no portal.",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "1 parágrafo — o que o doc entrega e como conecta com criativos."
+        },
+        "structure": {
+          "type": "array",
+          "description": "Explicação seção-a-seção do JSON. Cada item: section (nome do campo), what (o que é), why (por que está aqui).",
+          "items": {
+            "type": "object",
+            "required": [
+              "section",
+              "what",
+              "why"
+            ],
+            "properties": {
+              "section": {
+                "type": "string"
+              },
+              "what": {
+                "type": "string"
+              },
+              "why": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "workflow_recommended": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Passos numerados de uso prático (validar → exportar → subir → parear → testar)."
+        }
+      }
+    },
+    "char_limits_reference": {
+      "type": "object",
+      "description": "Limites oficiais de caracteres por plataforma — referência rápida ao lado das variações.",
+      "properties": {
+        "meta_ads": {
+          "type": "object",
+          "properties": {
+            "primary_text_max": {
+              "type": "integer"
+            },
+            "headline_max": {
+              "type": "integer"
+            },
+            "description_max": {
+              "type": "integer"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        },
+        "google_ads": {
+          "type": "object",
+          "properties": {
+            "headline_max": {
+              "type": "integer"
+            },
+            "description_max": {
+              "type": "integer"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "test_strategy": {
+      "type": "object",
+      "description": "Critérios para rodar A/B com essas copies — duração, budget e KPIs de kill/winner.",
+      "properties": {
+        "duration_min_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "min_budget_per_adset_brl": {
+          "type": "number",
+          "minimum": 0
+        },
+        "kpis_kill_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Quando pausar (ex: CTR <1% após 1k impressões)."
+        },
+        "kpis_winners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Quando escalar (ex: CTR ≥1,8%)."
+        }
+      }
+    }
+  }
+}

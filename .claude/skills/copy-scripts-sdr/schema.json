@@ -1,0 +1,410 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ScriptsSDR",
+  "description": "Output estruturado da skill scripts-sdr: scripts completos do SDR IA para WhatsApp incluindo boas-vindas, qualificacao, fluxos por score, objecoes e follow-up.",
+  "type": "object",
+  "required": [
+    "summary",
+    "welcome_message",
+    "qualification_questions",
+    "score_flows",
+    "objection_responses",
+    "followup_messages",
+    "human_handoff_message",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo executivo de 2-3 frases: nome do agente, numero de perguntas, numero de objecoes tratadas, tom de voz."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "Nome humano do agente SDR IA (ex: 'Ana da Empresa X')."
+    },
+    "tone_of_voice": {
+      "type": "string",
+      "description": "Tom de voz definido pelo brandbook que guia todos os scripts."
+    },
+    "welcome_message": {
+      "type": "string",
+      "description": "Mensagem de boas-vindas aprovada (max 3 frases). Primeira mensagem enviada ao lead."
+    },
+    "welcome_alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "approach": {
+            "type": "string",
+            "description": "Tipo de abordagem (direta, empatica, curiosa)."
+          },
+          "message": {
+            "type": "string",
+            "description": "Texto da mensagem alternativa."
+          }
+        }
+      },
+      "description": "Opcoes alternativas de mensagem de boas-vindas (incluindo a escolhida)."
+    },
+    "qualification_questions": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "question",
+          "reveals",
+          "score_influence"
+        ],
+        "properties": {
+          "order": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Ordem da pergunta na sequencia de qualificacao."
+          },
+          "question": {
+            "type": "string",
+            "description": "A pergunta em linguagem natural para WhatsApp."
+          },
+          "reveals": {
+            "type": "string",
+            "description": "O que a resposta do lead revela sobre a qualificacao."
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "need",
+              "urgency",
+              "authority",
+              "budget",
+              "final_qualification"
+            ],
+            "description": "Dimensao de qualificacao que a pergunta avalia."
+          },
+          "score_influence": {
+            "type": "object",
+            "properties": {
+              "plus_2": {
+                "type": "string",
+                "description": "Resposta que adiciona +2 ao score."
+              },
+              "plus_1": {
+                "type": "string",
+                "description": "Resposta que adiciona +1 ao score."
+              },
+              "zero": {
+                "type": "string",
+                "description": "Resposta neutra (0 pontos)."
+              },
+              "minus_1": {
+                "type": "string",
+                "description": "Resposta que subtrai -1 do score."
+              }
+            },
+            "description": "Como a resposta influencia o score total."
+          },
+          "transition_phrase": {
+            "type": "string",
+            "description": "Frase natural de transicao para a proxima pergunta."
+          }
+        }
+      },
+      "description": "Perguntas de qualificacao com logica de scoring."
+    },
+    "scoring_table": {
+      "type": "object",
+      "properties": {
+        "five_star_range": {
+          "type": "string",
+          "description": "Faixa de pontos para 5 estrelas (ex: '8-10')."
+        },
+        "four_star_range": {
+          "type": "string",
+          "description": "Faixa de pontos para 4 estrelas (ex: '5-7')."
+        },
+        "three_star_range": {
+          "type": "string",
+          "description": "Faixa de pontos para 3 estrelas (ex: '2-4')."
+        },
+        "two_star_range": {
+          "type": "string",
+          "description": "Faixa de pontos para 2 estrelas (ex: '0-1')."
+        },
+        "one_star_range": {
+          "type": "string",
+          "description": "Faixa de pontos para 1 estrela (ex: 'negativo')."
+        }
+      }
+    },
+    "score_flows": {
+      "type": "object",
+      "required": [
+        "qualified",
+        "warm",
+        "cold"
+      ],
+      "properties": {
+        "qualified": {
+          "type": "object",
+          "required": [
+            "script",
+            "next_step"
+          ],
+          "properties": {
+            "score_range": {
+              "type": "string",
+              "description": "Faixa de score para este fluxo (ex: '4-5 estrelas')."
+            },
+            "script": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sequencia de mensagens do SDR para lead qualificado (cada item = 1 mensagem)."
+            },
+            "next_step": {
+              "type": "string",
+              "description": "Acao seguinte (ex: 'Encaminhar para vendedor + alerta WhatsApp')."
+            }
+          }
+        },
+        "warm": {
+          "type": "object",
+          "required": [
+            "script",
+            "nurture_action"
+          ],
+          "properties": {
+            "score_range": {
+              "type": "string",
+              "description": "Faixa de score para este fluxo (ex: '3 estrelas')."
+            },
+            "script": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sequencia de mensagens do SDR para lead morno."
+            },
+            "nurture_action": {
+              "type": "string",
+              "description": "Acao de nutricao (ex: 'Regua automatica: 1 conteudo/semana por 4 semanas')."
+            }
+          }
+        },
+        "cold": {
+          "type": "object",
+          "required": [
+            "script",
+            "nurture_action"
+          ],
+          "properties": {
+            "score_range": {
+              "type": "string",
+              "description": "Faixa de score para este fluxo (ex: '1-2 estrelas')."
+            },
+            "script": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Sequencia de mensagens do SDR para lead frio."
+            },
+            "nurture_action": {
+              "type": "string",
+              "description": "Acao de nutricao passiva (ex: 'Email mensal + sem follow-up ativo')."
+            }
+          }
+        }
+      }
+    },
+    "objection_responses": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "objection",
+          "response"
+        ],
+        "properties": {
+          "objection": {
+            "type": "string",
+            "description": "A objecao como o lead a expressa."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "price",
+              "urgency",
+              "authority",
+              "trust",
+              "need",
+              "competitor"
+            ],
+            "description": "Tipo da objecao."
+          },
+          "response": {
+            "type": "string",
+            "description": "Resposta do SDR IA (max 3 frases, tom natural)."
+          },
+          "escalation_response": {
+            "type": "string",
+            "description": "Segunda resposta se o lead insistir (ou escalar para humano)."
+          }
+        }
+      },
+      "description": "Respostas do SDR IA para cada objecao mapeada."
+    },
+    "unmapped_objection_response": {
+      "type": "string",
+      "description": "Resposta generica para objecoes nao mapeadas (reconhecimento + escalamento)."
+    },
+    "escalation_rules": {
+      "type": "object",
+      "properties": {
+        "after_2_insistences": {
+          "type": "string",
+          "description": "Acao quando lead insiste 2x na mesma objecao."
+        },
+        "on_frustration": {
+          "type": "string",
+          "description": "Acao quando lead demonstra irritacao."
+        },
+        "on_human_request": {
+          "type": "string",
+          "description": "Acao quando lead pede para falar com humano."
+        }
+      }
+    },
+    "followup_messages": {
+      "type": "object",
+      "required": [
+        "after_1h",
+        "after_24h",
+        "after_3d"
+      ],
+      "properties": {
+        "after_1h": {
+          "type": "string",
+          "description": "Mensagem de follow-up apos 1 hora sem resposta."
+        },
+        "after_24h": {
+          "type": "string",
+          "description": "Mensagem de follow-up apos 24 horas sem resposta."
+        },
+        "after_3d": {
+          "type": "string",
+          "description": "Mensagem de follow-up final apos 3 dias sem resposta."
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Regras de follow-up (max tentativas, horarios, opt-out)."
+        }
+      }
+    },
+    "human_handoff_message": {
+      "type": "object",
+      "required": [
+        "qualified_handoff",
+        "requested_handoff",
+        "limitation_handoff"
+      ],
+      "properties": {
+        "qualified_handoff": {
+          "type": "string",
+          "description": "Mensagem de transicao quando lead qualificado e encaminhado para vendedor."
+        },
+        "requested_handoff": {
+          "type": "string",
+          "description": "Mensagem quando o lead pede para falar com humano."
+        },
+        "limitation_handoff": {
+          "type": "string",
+          "description": "Mensagem quando o SDR IA nao sabe responder algo."
+        }
+      }
+    }
+  }
+}
