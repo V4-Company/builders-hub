@@ -1,0 +1,1086 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DiagnosticoCRO",
+  "description": "Output estruturado do diagnostico de CRO: analise tecnica, auditoria de copy, hipoteses de teste e wireframe de melhorias.",
+  "type": "object",
+  "required": [
+    "summary",
+    "client_name",
+    "segment",
+    "url",
+    "technical_audit",
+    "onpage_seo",
+    "security_headers",
+    "technical_diagnosis",
+    "tracking_stack",
+    "events_fired",
+    "quality_flags",
+    "cro_elements_deep",
+    "compliance_lgpd",
+    "copy_audit",
+    "trust_analysis",
+    "test_hypotheses",
+    "wireframe_improvements",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do diagnóstico de CRO. Inclui principal gap de conversão e ação prioritária."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "segment": {
+      "type": "string",
+      "description": "Segmento de atuacao"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL do site/landing page analisada"
+    },
+    "current_conversion_rate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Taxa de conversao atual em percentual (se disponivel)"
+    },
+    "current_bounce_rate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Taxa de rejeicao atual em percentual (se disponivel)"
+    },
+    "avg_time_on_page": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Tempo medio na pagina (se disponivel)"
+    },
+    "technical_audit": {
+      "type": "object",
+      "description": "Dados brutos do audit tecnico automatizado (PageSpeed Insights + on-page). Preenchido a partir de client.json.page_audit.",
+      "required": [
+        "fetched_at",
+        "pagespeed"
+      ],
+      "properties": {
+        "fetched_at": {
+          "type": "string",
+          "description": "ISO timestamp do audit"
+        },
+        "cache_file": {
+          "type": "string",
+          "description": "Caminho relativo do cache raw"
+        },
+        "pagespeed": {
+          "type": "object",
+          "properties": {
+            "mobile_scores": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "performance": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "accessibility": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "best_practices": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "seo": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "desktop_scores": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "performance": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "accessibility": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "best_practices": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "seo": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "mobile_cwv_lab": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "Core Web Vitals lab data (Lighthouse)",
+              "properties": {
+                "lcp_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "fcp_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "tbt_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "cls": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "speed_index_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "tti_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "ttfb_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "desktop_cwv_lab": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "mobile_cwv_field": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "CrUX field data (usuarios reais), null se sem dados suficientes"
+            },
+            "desktop_cwv_field": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "mobile_top_opportunities": {
+              "type": "array",
+              "description": "Top opportunities do Lighthouse mobile ordenadas por savings_ms"
+            },
+            "desktop_top_opportunities": {
+              "type": "array"
+            }
+          }
+        }
+      }
+    },
+    "onpage_seo": {
+      "type": "object",
+      "description": "Analise on-page SEO (mobile/desktop via parser HTML). Preenchido a partir de client.json.page_audit.onpage.",
+      "properties": {
+        "mobile": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title_length": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "meta_description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "meta_description_length": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "canonical": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "lang": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "viewport": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "favicon": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "og": {
+              "type": "object",
+              "description": "Open Graph tags"
+            },
+            "twitter": {
+              "type": "object",
+              "description": "Twitter card tags"
+            },
+            "schema_types": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "h1_count": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "h2_count": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "h3_count": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "images_total": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "images_without_alt": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "links_internal": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "links_external": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "links_nofollow": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "html_size_kb": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "response_time_ms": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          }
+        },
+        "desktop": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "divergences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Diferencas significativas entre versao mobile e desktop (title, h1, canonical, etc.)"
+        }
+      }
+    },
+    "security_headers": {
+      "type": "object",
+      "description": "Analise de headers HTTP de seguranca. Preenchido a partir de client.json.page_audit.security.",
+      "properties": {
+        "https": {
+          "type": "boolean"
+        },
+        "hsts": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Valor do Strict-Transport-Security ou null se ausente"
+        },
+        "csp": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "x_frame_options": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "x_content_type_options": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "referrer_policy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "permissions_policy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "score": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 10
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "technical_diagnosis": {
+      "type": "object",
+      "required": [
+        "pagespeed_mobile",
+        "pagespeed_desktop"
+      ],
+      "properties": {
+        "pagespeed_mobile": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Score PageSpeed Insights mobile (0-100)"
+        },
+        "pagespeed_desktop": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Score PageSpeed Insights desktop (0-100)"
+        },
+        "lcp": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Largest Contentful Paint em segundos"
+        },
+        "cls": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Cumulative Layout Shift"
+        },
+        "inp": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Interaction to Next Paint em milissegundos"
+        },
+        "critical_issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Problemas criticos de velocidade identificados"
+        },
+        "estimated_conversion_loss": {
+          "type": "string",
+          "description": "Estimativa de perda de conversao por problemas tecnicos"
+        },
+        "tested": {
+          "type": "boolean",
+          "description": "Se o PageSpeed foi efetivamente testado"
+        }
+      }
+    },
+    "copy_audit": {
+      "type": "object",
+      "required": [
+        "above_fold",
+        "sections"
+      ],
+      "properties": {
+        "above_fold": {
+          "type": "object",
+          "required": [
+            "value_prop_clear",
+            "headline_complete",
+            "cta_visible",
+            "visitor_impression"
+          ],
+          "properties": {
+            "value_prop_clear": {
+              "type": "boolean",
+              "description": "Proposta de valor clara em menos de 5 segundos"
+            },
+            "value_prop_detail": {
+              "type": "string",
+              "description": "Justificativa da avaliacao da proposta de valor"
+            },
+            "headline_complete": {
+              "type": "boolean",
+              "description": "Headline responde o que + para quem + qual beneficio"
+            },
+            "current_headline": {
+              "type": "string",
+              "description": "Headline atual da pagina"
+            },
+            "suggested_headline": {
+              "type": "string",
+              "description": "Headline sugerida baseada na PUV"
+            },
+            "cta_visible": {
+              "type": "boolean",
+              "description": "CTA visivel sem rolar"
+            },
+            "current_cta": {
+              "type": "string",
+              "description": "Texto do CTA atual"
+            },
+            "suggested_cta": {
+              "type": "string",
+              "description": "Texto de CTA sugerido"
+            },
+            "visitor_impression": {
+              "type": "string",
+              "description": "O que um visitante do ICP provavelmente pensa ao chegar"
+            }
+          }
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "exists",
+              "evaluation",
+              "main_problem"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Nome da secao (Hero, Problema/Dor, Solucao, etc.)"
+              },
+              "exists": {
+                "type": "boolean",
+                "description": "Se a secao existe na pagina"
+              },
+              "evaluation": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5,
+                "description": "Avaliacao da secao (1-5)"
+              },
+              "main_problem": {
+                "type": "string",
+                "description": "Problema principal da secao"
+              }
+            }
+          },
+          "description": "Avaliacao de cada secao da pagina"
+        },
+        "missing_sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Secoes criticas que deveriam existir e nao existem"
+        },
+        "unnecessary_sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Secoes que existem mas nao ajudam ou atrapalham"
+        }
+      }
+    },
+    "trust_analysis": {
+      "type": "object",
+      "required": [
+        "trust_signals",
+        "ssl_active",
+        "professional_appearance"
+      ],
+      "properties": {
+        "trust_signals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "signal",
+              "present"
+            ],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "Tipo de sinal de confianca"
+              },
+              "present": {
+                "type": "boolean",
+                "description": "Se esta presente na pagina"
+              }
+            }
+          },
+          "description": "Sinais de confianca e se estao presentes"
+        },
+        "ssl_active": {
+          "type": "boolean",
+          "description": "Se o SSL (HTTPS) esta ativo"
+        },
+        "professional_appearance": {
+          "type": "boolean",
+          "description": "Se a pagina tem aparencia profissional para o ICP"
+        },
+        "professional_appearance_detail": {
+          "type": "string",
+          "description": "Justificativa da avaliacao de aparencia"
+        },
+        "trust_score": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Score de confianca geral (1-10)"
+        },
+        "biggest_trust_gap": {
+          "type": "string",
+          "description": "Maior gap de confianca identificado"
+        }
+      }
+    },
+    "test_hypotheses": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "hypothesis",
+          "element",
+          "expected_impact",
+          "difficulty",
+          "priority"
+        ],
+        "properties": {
+          "hypothesis": {
+            "type": "string",
+            "description": "Descricao da hipotese de teste"
+          },
+          "element": {
+            "type": "string",
+            "description": "Elemento a testar (headline, CTA, hero, secao, etc.)"
+          },
+          "current_version": {
+            "type": "string",
+            "description": "Como esta hoje"
+          },
+          "proposed_version": {
+            "type": "string",
+            "description": "Como deveria ficar"
+          },
+          "expected_impact": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Impacto esperado na conversao"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": [
+              "easy",
+              "medium",
+              "hard"
+            ],
+            "description": "Dificuldade de implementacao"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "P1",
+              "P2",
+              "P3"
+            ],
+            "description": "Prioridade (P1 = alto impacto + facil)"
+          },
+          "success_metric": {
+            "type": "string",
+            "description": "Como medir se a hipotese funcionou"
+          },
+          "estimated_improvement": {
+            "type": "string",
+            "description": "Melhoria percentual estimada"
+          }
+        }
+      },
+      "description": "Hipoteses de teste priorizadas por impacto"
+    },
+    "wireframe_improvements": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "section_number",
+          "name",
+          "content_description"
+        ],
+        "properties": {
+          "section_number": {
+            "type": "integer",
+            "description": "Numero da secao na ordem da pagina"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da secao (ex: Hero, Problema/Dor, Solucao)"
+          },
+          "content_description": {
+            "type": "string",
+            "description": "O que a secao deve conter"
+          },
+          "suggested_copy": {
+            "type": "string",
+            "description": "Rascunho de copy sugerida para a secao"
+          },
+          "format": {
+            "type": "string",
+            "description": "Formato recomendado (lista, cards, timeline, etc.)"
+          },
+          "visual_element": {
+            "type": "string",
+            "description": "Elemento visual recomendado (foto, video, icone, etc.)"
+          }
+        }
+      },
+      "description": "Wireframe da LP melhorada, secao a secao"
+    },
+    "transversal_elements": {
+      "type": "object",
+      "description": "Elementos que aparecem em toda a pagina",
+      "properties": {
+        "trust_bar": {
+          "type": "boolean",
+          "description": "Se deve ter barra de confianca (selos, CNPJ)"
+        },
+        "whatsapp_floating": {
+          "type": "boolean",
+          "description": "Se deve ter botao de WhatsApp flutuante"
+        },
+        "exit_intent_popup": {
+          "type": "boolean",
+          "description": "Se deve ter popup de exit intent"
+        },
+        "exit_intent_offer": {
+          "type": "string",
+          "description": "Oferta do popup de exit intent (se aplicavel)"
+        }
+      }
+    },
+    "tracking_stack": {
+      "type": "object",
+      "description": "Ferramentas de tracking/ads/analytics detectadas via Playwright. Preenchido a partir de client.json.page_audit_deep.tracking_stack.",
+      "properties": {
+        "tools_detected": {
+          "type": "object",
+          "description": "Dicionario {tool_id: {name, category, evidence[]}} das ferramentas identificadas",
+          "additionalProperties": true
+        },
+        "ids_found": {
+          "type": "object",
+          "description": "IDs extraidos: gtm, ga4, ua, google_ads, meta_pixel, tiktok_pixel, linkedin_partner",
+          "properties": {
+            "gtm": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ga4": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ua": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "google_ads": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "meta_pixel": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tiktok_pixel": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "linkedin_partner": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "categories_summary": {
+          "type": "object",
+          "description": "Agrupamento por categoria: tracking, analytics, ads, heatmap, chat, cms, ecommerce, framework, lp_builder, cmp, hosting"
+        },
+        "total_tools": {
+          "type": "integer"
+        },
+        "setup_diagnosis": {
+          "type": "string",
+          "description": "Diagnostico narrativo do setup: coberturas, gaps, contradicoes. Ex: 'GTM presente mas sem GA4 — cliente opera cego.'"
+        }
+      }
+    },
+    "events_fired": {
+      "type": "object",
+      "description": "Eventos GA4 e Meta Pixel disparados durante navegacao.",
+      "properties": {
+        "ga4_event_count": {
+          "type": "integer"
+        },
+        "meta_event_count": {
+          "type": "integer"
+        },
+        "ga4_event_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "meta_event_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "events_diagnosis": {
+          "type": "string",
+          "description": "Avaliacao dos eventos: completude (page_view, scroll, click, form_submit), duplicatas, Consent Mode v2"
+        },
+        "expected_events_missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Eventos que DEVERIAM existir mas nao aparecem (ex: 'page_view', 'PageView', 'generate_lead')"
+        }
+      }
+    },
+    "quality_flags": {
+      "type": "array",
+      "description": "Red flags de qualidade do tagueamento (UA legacy, pixel duplicado, GTM sem analytics, etc.)",
+      "items": {
+        "type": "object",
+        "required": [
+          "severity",
+          "flag",
+          "title",
+          "detail"
+        ],
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "flag": {
+            "type": "string",
+            "description": "Identificador curto do flag"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cro_elements_deep": {
+      "type": "object",
+      "description": "Analise profunda de elementos CRO via Playwright (CTAs, forms, WhatsApp, prova social, confianca, urgencia).",
+      "properties": {
+        "desktop": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "mobile": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "cta_diagnosis": {
+          "type": "string",
+          "description": "Avaliacao: quantidade de CTAs, above-fold, clareza, consistencia de texto"
+        },
+        "form_diagnosis": {
+          "type": "string",
+          "description": "Avaliacao: quantidade de forms, campos por form (regra: <= 5), campos obrigatorios, consentimento LGPD"
+        },
+        "social_proof_diagnosis": {
+          "type": "string",
+          "description": "Avaliacao de prova social (depoimentos, avaliacoes, numeros, certificacoes, logos)"
+        },
+        "trust_diagnosis": {
+          "type": "string",
+          "description": "Avaliacao: CNPJ, endereco, telefone, email, politica de privacidade, termos"
+        }
+      }
+    },
+    "compliance_lgpd": {
+      "type": "object",
+      "description": "Auditoria de compliance LGPD: CMP presente + scripts pre-consent.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "compliant",
+            "partial",
+            "non_compliant"
+          ]
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "has_cmp": {
+          "type": "boolean"
+        },
+        "cmps_detected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pre_consent_trackers": {
+          "type": "object",
+          "description": "Trackers que disparam ANTES de qualquer consentimento {pattern: [urls]}"
+        },
+        "pre_consent_tracker_count": {
+          "type": "integer"
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recommendation": {
+          "type": "string",
+          "description": "Recomendacao concreta: 'Instalar Cookiebot/OneTrust + gtag consent default denied + Consent Mode v2'"
+        }
+      }
+    },
+    "target_conversion_rate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Meta de taxa de conversao apos melhorias"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora de conclusao"
+    }
+  }
+}

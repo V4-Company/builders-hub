@@ -1,0 +1,358 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DiagnosticoMaturidade",
+  "description": "Output estruturado da skill diagnostico-maturidade: score por pilar, resumo executivo, prioridades e benchmark.",
+  "type": "object",
+  "required": [
+    "summary",
+    "overall_score",
+    "pillar_scores",
+    "executive_summary",
+    "priorities",
+    "sector_benchmark",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do diagnóstico. Usado como referência rápida por outras skills."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete em 1 linha com o veredito desta skill (hero do resumo executivo no portal). Ver references/padrao-output.md"
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "description": "KPIs visuais categorizados para o resumo executivo. Cada item: {category, label, value, subtext, tone}.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "posicao",
+              "competicao",
+              "janela",
+              "maturidade",
+              "oportunidade",
+              "risco"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Achados categorizados por intenção (vantagem/contexto/ameaça/ação). Pelo menos 3 dos 4 tipos cobertos.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "data_source": {
+      "type": "string",
+      "enum": [
+        "v4mos",
+        "manual",
+        "mixed"
+      ],
+      "description": "De onde vieram os dados: V4MOS automático, coleta manual com operador, ou misto."
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Score geral de maturidade digital (média ponderada dos pilares)."
+    },
+    "overall_classification": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "low",
+        "medium",
+        "good",
+        "excellent"
+      ],
+      "description": "Classificação textual do score geral."
+    },
+    "pillar_scores": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "pillar",
+          "score",
+          "classification",
+          "highlight"
+        ],
+        "properties": {
+          "pillar": {
+            "type": "string",
+            "enum": [
+              "midia_paga",
+              "criativos",
+              "cro",
+              "crm",
+              "seo"
+            ],
+            "description": "Nome do pilar."
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Score do pilar (0-100)."
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "low",
+              "medium",
+              "good",
+              "excellent"
+            ],
+            "description": "Classificação do pilar."
+          },
+          "highlight": {
+            "type": "string",
+            "description": "1 frase destacando o principal achado deste pilar."
+          },
+          "estimated": {
+            "type": "boolean",
+            "description": "Se true, o score foi estimado manualmente (sem dados V4MOS)."
+          },
+          "details": {
+            "type": "object",
+            "description": "Detalhes específicos por pilar.",
+            "properties": {
+              "strengths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Pontos fortes identificados."
+              },
+              "weaknesses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Pontos fracos identificados."
+              },
+              "metrics": {
+                "type": "object",
+                "description": "Métricas específicas do pilar (CPA, ROAS, taxa de conversão, etc.).",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "description": "Scores detalhados por pilar de maturidade."
+    },
+    "executive_summary": {
+      "type": "string",
+      "description": "Resumo executivo de 3 parágrafos: significado do score, top 2 gaps, top 2 forças."
+    },
+    "priorities": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "action",
+          "rationale",
+          "effort",
+          "pillar"
+        ],
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Posição na prioridade (1 = mais importante)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Ação específica e acionável."
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Por que é prioridade (impacto esperado)."
+          },
+          "effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Nível de esforço para implementar."
+          },
+          "pillar": {
+            "type": "string",
+            "description": "Qual pilar essa ação impacta."
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "O que precisa estar pronto antes."
+          }
+        }
+      },
+      "description": "Ações prioritárias ranqueadas por impacto."
+    },
+    "sector_benchmark": {
+      "type": "object",
+      "required": [
+        "sector",
+        "sector_average",
+        "comparison"
+      ],
+      "properties": {
+        "sector": {
+          "type": "string",
+          "description": "Segmento/setor do cliente para benchmark."
+        },
+        "sector_average": {
+          "type": "number",
+          "description": "Score médio do setor (referência)."
+        },
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "above_average",
+            "at_average",
+            "below_average",
+            "significantly_below"
+          ],
+          "description": "Posição do cliente vs. média do setor."
+        },
+        "pillar_comparison": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pillar": {
+                "type": "string"
+              },
+              "client_score": {
+                "type": "number"
+              },
+              "sector_average": {
+                "type": "number"
+              },
+              "gap": {
+                "type": "number"
+              },
+              "position": {
+                "type": "string",
+                "enum": [
+                  "above",
+                  "at",
+                  "below",
+                  "critical_gap"
+                ]
+              }
+            }
+          },
+          "description": "Comparação por pilar vs. média do setor."
+        },
+        "key_insight": {
+          "type": "string",
+          "description": "Insight principal da comparação com o setor."
+        }
+      }
+    },
+    "key_insight": {
+      "type": "object",
+      "description": "Ponto de alavancagem desta skill — o bloco que merece destaque visual para conversa com o stakeholder. Ver PADRAO-OUTPUT.md.",
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "Frase-manchete do ponto (pode virar quote destacada no renderer)"
+        },
+        "context": {
+          "type": "string",
+          "description": "Contexto em 2-3 linhas explicando o cenário"
+        },
+        "numbered_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Razões numeradas (o renderer vira 3 cards numerados)"
+        },
+        "discussion_anchor": {
+          "type": "string",
+          "description": "Por que este é o ponto para stakeholder decidir/validar"
+        }
+      }
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta se a análise revelou fragilidade real do cliente (não há diferencial claro, premissa contraditória, etc.). Nunca omitir se justificado."
+    }
+  }
+}

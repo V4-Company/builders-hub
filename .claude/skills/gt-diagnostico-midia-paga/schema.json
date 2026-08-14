@@ -1,0 +1,991 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DiagnosticoMidia",
+  "description": "Output estruturado do diagnostico de midia paga: metricas, benchmarks, diagnostico por dimensao, problemas e plano de acao.",
+  "type": "object",
+  "required": [
+    "summary",
+    "client_name",
+    "segment",
+    "data_source",
+    "data_period",
+    "current_metrics",
+    "benchmarks",
+    "diagnosis_by_dimension",
+    "top_problems",
+    "action_plan",
+    "realistic_goal",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do diagnóstico de mídia. Inclui principal problema identificado e ROAS atual vs benchmark."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete em 1 linha com o veredito desta skill (hero do resumo executivo no portal). Ver references/padrao-output.md"
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "description": "KPIs visuais categorizados para o resumo executivo. Cada item: {category, label, value, subtext, tone}.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "posicao",
+              "competicao",
+              "janela",
+              "maturidade",
+              "oportunidade",
+              "risco"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Achados categorizados por intenção (vantagem/contexto/ameaça/ação). Pelo menos 3 dos 4 tipos cobertos.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "segment": {
+      "type": "string",
+      "description": "Segmento de atuacao"
+    },
+    "data_source": {
+      "type": "string",
+      "enum": [
+        "v4mos_api",
+        "manual_export",
+        "operator_provided",
+        "no_data"
+      ],
+      "description": "Origem dos dados de midia"
+    },
+    "data_period": {
+      "type": "string",
+      "description": "Periodo dos dados analisados (ex: ultimos 90 dias)"
+    },
+    "monthly_budget": {
+      "type": "number",
+      "description": "Budget mensal em reais"
+    },
+    "platforms_active": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Plataformas de midia paga ativas"
+    },
+    "integrations_status": {
+      "type": "object",
+      "description": "Status das integracoes V4MOS",
+      "properties": {
+        "meta_ads": {
+          "type": "string",
+          "enum": [
+            "connected",
+            "disconnected",
+            "not_configured"
+          ]
+        },
+        "google_ads": {
+          "type": "string",
+          "enum": [
+            "connected",
+            "disconnected",
+            "not_configured"
+          ]
+        },
+        "google_analytics": {
+          "type": "string",
+          "enum": [
+            "connected",
+            "disconnected",
+            "not_configured"
+          ]
+        }
+      }
+    },
+    "current_metrics": {
+      "type": "object",
+      "required": [
+        "cpl",
+        "ctr",
+        "conversion_rate"
+      ],
+      "properties": {
+        "cpl": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Custo por Lead em reais"
+        },
+        "ctr": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Taxa de clique em percentual"
+        },
+        "conversion_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Taxa de conversao da landing page em percentual"
+        },
+        "roas": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Return on Ad Spend (multiplicador)"
+        },
+        "cpc": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Custo por clique em reais"
+        },
+        "total_investment": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Investimento total no periodo em reais"
+        },
+        "total_leads": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Total de leads gerados no periodo"
+        },
+        "total_clicks": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Total de cliques no periodo"
+        },
+        "impressions": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Total de impressoes no periodo"
+        },
+        "frequency": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Frequencia media dos anuncios"
+        }
+      }
+    },
+    "benchmarks": {
+      "type": "object",
+      "description": "Benchmarks do setor para comparacao",
+      "properties": {
+        "cpl": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "CPL benchmark do setor em reais"
+        },
+        "ctr": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "CTR benchmark do setor em percentual"
+        },
+        "conversion_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Taxa de conversao benchmark do setor"
+        },
+        "roas": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "ROAS benchmark do setor"
+        },
+        "cpc": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "CPC benchmark do setor em reais"
+        },
+        "source": {
+          "type": "string",
+          "description": "Fonte dos benchmarks"
+        }
+      }
+    },
+    "diagnosis_by_dimension": {
+      "type": "object",
+      "required": [
+        "account_structure",
+        "creatives",
+        "landing_pages",
+        "audiences"
+      ],
+      "properties": {
+        "account_structure": {
+          "type": "object",
+          "required": [
+            "organization",
+            "segmentation",
+            "budget_allocation",
+            "observation"
+          ],
+          "properties": {
+            "organization": {
+              "type": "string",
+              "enum": [
+                "adequate",
+                "fragmented",
+                "nonexistent"
+              ],
+              "description": "Organizacao de campanhas e conjuntos"
+            },
+            "segmentation": {
+              "type": "string",
+              "description": "Avaliacao da segmentacao vs ICP"
+            },
+            "budget_allocation": {
+              "type": "string",
+              "enum": [
+                "well_distributed",
+                "concentrated",
+                "dispersed"
+              ],
+              "description": "Distribuicao do budget entre campanhas"
+            },
+            "observation": {
+              "type": "string",
+              "description": "Observacao especifica"
+            }
+          }
+        },
+        "creatives": {
+          "type": "object",
+          "required": [
+            "evaluation"
+          ],
+          "properties": {
+            "active_count": {
+              "type": "integer",
+              "description": "Numero de criativos ativos"
+            },
+            "best_performer": {
+              "type": "string",
+              "description": "Criativo com melhor performance e metricas"
+            },
+            "worst_performer": {
+              "type": "string",
+              "description": "Criativo com pior performance e metricas"
+            },
+            "ab_testing_active": {
+              "type": "boolean",
+              "description": "Se ha teste A/B ativo"
+            },
+            "average_frequency": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "Frequencia media"
+            },
+            "fatigue_detected": {
+              "type": "boolean",
+              "description": "Se ha fadiga de criativo detectada"
+            },
+            "evaluation": {
+              "type": "string",
+              "description": "Avaliacao geral dos criativos"
+            }
+          }
+        },
+        "landing_pages": {
+          "type": "object",
+          "required": [
+            "evaluation"
+          ],
+          "properties": {
+            "lp_count": {
+              "type": "integer",
+              "description": "Numero de LPs usadas"
+            },
+            "coherence_with_ads": {
+              "type": "string",
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ],
+              "description": "Coerencia entre anuncios e LPs"
+            },
+            "estimated_bounce_rate": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "Taxa de rejeicao estimada"
+            },
+            "evaluation": {
+              "type": "string",
+              "description": "Avaliacao geral das LPs"
+            }
+          }
+        },
+        "audiences": {
+          "type": "object",
+          "required": [
+            "evaluation"
+          ],
+          "properties": {
+            "types_used": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "broad",
+                  "interest",
+                  "lookalike",
+                  "retargeting",
+                  "custom"
+                ]
+              },
+              "description": "Tipos de publico usados"
+            },
+            "overlap_detected": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Se ha sobreposicao de publicos"
+            },
+            "retargeting_active": {
+              "type": "boolean",
+              "description": "Se retargeting esta ativo"
+            },
+            "evaluation": {
+              "type": "string",
+              "description": "Avaliacao geral de publicos"
+            }
+          }
+        }
+      }
+    },
+    "top_problems": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "problem",
+          "data_evidence",
+          "impact"
+        ],
+        "properties": {
+          "problem": {
+            "type": "string",
+            "description": "Descricao do problema"
+          },
+          "data_evidence": {
+            "type": "string",
+            "description": "Evidencia nos dados que comprova o problema"
+          },
+          "impact": {
+            "type": "string",
+            "description": "Impacto estimado (quanto esta custando)"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "account_structure",
+              "creatives",
+              "landing_pages",
+              "audiences"
+            ],
+            "description": "Dimensao do problema"
+          }
+        }
+      },
+      "description": "Top 3 problemas criticos, em ordem de impacto"
+    },
+    "action_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "priority",
+          "expected_impact",
+          "responsible"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Descricao da acao"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "normal"
+            ],
+            "description": "Prioridade da acao"
+          },
+          "expected_impact": {
+            "type": "string",
+            "description": "Impacto esperado"
+          },
+          "responsible": {
+            "type": "string",
+            "description": "Quem e responsavel pela execucao"
+          },
+          "deadline": {
+            "type": "string",
+            "description": "Prazo (ex: Semana 1, Semana 2)"
+          }
+        }
+      },
+      "description": "Plano de acao para os proximos 30 dias"
+    },
+    "realistic_goal": {
+      "type": "object",
+      "required": [
+        "justification"
+      ],
+      "properties": {
+        "target_cpl": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "CPL alvo em 90 dias (em reais)"
+        },
+        "target_roas": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "ROAS alvo em 90 dias (multiplicador)"
+        },
+        "justification": {
+          "type": "string",
+          "description": "Justificativa da meta com base nos dados"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Premissas para atingir a meta"
+        },
+        "risk_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Fatores de risco que podem impedir a meta"
+        }
+      }
+    },
+    "keyword_clusters": {
+      "type": "array",
+      "description": "Agrupamento estratégico de keywords de search (4-6 clusters).",
+      "items": {
+        "type": "object",
+        "required": [
+          "cluster"
+        ],
+        "properties": {
+          "cluster": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "navigational",
+              "informational",
+              "transactional",
+              "commercial"
+            ]
+          },
+          "budget_allocation_pct": {
+            "type": "number"
+          },
+          "expected_cpc_range": {
+            "type": "string"
+          },
+          "bid_strategy": {
+            "type": "string"
+          },
+          "copy_angle": {
+            "type": "string"
+          },
+          "risk": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "budget_reallocation_scenarios": {
+      "type": "object",
+      "description": "3 cenários de realocação de budget (A conservador, B realista, C agressivo).",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "scenario_a_conservative": {
+          "$ref": "#/definitions/budgetScenario"
+        },
+        "scenario_b_realistic": {
+          "$ref": "#/definitions/budgetScenario"
+        },
+        "scenario_c_aggressive": {
+          "$ref": "#/definitions/budgetScenario"
+        },
+        "recommendation": {
+          "type": "string"
+        }
+      }
+    },
+    "creative_testing_hypotheses": {
+      "type": "object",
+      "description": "Hipóteses de testes A/B de criativos.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "hypothesis"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "hypothesis": {
+                "type": "string"
+              },
+              "angle": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "hook": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "cta": {
+                "type": "string"
+              },
+              "target_audience": {
+                "type": "string"
+              },
+              "success_criteria": {
+                "type": "string"
+              },
+              "testing_budget": {
+                "type": "number"
+              },
+              "testing_duration_days": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "testing_budget_total_week_1": {
+          "type": "number"
+        }
+      }
+    },
+    "daypart_optimization": {
+      "type": "object",
+      "description": "Ajustes de lance por janela de dia/hora.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "day_time"
+            ],
+            "properties": {
+              "day_time": {
+                "type": "string"
+              },
+              "bid_adjustment_pct": {
+                "type": "number"
+              },
+              "rationale": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "forecast_sensitivity_analysis": {
+      "type": "object",
+      "description": "Análise de sensibilidade da meta: base_case + variações what-if. NOTA: o renderer do portal NÃO exibe mais o gráfico de sensibilidade — apenas os cards de detalhe (base_case + lista de variations). Mantenha os dados ricos mesmo assim, eles alimentam os cards.",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "base_case": {
+          "type": "object",
+          "description": "Caso base da projeção. Aceita nomenclatura com sufixo '_90d' ou sem.",
+          "properties": {
+            "leads_monthly": {
+              "type": "number",
+              "description": "Leads mensais no base case. Nome preferido."
+            },
+            "leads_month_90d": {
+              "type": "number",
+              "description": "Alternativa a leads_monthly (leads projetados ao final de 90d)."
+            },
+            "cpl": {
+              "type": "number",
+              "description": "CPL no base case (R$). Nome preferido."
+            },
+            "cpl_90d_brl": {
+              "type": "number",
+              "description": "Alternativa a cpl."
+            },
+            "cac": {
+              "type": "number",
+              "description": "CAC no base case (R$)."
+            },
+            "cac_90d_brl": {
+              "type": "number",
+              "description": "Alternativa a cac."
+            },
+            "revenue_monthly": {
+              "type": "number",
+              "description": "Receita mensal projetada."
+            },
+            "roas": {
+              "type": "number",
+              "description": "ROAS no base case."
+            }
+          }
+        },
+        "variations": {
+          "type": "array",
+          "description": "Cenários what-if. O renderer exibe como lista de cards (sem gráfico). 4-6 itens.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario": {
+                "type": "string",
+                "description": "Nome do cenário (ex: 'CPC +10%'). Nome preferido."
+              },
+              "scenario_name": {
+                "type": "string",
+                "description": "Alternativa a scenario."
+              },
+              "variable_change": {
+                "type": "string",
+                "description": "Descrição da mudança na variável."
+              },
+              "impact_on_leads": {
+                "type": "string",
+                "description": "Impacto em leads (texto ou número). Nome preferido."
+              },
+              "impact_on_leads_month_90d": {
+                "type": [
+                  "string",
+                  "number"
+                ],
+                "description": "Alternativa numérica — variação em leads/mês no 90d."
+              },
+              "impact_on_cpl": {
+                "type": "string",
+                "description": "Impacto no CPL. Nome preferido."
+              },
+              "impact_on_cpl_brl": {
+                "type": [
+                  "string",
+                  "number"
+                ],
+                "description": "Alternativa numérica (R$)."
+              },
+              "impact_on_revenue": {
+                "type": "string",
+                "description": "Impacto na receita."
+              },
+              "delta_vs_base_pct": {
+                "type": "number",
+                "description": "Variação vs. base_case em % (ex: -15.5 = -15.5%). Usado pelos cards de detalhe."
+              }
+            }
+          }
+        }
+      }
+    },
+    "is_launch_plan": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se true, este e um plano de lancamento (cliente nao tem midia ativa)"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora de conclusao"
+    },
+    "key_insight": {
+      "type": "object",
+      "description": "Ponto de alavancagem desta skill — o bloco que merece destaque visual para conversa com o stakeholder. Ver PADRAO-OUTPUT.md.",
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "Frase-manchete do ponto (pode virar quote destacada no renderer)"
+        },
+        "context": {
+          "type": "string",
+          "description": "Contexto em 2-3 linhas explicando o cenário"
+        },
+        "numbered_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Razões numeradas (o renderer vira 3 cards numerados)"
+        },
+        "discussion_anchor": {
+          "type": "string",
+          "description": "Por que este é o ponto para stakeholder decidir/validar"
+        }
+      }
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta se a análise revelou fragilidade real do cliente (não há diferencial claro, premissa contraditória, etc.). Nunca omitir se justificado."
+    }
+  },
+  "definitions": {
+    "budgetScenario": {
+      "type": "object",
+      "description": "Cenário de realocação de budget. Aceita dois conjuntos de nomes — o renderer do portal usa '??' para cair no alternativo quando o preferido está ausente.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome do cenário (ex: 'Conservador'). Nome preferido."
+        },
+        "label": {
+          "type": "string",
+          "description": "Alternativa a name."
+        },
+        "total_budget_monthly": {
+          "type": "number",
+          "description": "Budget total mensal em R$. Se ausente, o renderer soma google_split + meta_split (ou os valores dentro de google_allocation/meta_allocation)."
+        },
+        "google_split": {
+          "type": "number",
+          "description": "Valor em R$ para Google Ads. Nome preferido."
+        },
+        "meta_split": {
+          "type": "number",
+          "description": "Valor em R$ para Meta Ads. Nome preferido."
+        },
+        "google_allocation": {
+          "type": "object",
+          "description": "Alternativa estruturada a google_split. Se presente, o renderer usa .value (ou .amount/.brl) como valor.",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "brl": {
+              "type": "number"
+            },
+            "pct": {
+              "type": "number",
+              "description": "Percentual do total alocado."
+            }
+          }
+        },
+        "meta_allocation": {
+          "type": "object",
+          "description": "Alternativa estruturada a meta_split.",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "brl": {
+              "type": "number"
+            },
+            "pct": {
+              "type": "number"
+            }
+          }
+        },
+        "campaigns_structure": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "campaign": {
+                "type": "string"
+              },
+              "platform": {
+                "type": "string"
+              },
+              "budget_monthly": {
+                "type": "number"
+              },
+              "objective": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "expected_leads_monthly": {
+          "type": "number",
+          "description": "Leads mensais esperados. Nome preferido."
+        },
+        "projected_leads_month": {
+          "type": "number",
+          "description": "Alternativa a expected_leads_monthly."
+        },
+        "expected_cpl": {
+          "type": "number",
+          "description": "CPL esperado (R$). Nome preferido."
+        },
+        "projected_cpl": {
+          "type": "number",
+          "description": "Alternativa a expected_cpl."
+        },
+        "expected_roas": {
+          "type": "number",
+          "description": "ROAS esperado."
+        },
+        "delta_leads": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "Variação de leads vs. cenário atual (número absoluto ou '+15%')."
+        },
+        "effort_weeks": {
+          "type": "number",
+          "description": "Semanas de esforço para implementar o cenário."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "alta",
+            "média",
+            "media",
+            "baixa"
+          ],
+          "description": "Nível de confiança na projeção."
+        },
+        "risk_assessment": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,608 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DiagnosticoCriativos",
+  "description": "Output estruturado do diagnostico de criativos: matriz de avaliacao, padroes, analise de concorrentes e briefing de producao.",
+  "type": "object",
+  "required": [
+    "summary",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings",
+    "client_name",
+    "segment",
+    "creative_matrix",
+    "patterns_identified",
+    "what_works",
+    "production_briefing"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "segment": {
+      "type": "string",
+      "description": "Segmento de atuacao"
+    },
+    "icp_summary": {
+      "type": "string",
+      "description": "Resumo do ICP para referencia"
+    },
+    "total_creatives_analyzed": {
+      "type": "integer",
+      "description": "Total de criativos analisados"
+    },
+    "average_score": {
+      "type": "number",
+      "description": "Score medio dos criativos (de 25)"
+    },
+    "creative_matrix": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "number",
+          "type",
+          "hook_score",
+          "clarity_score",
+          "icp_coherence_score",
+          "cta_score",
+          "visual_score",
+          "total_score",
+          "verdict"
+        ],
+        "properties": {
+          "number": {
+            "type": "integer",
+            "description": "Numero sequencial do criativo"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "feed",
+              "story",
+              "carrossel",
+              "video_curto",
+              "video_longo",
+              "banner",
+              "reels",
+              "outro"
+            ],
+            "description": "Tipo/formato do criativo"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descricao curta do criativo"
+          },
+          "hook_score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Score do hook — capacidade de parar o scroll (1-5)"
+          },
+          "hook_comment": {
+            "type": "string",
+            "description": "Comentario especifico sobre o hook"
+          },
+          "clarity_score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Score de clareza da mensagem (1-5)"
+          },
+          "clarity_comment": {
+            "type": "string",
+            "description": "Comentario especifico sobre a clareza"
+          },
+          "icp_coherence_score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Score de coerencia com o ICP (1-5)"
+          },
+          "icp_coherence_comment": {
+            "type": "string",
+            "description": "Comentario especifico sobre coerencia com ICP"
+          },
+          "cta_score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Score do CTA — clareza e visibilidade (1-5)"
+          },
+          "cta_comment": {
+            "type": "string",
+            "description": "Comentario especifico sobre o CTA"
+          },
+          "visual_score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Score de qualidade visual (1-5)"
+          },
+          "visual_comment": {
+            "type": "string",
+            "description": "Comentario especifico sobre a qualidade visual"
+          },
+          "total_score": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 25,
+            "description": "Score total (soma dos 5 criterios)"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "manter",
+              "otimizar",
+              "eliminar"
+            ],
+            "description": "Veredicto: manter (20-25), otimizar (13-19), eliminar (<13)"
+          },
+          "verdict_reason": {
+            "type": "string",
+            "description": "Motivo do veredicto em 1 frase"
+          },
+          "performance_data": {
+            "type": "object",
+            "description": "Dados de performance se disponiveis",
+            "properties": {
+              "ctr": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "cpl": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "impressions": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "clicks": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          },
+          "preview": {
+            "type": "object",
+            "description": "Midia do criativo para embed no portal. Populado automaticamente pelo meta_ads_fetch.sh ou manualmente pelo operador.",
+            "properties": {
+              "image_url": {
+                "type": ["string", "null"],
+                "description": "Path relativo (ex: 'assets/creatives/meta/{slug}/{ad_id}/image.jpg') ou URL absoluta"
+              },
+              "thumbnail_url": {
+                "type": ["string", "null"],
+                "description": "Miniatura otimizada para grid"
+              },
+              "video_url": {
+                "type": ["string", "null"],
+                "description": "URL do CDN Meta (se for video) — renderer embeda direto via <video>"
+              },
+              "ads_library_id": {
+                "type": ["string", "null"],
+                "description": "ID do anuncio na Meta Ads Library"
+              },
+              "ads_library_url": {
+                "type": ["string", "null"],
+                "description": "Link direto para a pagina do anuncio no Meta Ads Library"
+              },
+              "start_date": {
+                "type": ["string", "null"],
+                "description": "Data de inicio da veiculacao (ISO)"
+              },
+              "platforms": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Plataformas onde o anuncio foi veiculado (facebook, instagram, messenger, audience_network)"
+              },
+              "cta_type": {
+                "type": ["string", "null"],
+                "description": "Tipo de CTA (LEARN_MORE, MESSAGE_PAGE, SHOP_NOW, etc.)"
+              },
+              "source": {
+                "type": "string",
+                "enum": ["meta_ads_library", "uploaded", "unavailable"],
+                "description": "De onde veio a midia"
+              },
+              "fetched_at": {
+                "type": ["string", "null"],
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "description": "Matriz de avaliacao de cada criativo"
+    },
+    "patterns_identified": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "pattern",
+          "affected_creatives",
+          "example"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "Descricao do padrao/problema"
+          },
+          "affected_creatives": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Numeros dos criativos afetados"
+          },
+          "example": {
+            "type": "string",
+            "description": "Exemplo concreto do padrao"
+          }
+        }
+      },
+      "description": "Padroes de problema que se repetem"
+    },
+    "what_works": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "element",
+          "seen_in",
+          "reason"
+        ],
+        "properties": {
+          "element": {
+            "type": "string",
+            "description": "Elemento que funciona"
+          },
+          "seen_in": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Numeros dos criativos onde aparece"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Por que funciona"
+          }
+        }
+      },
+      "description": "Elementos que devem ser preservados ou replicados"
+    },
+    "competitor_analysis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "competitor",
+          "creative_pattern"
+        ],
+        "properties": {
+          "competitor": {
+            "type": "string",
+            "description": "Nome do concorrente"
+          },
+          "active_ads_count": {
+            "type": "integer",
+            "description": "Numero de anuncios ativos (Meta Ads Library)"
+          },
+          "ads_library_url": {
+            "type": "string",
+            "description": "Link direto para a Meta Ads Library do concorrente"
+          },
+          "creative_pattern": {
+            "type": "string",
+            "description": "Padrao criativo observado"
+          },
+          "what_works": {
+            "type": "string",
+            "description": "O que pode inspirar"
+          },
+          "what_to_avoid": {
+            "type": "string",
+            "description": "O que nao copiar"
+          },
+          "gap_para_cliente": {
+            "type": "boolean",
+            "description": "True se o concorrente usa um padrao que o cliente NAO usa e deveria testar."
+          },
+          "replication_idea": {
+            "type": ["string", "null"],
+            "description": "Se gap_para_cliente=true, ideia concreta para o cliente replicar (formato, hook, angulo). null quando gap=false."
+          },
+          "sample_ads": {
+            "type": "array",
+            "description": "Ate 6 anuncios de exemplo do concorrente para embed no portal. Populado pelo meta_ads_fetch.sh.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ads_library_id": {"type": ["string", "null"]},
+                "ads_library_url": {"type": ["string", "null"]},
+                "image_url": {"type": ["string", "null"]},
+                "thumbnail_url": {"type": ["string", "null"]},
+                "video_url": {"type": ["string", "null"]},
+                "copy_excerpt": {"type": ["string", "null"], "description": "Primeiros 150 caracteres do copy"},
+                "start_date": {"type": ["string", "null"]},
+                "platforms": {"type": "array", "items": {"type": "string"}},
+                "cta_type": {"type": ["string", "null"]}
+              }
+            }
+          }
+        }
+      },
+      "description": "Analise de criativos de concorrentes na Meta Ads Library"
+    },
+    "competitor_patterns_missing": {
+      "type": "array",
+      "description": "Padroes recorrentes dos concorrentes que o cliente NAO usa — lista priorizada de gaps acionaveis. Mesma logica do gt-diagnostico-organico-instagram para coerencia cross-outputs.",
+      "items": {
+        "type": "object",
+        "required": [
+          "pattern",
+          "seen_in_competitors",
+          "why_it_works",
+          "how_client_could_implement"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "Descricao do padrao (ex: 'video vertical com case real + depoimento em texto sobreposto')"
+          },
+          "seen_in_competitors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Nomes dos concorrentes que usam o padrao"
+          },
+          "ads_count": {
+            "type": "integer",
+            "description": "Quantos anuncios dos concorrentes usam esse padrao"
+          },
+          "why_it_works": {
+            "type": "string",
+            "description": "Por que provavelmente funciona para o ICP do cliente"
+          },
+          "how_client_could_implement": {
+            "type": "string",
+            "description": "Como o cliente poderia implementar (acionavel, nao generico)"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["alta", "media", "baixa"]
+          }
+        }
+      }
+    },
+    "production_briefing": {
+      "type": "object",
+      "required": [
+        "hook_direction",
+        "priority_format",
+        "visual_elements",
+        "avoid_elements",
+        "copy_guidelines"
+      ],
+      "properties": {
+        "hook_direction": {
+          "type": "string",
+          "description": "Direcao recomendada para hooks"
+        },
+        "hook_examples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Exemplos de hooks recomendados"
+        },
+        "priority_format": {
+          "type": "string",
+          "enum": [
+            "stories_vertical",
+            "feed_quadrado",
+            "carrossel",
+            "video_curto",
+            "video_longo",
+            "reels"
+          ],
+          "description": "Formato prioritario para novos criativos"
+        },
+        "format_justification": {
+          "type": "string",
+          "description": "Por que este formato para este ICP"
+        },
+        "visual_elements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Elementos visuais a incluir nos novos criativos"
+        },
+        "avoid_elements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Elementos a evitar nos novos criativos"
+        },
+        "copy_guidelines": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "string",
+              "enum": [
+                "short_15_words",
+                "medium_30_words",
+                "long_50_plus"
+              ],
+              "description": "Comprimento recomendado"
+            },
+            "tone": {
+              "type": "string",
+              "description": "Tom recomendado"
+            },
+            "structure": {
+              "type": "string",
+              "description": "Estrutura recomendada (ex: hook-dor-solucao-prova-CTA)"
+            },
+            "icp_keywords": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Palavras-chave que o ICP usa"
+            }
+          },
+          "description": "Diretrizes de copy para novos criativos"
+        },
+        "recommended_quantity": {
+          "type": "integer",
+          "description": "Quantidade recomendada de novos criativos"
+        },
+        "variation_plan": {
+          "type": "string",
+          "description": "Plano de variacoes (ex: 3 hooks x 2 formatos x 2 CTAs)"
+        }
+      },
+      "description": "Briefing para producao de novos criativos na Semana 3"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora de conclusao"
+    },
+    "counts": {
+      "type": "object",
+      "description": "Resumo da avaliacao",
+      "properties": {
+        "keep_count": {
+          "type": "integer",
+          "description": "Quantidade de criativos para manter"
+        },
+        "optimize_count": {
+          "type": "integer",
+          "description": "Quantidade de criativos para otimizar"
+        },
+        "eliminate_count": {
+          "type": "integer",
+          "description": "Quantidade de criativos para eliminar"
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases do diagnóstico de criativos. Inclui principais padrões encontrados e ação prioritária."
+    },
+    "summary_headline": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Manchete em 1 linha com o veredito da analise. Ex: '[Cliente]: 7 de 10 criativos falham no hook — oportunidade de redesenho antes de escalar midia'. Ver PADRAO-OUTPUT.md."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "description": "KPIs visuais categorizados para o resumo executivo. Ex: {category:'maturidade', label:'Score medio', value:'13,2/25', tone:'yellow'}.",
+      "items": {
+        "type": "object",
+        "required": ["category", "label", "value"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["posicao", "competicao", "janela", "maturidade", "oportunidade", "risco"]
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tone": {
+            "type": "string",
+            "enum": ["green", "yellow", "red", "blue", "gray"]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Achados categorizados. Cobrir pelo menos 3 dos 4 tipos (vantagem/contexto/ameaca/acao).",
+      "items": {
+        "type": "object",
+        "required": ["category", "text"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["vantagem", "contexto", "ameaca", "acao"]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "key_insight": {
+      "type": "object",
+      "description": "Ponto de alavancagem desta skill — para diagnostico de criativos, e o padrao criativo mais impactante (problema recorrente ou sucesso a amplificar) OU o gap mais assimetrico vs concorrente. Ver PADRAO-OUTPUT.md.",
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "Frase-manchete do ponto (pode virar quote destacada)"
+        },
+        "context": {
+          "type": "string",
+          "description": "Contexto em 2-3 linhas explicando o cenario"
+        },
+        "numbered_reasons": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Razoes numeradas (renderer vira 3 cards)"
+        },
+        "discussion_anchor": {
+          "type": "string",
+          "description": "Por que este e o ponto para stakeholder decidir/validar"
+        }
+      }
+    },
+    "honesty_alert": {
+      "type": "string",
+      "description": "Alerta se o diagnostico revelou fragilidade critica (ex: cliente nao tem criativos pagos ativos, base insuficiente para analise, concorrentes dominam com volume que o cliente nao consegue acompanhar). Nunca omitir se justificado."
+    },
+    "source_outputs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Outputs consultados para cross-referencia (ex: 'gt-diagnostico-midia-paga.json' para performance por criativo, 'geral-persona-icp.json' para ICP)."
+    },
+    "period": {
+      "type": "object",
+      "description": "Periodo coberto pelos criativos analisados (se aplicavel).",
+      "properties": {
+        "start": {"type": "string", "format": "date"},
+        "end": {"type": "string", "format": "date"}
+      }
+    }
+  }
+}

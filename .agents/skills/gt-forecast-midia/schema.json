@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Forecast de Mídia",
+  "description": "Forecast operacional de 6 meses com split de canais, plano de campanhas, métricas de tracking e evolução mensal projetada. Baseline conservador — não modela ROAS/receita financeira.",
+  "type": "object",
+  "required": [
+    "client_name",
+    "summary",
+    "summary_headline",
+    "horizon",
+    "currency",
+    "scenario_stance",
+    "channel_split",
+    "campaigns",
+    "tracking_metrics",
+    "forecast_6_months",
+    "assumptions_and_dependencies",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo em 1-2 parágrafos com o veredito do forecast. Específico, com números reais."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 chars) com o veredito principal."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: maturidade | janela | oportunidade | risco | competicao | posicao.",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "horizon": {
+      "type": "string",
+      "description": "Janela temporal coberta (ex: 'Maio/2026 — Outubro/2026 (6 meses)')."
+    },
+    "currency": {
+      "type": "string",
+      "description": "Moeda base — normalmente 'BRL'."
+    },
+    "scenario_stance": {
+      "type": "string",
+      "description": "Postura do cenário (ULTRA conservador / Conservador / Realista / Otimista) com justificativa."
+    },
+    "channel_split": {
+      "type": "object",
+      "required": [
+        "total_monthly_budget",
+        "rationale",
+        "channels"
+      ],
+      "properties": {
+        "total_monthly_budget": {
+          "type": "number"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "channels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "channel",
+              "percentage",
+              "monthly_value",
+              "primary_intent"
+            ],
+            "properties": {
+              "channel": {
+                "type": "string"
+              },
+              "percentage": {
+                "type": "number"
+              },
+              "monthly_value": {
+                "type": "number"
+              },
+              "primary_intent": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "campaigns": {
+      "type": "object",
+      "description": "Plano de campanhas concentradas por canal. Estrutura aberta — varia conforme split.",
+      "required": [
+        "concentration_note"
+      ],
+      "properties": {
+        "concentration_note": {
+          "type": "string"
+        }
+      }
+    },
+    "tracking_metrics": {
+      "type": "object",
+      "required": [
+        "description",
+        "metrics"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "metric",
+              "definition",
+              "source",
+              "frequency"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "metric": {
+                "type": "string"
+              },
+              "definition": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "forecast_6_months": {
+      "type": "object",
+      "required": [
+        "description",
+        "evolution_logic",
+        "monthly_evolution",
+        "totals_6_months"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "evolution_logic": {
+          "type": "string"
+        },
+        "monthly_evolution": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "month",
+              "label",
+              "phase",
+              "impressions",
+              "clicks",
+              "leads",
+              "cpl"
+            ],
+            "properties": {
+              "month": {
+                "type": "integer"
+              },
+              "label": {
+                "type": "string"
+              },
+              "phase": {
+                "type": "string"
+              },
+              "impressions": {
+                "type": [
+                  "integer",
+                  "number"
+                ]
+              },
+              "clicks": {
+                "type": [
+                  "integer",
+                  "number"
+                ]
+              },
+              "ctr_pct": {
+                "type": "number"
+              },
+              "cpc": {
+                "type": "number"
+              },
+              "leads": {
+                "type": [
+                  "integer",
+                  "number"
+                ]
+              },
+              "cpl": {
+                "type": "number"
+              },
+              "mql_rate_pct": {
+                "type": "number"
+              },
+              "mqls": {
+                "type": [
+                  "integer",
+                  "number"
+                ]
+              },
+              "appointments": {
+                "type": [
+                  "integer",
+                  "number"
+                ]
+              },
+              "show_rate_pct": {
+                "type": "number"
+              },
+              "served_clients": {
+                "type": [
+                  "integer",
+                  "number"
+                ]
+              },
+              "cac_media": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "totals_6_months": {
+          "type": "object",
+          "properties": {
+            "total_investment": {
+              "type": "number"
+            },
+            "total_impressions": {
+              "type": [
+                "integer",
+                "number"
+              ]
+            },
+            "total_clicks": {
+              "type": [
+                "integer",
+                "number"
+              ]
+            },
+            "avg_ctr_pct": {
+              "type": "number"
+            },
+            "avg_cpc": {
+              "type": "number"
+            },
+            "total_leads": {
+              "type": [
+                "integer",
+                "number"
+              ]
+            },
+            "avg_cpl": {
+              "type": "number"
+            },
+            "avg_mql_rate_pct": {
+              "type": "number"
+            },
+            "total_mqls": {
+              "type": [
+                "integer",
+                "number"
+              ]
+            },
+            "total_appointments": {
+              "type": [
+                "integer",
+                "number"
+              ]
+            },
+            "avg_show_rate_pct": {
+              "type": "number"
+            },
+            "total_served_clients": {
+              "type": [
+                "integer",
+                "number"
+              ]
+            },
+            "avg_cac_media": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "assumptions_and_dependencies": {
+      "type": "array",
+      "description": "Premissas, dependências e disclaimers explícitos do forecast.",
+      "minItems": 3,
+      "items": {
+        "type": "string"
+      }
+    },
+    "_metadata": {
+      "type": "object",
+      "properties": {
+        "skill": {
+          "type": "string"
+        },
+        "version": {
+          "type": [
+            "integer",
+            "number"
+          ]
+        },
+        "generated_at": {
+          "type": "string"
+        },
+        "version_notes": {
+          "type": "string"
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_iteration": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

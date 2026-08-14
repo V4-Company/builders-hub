@@ -1,0 +1,522 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DiagnosticoOrganicoIG",
+  "description": "Diagnostico comparativo de conteudo organico no Instagram — cliente vs 2 concorrentes, 90 dias, via Graph API + business_discovery.",
+  "type": "object",
+  "required": [
+    "summary",
+    "client_name",
+    "period",
+    "client_account",
+    "competitor_accounts",
+    "format_distribution",
+    "cadence",
+    "engagement_benchmark",
+    "top_posts",
+    "bottom_posts",
+    "competitor_patterns_missing",
+    "client_winning_patterns",
+    "next_actions",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo 1-2 frases com cliente, metricas-chave, gap principal, acao prioritaria."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "period": {
+      "type": "object",
+      "required": [
+        "start",
+        "end",
+        "days"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        },
+        "days": {
+          "type": "integer"
+        }
+      }
+    },
+    "client_account": {
+      "$ref": "#/definitions/account"
+    },
+    "competitor_accounts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/definitions/account"
+      }
+    },
+    "format_distribution": {
+      "type": "object",
+      "description": "Distribuicao por formato (FEED_IMAGE / CAROUSEL / REELS / VIDEO) por conta.",
+      "required": [
+        "by_account",
+        "insight"
+      ],
+      "properties": {
+        "by_account": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "username",
+              "counts"
+            ],
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "counts": {
+                "type": "object",
+                "properties": {
+                  "FEED_IMAGE": {
+                    "type": "integer"
+                  },
+                  "CAROUSEL": {
+                    "type": "integer"
+                  },
+                  "REELS": {
+                    "type": "integer"
+                  },
+                  "VIDEO": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "insight": {
+          "type": "string",
+          "description": "Leitura comparativa (onde o cliente esta desalinhado)."
+        }
+      }
+    },
+    "cadence": {
+      "type": "object",
+      "required": [
+        "by_account",
+        "insight"
+      ],
+      "properties": {
+        "by_account": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "username",
+              "posts_per_week"
+            ],
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "posts_per_week": {
+                "type": "number"
+              },
+              "preferred_weekday": {
+                "type": "string"
+              },
+              "preferred_hour": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "insight": {
+          "type": "string"
+        }
+      }
+    },
+    "engagement_benchmark": {
+      "type": "object",
+      "required": [
+        "by_account",
+        "insight"
+      ],
+      "properties": {
+        "by_account": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "username",
+              "avg_likes",
+              "avg_comments",
+              "avg_engagement_proxy"
+            ],
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "avg_likes": {
+                "type": "number"
+              },
+              "avg_comments": {
+                "type": "number"
+              },
+              "avg_engagement_proxy": {
+                "type": "number",
+                "description": "(likes + 3*comments) / followers * 100"
+              },
+              "best_format_by_engagement": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "insight": {
+          "type": "string"
+        }
+      }
+    },
+    "top_posts": {
+      "type": "array",
+      "description": "Top 3 posts de cada conta (cliente + 2 concorrentes) por engagement_proxy.",
+      "minItems": 3,
+      "items": {
+        "$ref": "#/definitions/post"
+      }
+    },
+    "bottom_posts": {
+      "type": "array",
+      "description": "Bottom 3 posts do CLIENTE apenas — posts com menor engagement_proxy.",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/definitions/post"
+      }
+    },
+    "competitor_patterns_missing": {
+      "type": "array",
+      "description": "Padroes recorrentes em concorrentes que o cliente nao usa.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "pattern",
+          "seen_in_count",
+          "why_works",
+          "how_to_apply"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "seen_in_count": {
+            "type": "integer"
+          },
+          "seen_in_competitors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "example_permalinks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "why_works": {
+            "type": "string"
+          },
+          "how_to_apply": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "client_winning_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "pattern",
+          "seen_in_count",
+          "recommendation"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "seen_in_count": {
+            "type": "integer"
+          },
+          "example_permalinks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "instagram_compliance": {
+      "type": "object",
+      "properties": {
+        "aspect_ratio_issues_count": {
+          "type": "integer"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "impact",
+          "effort",
+          "priority"
+        ],
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "string",
+            "enum": [
+              "alto",
+              "medio",
+              "baixo"
+            ]
+          },
+          "effort": {
+            "type": "string",
+            "enum": [
+              "baixo",
+              "medio",
+              "alto"
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "account": {
+      "type": "object",
+      "required": [
+        "username",
+        "name",
+        "followers_count",
+        "media_count_total",
+        "posts_90d"
+      ],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "biography": {
+          "type": "string"
+        },
+        "profile_picture_url": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "followers_count": {
+          "type": "integer"
+        },
+        "follows_count": {
+          "type": "integer"
+        },
+        "media_count_total": {
+          "type": "integer"
+        },
+        "posts_90d": {
+          "type": "integer"
+        },
+        "permalink": {
+          "type": "string"
+        }
+      }
+    },
+    "post": {
+      "type": "object",
+      "required": [
+        "username",
+        "permalink",
+        "embed_url",
+        "media_type",
+        "format",
+        "timestamp",
+        "caption",
+        "like_count",
+        "comments_count",
+        "engagement_proxy",
+        "diagnosis"
+      ],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "post_id": {
+          "type": "string"
+        },
+        "permalink": {
+          "type": "string"
+        },
+        "embed_url": {
+          "type": "string",
+          "description": "permalink + 'embed/' — o portal monta o iframe oficial do Instagram."
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "FEED_IMAGE",
+            "CAROUSEL",
+            "REELS",
+            "VIDEO"
+          ]
+        },
+        "thumbnail_url": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "caption_length": {
+          "type": "integer"
+        },
+        "hashtags_count": {
+          "type": "integer"
+        },
+        "mentions_count": {
+          "type": "integer"
+        },
+        "has_cta": {
+          "type": "boolean"
+        },
+        "like_count": {
+          "type": "integer"
+        },
+        "comments_count": {
+          "type": "integer"
+        },
+        "engagement_proxy": {
+          "type": "number",
+          "description": "(likes + 3*comments) / followers * 100"
+        },
+        "diagnosis": {
+          "type": "string",
+          "description": "2 frases: o que funcionou (se top) ou o que quebrou (se bottom)."
+        },
+        "gap_para_cliente": {
+          "type": "boolean",
+          "description": "Se este eh um post de concorrente e o cliente nao tem padrao similar."
+        }
+      }
+    }
+  }
+}
