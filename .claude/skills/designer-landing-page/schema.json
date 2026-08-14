@@ -1,0 +1,431 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Landing Page",
+  "description": "Output estruturado da landing page: copy por seção, FAQ, prova social, meta tags e URL de deploy.",
+  "type": "object",
+  "required": [
+    "summary",
+    "sections",
+    "faq",
+    "social_proof",
+    "meta",
+    "client_name",
+    "summary_headline",
+    "summary_highlights",
+    "summary_key_findings"
+  ],
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente — sempre presente em todo output."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumo de 1-2 frases da landing page. Inclui proposta central da página e número de seções criadas."
+    },
+    "summary_headline": {
+      "type": "string",
+      "description": "Manchete em 1 linha (~120 caracteres) com o veredito da skill."
+    },
+    "summary_highlights": {
+      "type": "array",
+      "description": "KPIs em destaque (4-6 itens). Categorias: posicao | competicao | janela | maturidade | oportunidade | risco.",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "label",
+          "value",
+          "tone"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "subtext": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "green",
+              "yellow",
+              "red",
+              "blue",
+              "gray"
+            ]
+          }
+        }
+      }
+    },
+    "summary_key_findings": {
+      "type": "array",
+      "description": "3-5 achados categorizados (vantagem | contexto | ameaca | acao).",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "category",
+          "text"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "vantagem",
+              "contexto",
+              "ameaca",
+              "acao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "description": "Seções da LP em ordem de exibição.",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "hero",
+              "problem",
+              "authority",
+              "solution",
+              "how_it_works",
+              "deliverables",
+              "social_proof",
+              "secondary_audience",
+              "faq",
+              "final_cta",
+              "location"
+            ],
+            "description": "Identificador da seção. Aceita seções extras além do core (authority, secondary_audience, location/map) para LPs mais ricas."
+          },
+          "eyebrow": {
+            "type": "string",
+            "description": "Texto pequeno acima do headline (estilo eyebrow/sticker — ex: '· A profissional')."
+          },
+          "stats": {
+            "type": "array",
+            "description": "Stats inline da seção (ex: hero stats — alternativa a social_proof.stats).",
+            "items": {
+              "type": "object",
+              "required": [
+                "number",
+                "label"
+              ],
+              "properties": {
+                "number": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "credential_card": {
+            "type": "object",
+            "description": "Card flutuante com credencial (ex: nome do profissional + CRMV).",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              }
+            }
+          },
+          "credentials": {
+            "type": "array",
+            "description": "Timeline de credenciais (formato 'year' + 'title' — usado em seções de autoridade).",
+            "items": {
+              "type": "object",
+              "required": [
+                "year",
+                "title"
+              ],
+              "properties": {
+                "year": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "headline": {
+            "type": "string",
+            "description": "Título principal da seção"
+          },
+          "subheadline": {
+            "type": "string",
+            "description": "Subtítulo (quando aplicável)"
+          },
+          "body": {
+            "type": "string",
+            "description": "Texto do corpo (quando aplicável)"
+          },
+          "cta_primary": {
+            "type": "string",
+            "description": "Texto do CTA primário (hero e final_cta)"
+          },
+          "cta_secondary": {
+            "type": "string",
+            "description": "Texto do CTA secundário (hero)"
+          },
+          "cards": {
+            "type": "array",
+            "description": "Cards de dor (seção problem)",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "body"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "benefits": {
+            "type": "array",
+            "description": "Benefícios com ícone (seção solution)",
+            "items": {
+              "type": "object",
+              "required": [
+                "icon",
+                "title",
+                "body"
+              ],
+              "properties": {
+                "icon": {
+                  "type": "string",
+                  "description": "Nome do ícone sugerido (Lucide/Heroicons)"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "description": "Passos do como funciona",
+            "items": {
+              "type": "object",
+              "required": [
+                "number",
+                "title",
+                "body"
+              ],
+              "properties": {
+                "number": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "description": "Itens de entregáveis",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "benefit"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "benefit": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "faq": {
+      "type": "array",
+      "description": "5 perguntas frequentes que respondem às objeções do ICP.",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "question",
+          "answer"
+        ],
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "social_proof": {
+      "type": "object",
+      "required": [
+        "testimonials"
+      ],
+      "properties": {
+        "testimonials": {
+          "type": "array",
+          "description": "Depoimentos de clientes (reais ou placeholders). Aceita formato simples (name/role/text) ou rico (com photo, source, when, rating, neighborhood, pet, photo_caption).",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "text"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "description": "Cargo ou contexto da pessoa (opcional — pode ser derivado de source/when/neighborhood)"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto do depoimento"
+              },
+              "photo": {
+                "type": "string",
+                "description": "Caminho relativo da foto do depoimento (ex: /photos/testimonials/x.webp)"
+              },
+              "photo_caption": {
+                "type": "string",
+                "description": "Legenda da foto (ex: 'Arlete · cachorrinha levada para exame')"
+              },
+              "source": {
+                "type": "string",
+                "description": "Fonte do depoimento (ex: 'Google Reviews', 'Google · Local Guide')"
+              },
+              "when": {
+                "type": "string",
+                "description": "Quando foi escrito (ex: '6 meses atrás')"
+              },
+              "rating": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5,
+                "description": "Nota em estrelas (1-5)"
+              },
+              "neighborhood": {
+                "type": "string",
+                "description": "Bairro/cidade da pessoa"
+              },
+              "pet": {
+                "type": "string",
+                "description": "Nome e raça/idade do pet (ex: 'Mel · Siamês, 4 anos')"
+              }
+            }
+          }
+        },
+        "stats": {
+          "type": "array",
+          "description": "Números de impacto (clientes, anos, resultados).",
+          "items": {
+            "type": "object",
+            "required": [
+              "number",
+              "label"
+            ],
+            "properties": {
+              "number": {
+                "type": "string",
+                "description": "Número formatado (ex: '500+')"
+              },
+              "label": {
+                "type": "string",
+                "description": "Descrição do número"
+              }
+            }
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "og_title",
+        "og_description",
+        "og_type"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Title tag para SEO"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 155,
+          "description": "Meta description para SEO"
+        },
+        "og_title": {
+          "type": "string"
+        },
+        "og_description": {
+          "type": "string"
+        },
+        "og_type": {
+          "type": "string",
+          "enum": [
+            "website"
+          ],
+          "default": "website"
+        }
+      }
+    },
+    "deploy_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL da LP deployada na Vercel"
+    },
+    "whatsapp_link": {
+      "type": "string",
+      "description": "Link completo do WhatsApp com mensagem pré-formatada"
+    }
+  }
+}
