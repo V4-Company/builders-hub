@@ -29,7 +29,15 @@ Se voce manja de git, tambem pode:
 2. Branch nova: `skill/{papel}-{nome}` (ou `skill/{fonte}-{nome}`)
 3. Copie sua skill pra `.claude/skills/{prefixo}-{nome}/SKILL.md` E `.agents/skills/{prefixo}-{nome}/SKILL.md`
 4. Commit + push
-5. Abra PR preenchendo o template
+5. Rode as validações abaixo
+6. Abra PR preenchendo o template
+
+```bash
+python3 scripts/build-registry.py
+python3 scripts/validate-repo.py
+python3 scripts/build-registry.py --check
+python3 scripts/run-tests.py
+```
 
 ## Regras de contribuição
 
@@ -76,7 +84,7 @@ Toda skill vive em `.claude/skills/` E `.agents/skills/`. A `/criador-de-skills`
 
 ## Conflitos de merge
 
-A skill `/compartilhar-skill` ja tenta rebasear em `origin/main` antes de abrir o PR. Se der conflito, ela te guia pela resolucao. Arquivos pessoais (`clientes/`, `bases/`) nunca conflitam porque estao no `.gitignore`.
+A skill `/compartilhar-skill` ja tenta rebasear em `origin/main` antes de abrir o PR. Se der conflito, ela te guia pela resolucao. Arquivos pessoais (`squads/` e KBs em `bases/`) nunca conflitam porque estao no `.gitignore`.
 
 ## Duvidas?
 

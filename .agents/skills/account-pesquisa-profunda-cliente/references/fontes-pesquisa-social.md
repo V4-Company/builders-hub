@@ -103,4 +103,4 @@ Priorize:
 - Diferencie "o consumidor falou" de "a IA sintetizou".
 - Nao invente citacoes. Se nao houver frase real, marque como exemplo sintetizado.
 - Busque objecoes e hesitacoes. Frases tipo "quase comprei, mas..." sao mais uteis que elogios genericos.
-- Salve links e datas em `06-fontes-e-evidencias.md`.
+- Salve links e datas em `07-fontes-e-evidencias.md`.

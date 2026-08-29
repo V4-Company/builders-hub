@@ -21,7 +21,7 @@ git clone https://github.com/V4-Company/builders-hub.git
 cd builders-hub
 ```
 
-Ou baixe o ZIP pelo GitHub.
+Use um clone Git. O ZIP serve apenas para leitura e não permite `/sync-hub`, commits ou PRs.
 
 ### 2. Abra no Anti-Gravity (ou Claude Code)
 
@@ -35,6 +35,12 @@ Ou baixe o ZIP pelo GitHub.
 ```
 
 Valida git/GitHub CLI/dependências 100%, instala o que faltar, e te guia pelo resto: primeiro cliente/projeto, primeiras skills, fluxo de trabalho. Pode rodar de novo sempre que algo quebrar — os checks que já passaram voam.
+
+Para usar scripts de integração diretamente, instale também as dependências Python:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
 
 ## Skills principais
 
@@ -50,6 +56,8 @@ Valida git/GitHub CLI/dependências 100%, instala o que faltar, e te guia pelo r
 | `/novo-projeto` | Cria uma KB genérica em `bases/` |
 | `/geral-brainstormar-sobre-minha-funcao` | Descobre onde IA agrega mais valor no seu dia |
 | `/geral-sabatina` | Stress-test de planos e ideias |
+| `/geral-discovery-produto` | Transforma evidências dispersas em decisões de produto e oferta |
+| `/geral-backup-kb-drive` | Espelha uma KB no Drive com checagem de permissão e de segredos |
 
 ## Skills de account e check-in
 
@@ -106,8 +114,10 @@ builders-hub/
 ├── squads/                   # squads e KBs de clientes (gitignored)
 ├── bases/                    # seus KBs de projetos (gitignored)
 ├── docs/                     # guias e specs
+├── tests/                    # testes automatizados do repositorio
 ├── tutorial.html             # guia visual do hub
-└── scripts/build-registry.py # regenera REGISTRY.md
+├── requirements.txt          # dependencias dos scripts de integracao
+└── scripts/                  # geracao do registry e validacao estrutural
 ```
 
 Clientes vivem em `squads/{squad}/clientes/{cliente}/`. Dentro de cada cliente:
@@ -138,6 +148,31 @@ O hub usa dois arquivos de instrução:
 - `AGENTS.md`: lido por Codex/Anti-Gravity/outros agentes.
 
 Sempre que uma skill criar ou atualizar contexto duradouro, os dois devem ficar alinhados.
+
+## Configuração e segurança
+
+- Copie `.env.example` para `.env` apenas dentro da KB que precisa da integração.
+- Nunca preencha nem commite `.env.example`; ele documenta somente os nomes das variáveis.
+- A integração V4mos usa `V4MOS_CLIENT_ID`, `V4MOS_CLIENT_SECRET` e `V4MOS_WORKSPACE_ID`.
+- Arquivos `*.local.json`, `squads/`, KBs de `bases/` e credenciais são ignorados pelo Git.
+- O script `scripts/validate-repo.py` confere duplo-write, frontmatters, arquivos locais rastreados e padrões de segredo de alta confiança.
+
+## Desenvolvimento e validação
+
+Antes de abrir um PR:
+
+```bash
+python3 scripts/build-registry.py
+python3 scripts/validate-repo.py
+python3 scripts/build-registry.py --check
+python3 scripts/run-tests.py
+```
+
+Skills que têm testes próprios guardam os casos em `.claude/skills/<skill>/tests/`. A CI executa esses testes, compila os scripts Python e faz um smoke test da CLI V4mos.
+
+## Atualização e operação
+
+Este repositório é uma biblioteca de skills e KBs locais: não há servidor, banco de dados, migrations ou build de produção para publicar. Em uma máquina limpa, clone o repositório, instale `requirements.txt` e rode `/onboarding`. Para atualizar, use `/sync-hub` ou faça `git pull` na sua cópia; não existe processo que precise ser reiniciado.
 
 ## Contribuir
 

@@ -1,6 +1,6 @@
 ---
 name: compartilhar-skill
-description: Empacota uma skill local e abre Pull Request no Builders Hub publico automaticamente. Use quando o usuario rodar /compartilhar-skill, disser que quer "compartilhar essa skill com o time", "publicar no hub", "enviar pro repo" ou similar. Valida nome/frontmatter/duplo-write, resolve conflitos com origin/main via rebase, cria branch, commita, faz push e abre PR via gh CLI — o usuario so precisa aprovar depois. Nunca commita arquivos pessoais de clientes/ ou bases/.
+description: Empacota uma skill local e abre Pull Request no Builders Hub publico automaticamente. Use quando o usuario rodar /compartilhar-skill, disser que quer "compartilhar essa skill com o time", "publicar no hub", "enviar pro repo" ou similar. Valida nome/frontmatter/duplo-write, resolve conflitos com origin/main via rebase, cria branch, commita, faz push e abre PR via gh CLI — o usuario so precisa aprovar depois. Nunca commita arquivos pessoais de squads/ ou bases/.
 ---
 
 # /compartilhar-skill — Envia skill pro Builders Hub
@@ -109,7 +109,7 @@ git cat-file -e "origin/main:.claude/skills/{nome}/SKILL.md" 2>/dev/null && echo
 ### Passo 7 — Garantir main atualizada e fazer o commit
 
 ```bash
-# Guarda mudancas nao commitadas em outras pastas (ex: clientes/ ja esta gitignored, mas garante)
+# Guarda mudancas nao commitadas em outras pastas (ex: squads/ ja esta gitignored, mas garante)
 git stash --include-untracked --quiet 2>/dev/null || true
 
 # Atualiza main
@@ -119,7 +119,7 @@ git pull --rebase origin main
 # Cria branch nova
 git checkout -b "skill/{nome}"
 
-# Stage SO os arquivos da skill (nunca clientes/, bases/, arquivos pessoais)
+# Stage SO os arquivos da skill (nunca squads/, bases/, arquivos pessoais)
 git add ".claude/skills/{nome}" ".agents/skills/{nome}"
 
 # Confirme que so esses arquivos estao staged
@@ -244,7 +244,7 @@ Se `git branch --show-current` nao for `main`, pergunte se as mudancas atuais sa
 
 ## O que NUNCA fazer
 
-- Commitar conteudo de `clientes/` ou `bases/` (devem estar no .gitignore, mas verifique)
+- Commitar conteudo de `squads/` ou KBs de `bases/` (devem estar no .gitignore, mas verifique)
 - Editar arquivos em `.claude/skills/` de **outras** skills que nao a sendo compartilhada
 - Fazer push direto em `main` (sempre via branch + PR)
 - Forcar push (`--force`, `--force-with-lease`) sem instrucao explicita do usuario

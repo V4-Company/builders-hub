@@ -12,7 +12,7 @@ Voce vai criar a pasta de um novo cliente DENTRO de um squad. **Padrao obrigator
 Liste os squads existentes em `squads/` (ignore qualquer pasta `_template-*`):
 
 ```bash
-ls squads/ | grep -v '^_template-'
+if [ -d squads ]; then find squads -mindepth 1 -maxdepth 1 -type d -print; fi
 ```
 
 - **Se nao existir nenhum squad**: pare e diga:
@@ -38,6 +38,7 @@ Converta para lowercase-com-hifens (ex: "Academia Estação Saúde" → "academi
 cp -r bases/_template/_template-cliente "squads/[squad]/clientes/[cliente]"
 # Copia o .env.example pra .env (inicial vazio, o usuario preenche conforme for usando)
 cp "squads/[squad]/clientes/[cliente]/.env.example" "squads/[squad]/clientes/[cliente]/.env"
+chmod 600 "squads/[squad]/clientes/[cliente]/.env" 2>/dev/null || true
 ```
 
 O `.env` e gitignored por padrao (`squads/` inteiro fica local). Credenciais ficam locais. Templates versionados ficam em `bases/_template/`.

@@ -1,11 +1,9 @@
 # Arquivos pessoais do usuario — NUNCA sobem pro repo publico
-# Usa /pasta/* em vez de /pasta/ pra permitir re-incluir subpastas com !
-/squads/*
+# Squads sao sempre pessoais. Templates oficiais vivem em bases/_template/.
+/squads/
 /bases/*
 
 # Excecao: manter os templates vazios pra quem clona
-!/squads/_template-cliente/
-!/squads/_template-squad/
 !/bases/_template/
 
 # Credenciais e env (mas .env.example pode ser commitado como template)
@@ -18,6 +16,7 @@
 
 # Arquivos locais de trabalho
 *.local.md
+*.local.json
 *.draft.md
 *.scratch.*
 
@@ -33,6 +32,10 @@ Thumbs.db
 # Python (notebooklm-py etc)
 __pycache__/
 *.py[cod]
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
 .venv/
 venv/
 *.egg-info/

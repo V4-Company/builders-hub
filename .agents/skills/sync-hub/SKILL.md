@@ -1,6 +1,6 @@
 ---
 name: sync-hub
-description: Atualiza o Builders Hub local puxando as skills mais recentes do repo publico, mostra diff do que mudou desde a ultima sync e regenera o REGISTRY.md. Use quando o usuario rodar /sync-hub, quiser "baixar as skills novas do time", "atualizar meu hub" ou similar. Preserva arquivos pessoais de clientes/ e bases/ (gitignored). Lida com conflitos de forma segura e guia o usuario se algo precisar de resolucao manual.
+description: Atualiza o Builders Hub local puxando as skills mais recentes do repo publico, mostra diff do que mudou desde a ultima sync e regenera o REGISTRY.md. Use quando o usuario rodar /sync-hub, quiser "baixar as skills novas do time", "atualizar meu hub" ou similar. Preserva arquivos pessoais de squads/ e bases/ (gitignored). Lida com conflitos de forma segura e guia o usuario se algo precisar de resolucao manual.
 ---
 
 # /sync-hub — Atualiza o Builders Hub local
@@ -115,7 +115,7 @@ shutil.copytree(src, dst)
 "
 ```
 
-**Importante:** o rsync/copy nao toca em `clientes/` ou `bases/`, porque essas pastas estao fora de `.claude/skills/`.
+**Importante:** o rsync/copy nao toca em `squads/` ou `bases/`, porque essas pastas estao fora de `.claude/skills/`.
 
 ### Passo 6 — Regenerar REGISTRY.md local
 
@@ -198,7 +198,7 @@ Pare, mostre os conflitos, oriente:
 - Forcar push (essa skill so pulls, nao push nada)
 - Descartar stash/mudancas sem confirmar
 - Resetar branch do usuario sem ele aceitar (passo 3 exige confirmacao)
-- Tocar em `clientes/` ou `bases/` (sao gitignored e sagradas — sao dados pessoais)
+- Tocar em `squads/` ou nas KBs de `bases/` (sao gitignored e sagradas — sao dados pessoais)
 - Apagar `.sync-hub-last` (e o estado de progresso)
 
 ## Observacoes

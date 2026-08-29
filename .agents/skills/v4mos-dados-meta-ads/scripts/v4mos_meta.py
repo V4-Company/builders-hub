@@ -9,10 +9,11 @@ Onde <endpoint> e um path V4mos (ex: /v1/facebook/ads/ad) ou um alias
 curto: ad, adset, campaigns, creatives, accounts, platform, region,
 demographic, actions.
 
-Credenciais: ver `clientes/<cliente>/.env` (auto-detect do cwd ou via
---cliente) + env vars do shell. Falta algo e stdin e TTY? Pergunta e
-salva no .env. Sem TTY? Exit 2 com mensagem clara.
+Credenciais: ver `squads/<squad>/clientes/<cliente>/.env` (auto-detect
+do cwd ou via --squad/--cliente) + env vars do shell. Falta algo e stdin
+e TTY? Pergunta e salva no .env existente do cliente. Sem TTY? Exit 2.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -24,14 +25,14 @@ import os
 import re
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 try:
     import requests
 except ImportError:
-    print("ERRO: pip install requests", file=sys.stderr)
-    sys.exit(1)
+    requests = None
 
 BASE_URL = "https://api.data.v4.marketing"
 RATE_SLEEP = 2.0
@@ -56,6 +57,7 @@ ENDPOINT_ALIASES = {
 
 # ──────────── .env + creds (herdado da v1.2.0) ────────────
 
+
 def load_dotenv(path: Path) -> dict[str, str]:
     out: dict[str, str] = {}
     if not path.is_file():
@@ -64,40 +66,81 @@ def load_dotenv(path: Path) -> dict[str, str]:
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
-        m = re.match(r'^([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$', line)
+        m = re.match(r"^([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$", line)
         if not m:
             continue
         key, val = m.group(1), m.group(2).strip()
-        if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
+        if (val.startswith('"') and val.endswith('"')) or (
+            val.startswith("'") and val.endswith("'")
+        ):
             val = val[1:-1]
         if val:
             out[key] = val
     return out
 
 
-def find_client_env(cliente: str | None) -> tuple[Path | None, str | None]:
-    cwd = Path.cwd().resolve()
+def find_hub_root(start: Path | None = None) -> Path | None:
+    """Encontra a raiz do hub sem depender do nome do diretorio."""
+    start = (start or Path.cwd()).resolve()
+    for candidate in [start, *start.parents]:
+        if (candidate / "squads").is_dir() and (
+            (candidate / "AGENTS.md").is_file()
+            or (candidate / ".claude" / "skills").is_dir()
+        ):
+            return candidate
+    return None
+
+
+def find_client_env(
+    cliente: str | None,
+    squad: str | None = None,
+    start: Path | None = None,
+) -> tuple[Path | None, str | None]:
+    cwd = (start or Path.cwd()).resolve()
     if cliente:
-        for p in [cwd, *cwd.parents]:
-            cand = p / "clientes" / cliente / ".env"
-            if cand.is_file():
-                return cand, cliente
+        hub_root = find_hub_root(cwd)
+        if not hub_root:
+            return None, cliente
+        if squad:
+            client_dir = hub_root / "squads" / squad / "clientes" / cliente
+            return (
+                (client_dir / ".env", cliente)
+                if client_dir.is_dir()
+                else (None, cliente)
+            )
+        matches = sorted(
+            path
+            for path in (hub_root / "squads").glob(f"*/clientes/{cliente}")
+            if path.is_dir()
+        )
+        if len(matches) > 1:
+            squads = ", ".join(path.parents[1].name for path in matches)
+            raise ValueError(
+                f"cliente {cliente!r} existe em mais de um squad ({squads}); use --squad"
+            )
+        if matches:
+            return matches[0] / ".env", cliente
         return None, cliente
+
     parts = cwd.parts
-    for i, part in enumerate(parts):
-        if part in ("clientes", "bases") and i + 1 < len(parts):
-            nome = parts[i + 1]
-            if nome == "_template":
-                continue
-            env_path = Path(*parts[: i + 2]) / ".env"
-            if env_path.is_file():
-                return env_path, nome
+    for i in range(len(parts) - 3):
+        if parts[i] == "squads" and parts[i + 2] == "clientes":
+            nome = parts[i + 3]
+            client_dir = Path(*parts[: i + 4])
+            if client_dir.is_dir():
+                return client_dir / ".env", nome
     return None, None
 
 
-def require_creds(cliente: str | None) -> tuple[dict[str, str], str | None]:
+def require_creds(
+    cliente: str | None, squad: str | None = None
+) -> tuple[dict[str, str], str | None]:
     required = ["V4MOS_CLIENT_ID", "V4MOS_CLIENT_SECRET", "V4MOS_WORKSPACE_ID"]
-    env_path, detected = find_client_env(cliente)
+    try:
+        env_path, detected = find_client_env(cliente, squad)
+    except ValueError as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        sys.exit(2)
     file_vars = load_dotenv(env_path) if env_path else {}
     shell_vars = {k: os.environ.get(k, "") for k in required}
     creds = {}
@@ -109,47 +152,38 @@ def require_creds(cliente: str | None) -> tuple[dict[str, str], str | None]:
 
     missing = [k for k in required if not creds[k]]
     if missing and sys.stdin.isatty() and sys.stderr.isatty():
-        creds, env_path = prompt_and_save(cliente, detected, env_path, creds, missing)
+        creds, env_path = prompt_and_save(env_path, creds, missing)
         missing = [k for k in required if not creds[k]]
 
     if missing:
         print(f"✗ Credenciais V4mos faltando: {', '.join(missing)}", file=sys.stderr)
-        print("", file=sys.stderr)
+        print(file=sys.stderr)
         if env_path:
             print(f"  .env do cliente: {env_path}", file=sys.stderr)
         elif cliente:
-            print(f"  Esperado em: clientes/{cliente}/.env", file=sys.stderr)
+            target = (
+                f"squads/{squad}/clientes/{cliente}/.env"
+                if squad
+                else f"squads/<squad>/clientes/{cliente}/.env"
+            )
+            print(f"  Cliente não encontrado em: {target}", file=sys.stderr)
         else:
-            print("  Pasta de cliente nao identificada. Use --cliente <nome> ou cd na pasta.", file=sys.stderr)
-        print("", file=sys.stderr)
+            print(
+                "  Pasta de cliente não identificada. Use --squad e --cliente, ou entre na KB.",
+                file=sys.stderr,
+            )
+        print(
+            "  Crie a KB com /novo-cliente antes de salvar credenciais.",
+            file=sys.stderr,
+        )
+        print(file=sys.stderr)
         print(f"  Onde pegar: {V4MOS_KEYS_URL}", file=sys.stderr)
         sys.exit(2)
 
     return creds, detected
 
 
-def prompt_and_save(cliente, detected, env_path, creds, missing):
-    nome_cliente = cliente or detected
-    if env_path is None and nome_cliente:
-        cwd = Path.cwd().resolve()
-        hub_root = None
-        for p in [cwd, *cwd.parents]:
-            if (p / "clientes").is_dir():
-                hub_root = p
-                break
-        if hub_root:
-            client_dir = hub_root / "clientes" / nome_cliente
-            client_dir.mkdir(parents=True, exist_ok=True)
-            env_path = client_dir / ".env"
-            if not env_path.exists():
-                tmpl = hub_root / "clientes" / "_template" / ".env.example"
-                if tmpl.is_file():
-                    env_path.write_text(tmpl.read_text(encoding="utf-8"), encoding="utf-8")
-                else:
-                    env_path.write_text(
-                        "V4MOS_CLIENT_ID=\nV4MOS_CLIENT_SECRET=\nV4MOS_WORKSPACE_ID=\n",
-                        encoding="utf-8",
-                    )
+def prompt_and_save(env_path, creds, missing):
     if env_path is None:
         return creds, env_path
 
@@ -172,10 +206,12 @@ def prompt_and_save(cliente, detected, env_path, creds, missing):
                 break
             print("  (valor vazio — tenta de novo, Ctrl+C cancela)", file=sys.stderr)
 
-    existing = env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
+    existing = (
+        env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
+    )
     new_lines, seen = [], set()
     for line in existing:
-        m = re.match(r'^([A-Z_][A-Z0-9_]*)\s*=', line.strip())
+        m = re.match(r"^([A-Z_][A-Z0-9_]*)\s*=", line.strip())
         if m and m.group(1) in creds and creds[m.group(1)]:
             new_lines.append(f"{m.group(1)}={creds[m.group(1)]}")
             seen.add(m.group(1))
@@ -185,18 +221,24 @@ def prompt_and_save(cliente, detected, env_path, creds, missing):
         if key not in seen and creds.get(key):
             new_lines.append(f"{key}={creds[key]}")
     env_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    env_path.chmod(0o600)
     print(f"\n✓ Credenciais salvas em {env_path}\n", file=sys.stderr)
     return creds, env_path
 
 
 # ──────────── V4mos client (paginacao + rate limit) ────────────
 
+
 class V4mos:
     def __init__(self, creds: dict[str, str]):
+        if requests is None:
+            raise RuntimeError(
+                "dependência ausente: rode python3 -m pip install -r requirements.txt"
+            )
         self.headers = {
             "x-client-id": creds["V4MOS_CLIENT_ID"],
             "x-client-secret": creds["V4MOS_CLIENT_SECRET"],
-            "User-Agent": "v4mos-dados-meta-ads/2.0",
+            "User-Agent": "v4mos-dados-meta-ads/2.1",
         }
         self.workspace_id = creds["V4MOS_WORKSPACE_ID"]
         self.last_call = 0.0
@@ -213,13 +255,19 @@ class V4mos:
             params["page"] = page
             for attempt in range(3):
                 self.last_call = time.time()
-                r = requests.get(f"{BASE_URL}{path}", headers=self.headers, params=params, timeout=TIMEOUT)
-                if r.status_code == 429:
-                    retry_after = float(r.headers.get("Retry-After", 2 ** attempt))
+                r = requests.get(
+                    f"{BASE_URL}{path}",
+                    headers=self.headers,
+                    params=params,
+                    timeout=TIMEOUT,
+                )
+                if r.status_code in {429, 500, 502, 503, 504}:
+                    try:
+                        retry_after = float(r.headers.get("Retry-After", 2**attempt))
+                    except (TypeError, ValueError):
+                        retry_after = float(2**attempt)
                     time.sleep(retry_after)
                     continue
-                if r.status_code == 500:
-                    return rows
                 r.raise_for_status()
                 payload = r.json()
                 rows.extend(payload.get("data") or [])
@@ -231,13 +279,15 @@ class V4mos:
                 page += 1
                 break
             else:
-                raise RuntimeError(f"{path}: 3x 429 consecutivos")
+                raise RuntimeError(
+                    f"{path}: falhou após 3 tentativas em erro transitório"
+                )
         return rows
 
 
 # ──────────── Filtros client-side ────────────
 
-WHERE_RE = re.compile(r'^([a-zA-Z_][\w.]*)\s*(>=|<=|!=|=|<|>|~|\^)\s*(.+)$')
+WHERE_RE = re.compile(r"^([a-zA-Z_][\w.]*)\s*(>=|<=|!=|=|<|>|~|\^)\s*(.+)$")
 
 
 def parse_where(expr: str) -> Callable[[dict], bool]:
@@ -246,7 +296,9 @@ def parse_where(expr: str) -> Callable[[dict], bool]:
         raise ValueError(f"filtro invalido: {expr!r} (use field OP value)")
     field, op, val = m.group(1), m.group(2), m.group(3).strip()
     # strip aspas
-    if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
+    if (val.startswith('"') and val.endswith('"')) or (
+        val.startswith("'") and val.endswith("'")
+    ):
         val = val[1:-1]
 
     def pred(row: dict) -> bool:
@@ -283,6 +335,7 @@ def apply_wheres(rows: list[dict], preds: list[Callable[[dict], bool]]) -> list[
 
 # ──────────── Enriquecimento (CTR recalc) ────────────
 
+
 def enrich(rows: list[dict]) -> list[dict]:
     """Recalcula CTR quando impressions/clicks disponiveis (API vem quebrado)."""
     for r in rows:
@@ -300,6 +353,7 @@ def enrich(rows: list[dict]) -> list[dict]:
 
 # ──────────── Ordenacao + fields ────────────
 
+
 def sort_rows(rows: list[dict], order_by: str | None, order_dir: str) -> list[dict]:
     if not order_by:
         return rows
@@ -307,14 +361,14 @@ def sort_rows(rows: list[dict], order_by: str | None, order_dir: str) -> list[di
 
     def key(r):
         v = r.get(order_by)
-        if v is None:
-            return (1, 0)
         try:
             return (0, float(v))
         except (TypeError, ValueError):
-            return (0, str(v))
+            return (1, str(v).casefold())
 
-    return sorted(rows, key=key, reverse=reverse)
+    present = [row for row in rows if row.get(order_by) is not None]
+    missing = [row for row in rows if row.get(order_by) is None]
+    return sorted(present, key=key, reverse=reverse) + missing
 
 
 def select_fields(rows: list[dict], fields: list[str] | None) -> list[dict]:
@@ -324,6 +378,7 @@ def select_fields(rows: list[dict], fields: list[str] | None) -> list[dict]:
 
 
 # ──────────── Renderers ────────────
+
 
 def render_json(rows: list[dict]) -> str:
     return json.dumps(rows, ensure_ascii=False, indent=2, default=str)
@@ -336,8 +391,14 @@ def render_csv(rows: list[dict]) -> str:
     buf = io.StringIO()
     w = csv.DictWriter(buf, fieldnames=cols, extrasaction="ignore")
     w.writeheader()
+
+    def safe_cell(value):
+        if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@")):
+            return "'" + value
+        return value
+
     for r in rows:
-        w.writerow({c: r.get(c, "") for c in cols})
+        w.writerow({c: safe_cell(r.get(c, "")) for c in cols})
     return buf.getvalue()
 
 
@@ -391,22 +452,41 @@ RENDERERS = {
 
 # ──────────── CLI ────────────
 
+
 def parse_args():
     p = argparse.ArgumentParser(description="V4mos Meta Ads — data puller generico")
-    p.add_argument("endpoint", help="Path V4mos ou alias (ad, campaigns, platform, ...)")
+    p.add_argument(
+        "endpoint", help="Path V4mos ou alias (ad, campaigns, platform, ...)"
+    )
     p.add_argument("--cliente", default=None)
+    p.add_argument(
+        "--squad",
+        default=None,
+        help="squad da KB; evita ambiguidade entre clientes homônimos",
+    )
 
-    p.add_argument("--days", type=int, default=None, help="Janela em dias terminando ontem")
+    p.add_argument(
+        "--days", type=int, default=None, help="Janela em dias terminando ontem"
+    )
     p.add_argument("--since", default=None, help="dateStart YYYY-MM-DD")
     p.add_argument("--until", default=None, help="dateEnd YYYY-MM-DD")
 
     p.add_argument("--account", default=None, help="account_id FB (ex: act_XXX)")
     p.add_argument("--order-by", default=None)
-    p.add_argument("--order-dir", default="DESC", choices=["ASC", "DESC", "asc", "desc"])
-    p.add_argument("--limit", type=int, default=500, help="rows por pagina da API (max 5000)")
+    p.add_argument(
+        "--order-dir", default="DESC", choices=["ASC", "DESC", "asc", "desc"]
+    )
+    p.add_argument(
+        "--limit", type=int, default=500, help="rows por pagina da API (max 5000)"
+    )
     p.add_argument("--max", type=int, default=None, help="total cap apos paginacao")
     p.add_argument("--fields", default=None, help="CSV de colunas pra manter")
-    p.add_argument("--where", action="append", default=[], help="filtro client-side (pode repetir, AND)")
+    p.add_argument(
+        "--where",
+        action="append",
+        default=[],
+        help="filtro client-side (pode repetir, AND)",
+    )
 
     p.add_argument("--format", default=None, choices=["json", "csv", "table", "md"])
     p.add_argument("--out", default=None)
@@ -419,9 +499,36 @@ def resolve_endpoint(x: str) -> str:
     return ENDPOINT_ALIASES.get(x, f"/v1/facebook/ads/{x}")
 
 
+def validate_args(args) -> None:
+    if args.days is not None and args.days < 1:
+        raise SystemExit("ERRO: --days deve ser maior que zero")
+    if args.days is not None and args.since:
+        raise SystemExit("ERRO: use --days ou --since, não os dois")
+    if not 1 <= args.limit <= 5000:
+        raise SystemExit("ERRO: --limit deve estar entre 1 e 5000")
+    if args.max is not None and args.max < 1:
+        raise SystemExit("ERRO: --max deve ser maior que zero")
+    parsed_dates: dict[str, dt.date] = {}
+    for field in ("since", "until"):
+        value = getattr(args, field)
+        if not value:
+            continue
+        try:
+            parsed_dates[field] = dt.date.fromisoformat(value)
+        except ValueError as exc:
+            raise SystemExit(f"ERRO: --{field} deve usar YYYY-MM-DD") from exc
+    if (
+        parsed_dates.get("since")
+        and parsed_dates.get("until")
+        and parsed_dates["since"] > parsed_dates["until"]
+    ):
+        raise SystemExit("ERRO: --since não pode ser posterior a --until")
+
+
 def main():
     args = parse_args()
-    creds, cliente = require_creds(args.cliente)
+    validate_args(args)
+    creds, cliente = require_creds(args.cliente, args.squad)
     if cliente:
         print(f"▶ Cliente: {cliente}", file=sys.stderr)
 
@@ -435,11 +542,18 @@ def main():
     if args.until:
         params["dateEnd"] = args.until
     if args.days:
-        end = dt.date.fromisoformat(args.until) if args.until else dt.date.today() - dt.timedelta(days=1)
+        end = (
+            dt.date.fromisoformat(args.until)
+            if args.until
+            else dt.datetime.now().astimezone().date() - dt.timedelta(days=1)
+        )
         start = end - dt.timedelta(days=args.days - 1)
         params["dateStart"] = start.isoformat()
         params["dateEnd"] = end.isoformat()
-        print(f"▶ Periodo: {params['dateStart']} a {params['dateEnd']} ({args.days} dias)", file=sys.stderr)
+        print(
+            f"▶ Periodo: {params['dateStart']} a {params['dateEnd']} ({args.days} dias)",
+            file=sys.stderr,
+        )
 
     if args.account:
         params["account_id"] = args.account
@@ -484,7 +598,9 @@ def main():
     output = RENDERERS[fmt](rows)
 
     if args.out:
-        Path(args.out).write_text(output, encoding="utf-8")
+        output_path = Path(args.out)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(output, encoding="utf-8")
         print(f"✓ {len(rows)} rows em {args.out} ({fmt})", file=sys.stderr)
     else:
         print(output)

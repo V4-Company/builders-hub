@@ -1,6 +1,6 @@
 ---
 name: account-checkin-roleplay
-description: Prepara o account pra reunião de check-in com cliente seguindo ROPRE V4 e roda roleplay realista simulando as personas reais do cliente. Use sempre que o usuário mencionar reunião de check-in, ROPRE, preparar call com cliente, ensaio de reunião, ou disser que tem check-in marcado, amanhã, hoje, essa semana — mesmo que não fale "roleplay" explicitamente. Também use quando o usuário quiser revisar pauta de check-in, treinar resposta a cliente difícil, ou diagnosticar por que check-ins têm saído fracos.
+description: Prepara o account pra reunião de check-in com cliente seguindo ROPRE V2 e roda roleplay realista simulando as personas reais do cliente. Use sempre que o usuário mencionar reunião de check-in, ROPRE, preparar call com cliente, ensaio de reunião, ou disser que tem check-in marcado, amanhã, hoje, essa semana — mesmo que não fale "roleplay" explicitamente. Também use quando o usuário quiser revisar pauta de check-in, treinar resposta a cliente difícil, ou diagnosticar por que check-ins têm saído fracos.
 area: account
 author: guilhermelippert
 version: 1.0.0

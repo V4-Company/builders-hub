@@ -1,16 +1,16 @@
 ---
 name: v4mos-dados-meta-ads
-description: Puxa qualquer dado de Meta Ads (Facebook + Instagram) via API V4mos pra um cliente especifico. Use sempre que o usuario pedir dado de Meta Ads — metricas de campanhas, anuncios, keywords, breakdowns por plataforma/regiao/demografia, saldo de conta, ROAS, quality ranking. Aceita perguntas em linguagem natural ("ads que gastaram mais essa semana", "saldo da conta", "ROAS dos ultimos 30 dias") e traduz em fetch certo. Depois de puxar, pergunta ao usuario COMO quer consumir (conversar, HTML, CSV, PDF) e entrega no formato ideal — HTML/PDF delega pra /frontend-design. Credenciais ficam em clientes/<cliente>/.env; se faltar, pergunta e salva.
+description: Puxa qualquer dado de Meta Ads (Facebook + Instagram) via API V4mos pra um cliente especifico. Use sempre que o usuario pedir dado de Meta Ads — metricas de campanhas, anuncios, keywords, breakdowns por plataforma/regiao/demografia, saldo de conta, ROAS, quality ranking. Aceita perguntas em linguagem natural ("ads que gastaram mais essa semana", "saldo da conta", "ROAS dos ultimos 30 dias") e traduz em fetch certo. Depois de puxar, pergunta ao usuario COMO quer consumir (conversar, HTML, CSV, PDF) e entrega no formato ideal — HTML/PDF delega pra /geral-frontend-design. Credenciais ficam em squads/{squad}/clientes/{cliente}/.env; se faltar, pergunta e salva.
 area: v4mos
 author: guilhermelippert
-version: 2.0.0
+version: 2.1.0
 ---
 
 # /v4mos-dados-meta-ads
 
 Puxador inteligente de dados Meta Ads via V4mos. Escolhe endpoint + filtros com base na pergunta do usuario, roda o script, entrega no formato que faz sentido.
 
-Substituiu `trafego-meta-diagnostico` (que era rigido, entregava so 1 tipo de relatorio). Agora 1 skill cobre **qualquer** pergunta sobre Meta Ads — basta orquestrar direito.
+Uma unica skill cobre perguntas variadas sobre Meta Ads, escolhendo endpoint, filtros e formato de entrega conforme o pedido.
 
 ## Quando usar
 
@@ -32,17 +32,17 @@ Nao use pra: Google Ads (API V4mos quebrada nisso — ignora filtro de data), GA
 Antes de qualquer coisa, descubra com qual cliente esta trabalhando:
 
 1. **Se usuario nomeou explicitamente** → usa.
-2. **Se cwd dentro de `clientes/<nome>/` ou `bases/<nome>/`** → usa detectado. Confirma: "Esta trabalhando no cliente <nome>?"
-3. **Se ambiguo** → liste `ls clientes/ | grep -v _template` e pergunte.
+2. **Se cwd dentro de `squads/{squad}/clientes/{cliente}/`** → usa detectado.
+3. **Se ambiguo** → liste os caminhos em `squads/*/clientes/` e pergunte pelo squad.
 4. **Se cliente nao existe como pasta** → oferece `/novo-cliente` primeiro.
 
 ## Passo 2 — Verificar credenciais
 
-O script le automaticamente `clientes/<cliente>/.env`. Se faltar alguma chave e stdin for TTY, o proprio script pergunta e salva. Se voce (Claude) estiver orquestrando sem TTY, faz manualmente:
+O script le automaticamente `squads/{squad}/clientes/{cliente}/.env`. Se faltar alguma chave e stdin for TTY, o proprio script pergunta e salva. Ele nunca cria cliente fora da estrutura oficial. Se voce estiver orquestrando sem TTY, faça manualmente:
 
-1. Confere `clientes/<cliente>/.env`:
+1. Confere `squads/{squad}/clientes/{cliente}/.env` sem exibir os valores:
    ```bash
-   cat "clientes/<cliente>/.env" | grep -E "^V4MOS" | sed 's/=.*$/=<set>/'
+   sed -n 's/^\(V4MOS_[A-Z_]*\)=.*/\1=<set>/p' "squads/{squad}/clientes/{cliente}/.env"
    ```
 
 2. Se algo faltar, peca ao usuario:
@@ -53,7 +53,7 @@ O script le automaticamente `clientes/<cliente>/.env`. Se faltar alguma chave e 
    > - Client Secret
    > - Workspace ID"
 
-3. Com os valores em mao, edite `clientes/<cliente>/.env` via Edit tool, preservando comentarios.
+3. Com os valores em mao, edite `squads/{squad}/clientes/{cliente}/.env`, preservando comentarios e sem mostrar os segredos no terminal.
 
 Reuso: `V4MOS_CLIENT_ID`/`SECRET` sao seus (V4er) — valem pra todos os clientes. So `WORKSPACE_ID` muda.
 
@@ -70,14 +70,14 @@ Se a pergunta for ambigua (ex: "me mostra as campanhas"), pergunte: janela? orde
 
 ## Passo 4 — Executar o script
 
-**De dentro de `clientes/<cliente>/`:**
+**De dentro de `squads/{squad}/clientes/{cliente}/`:**
 ```bash
-python3 .claude/skills/v4mos-dados-meta-ads/scripts/v4mos_meta.py <endpoint> [flags]
+python3 ../../../../.claude/skills/v4mos-dados-meta-ads/scripts/v4mos_meta.py <endpoint> [flags]
 ```
 
 **De fora:**
 ```bash
-python3 .claude/skills/v4mos-dados-meta-ads/scripts/v4mos_meta.py <endpoint> --cliente <nome> [flags]
+python3 .claude/skills/v4mos-dados-meta-ads/scripts/v4mos_meta.py <endpoint> --squad <squad> --cliente <cliente> [flags]
 ```
 
 ### Endpoints (aliases curtos aceitos)
@@ -97,6 +97,7 @@ python3 .claude/skills/v4mos-dados-meta-ads/scripts/v4mos_meta.py <endpoint> --c
 ### Flags principais
 
 - `--days N` — janela em dias terminando ontem (atalho comum)
+- `--squad NOME --cliente NOME` — seleciona uma KB sem depender do diretorio atual
 - `--since/--until` — override explicito (YYYY-MM-DD)
 - `--account act_XXX` — filtra conta FB
 - `--order-by FIELD --order-dir DESC` — ordenacao da API
@@ -151,14 +152,14 @@ Pergunta o **objetivo** antes de renderizar:
 - **Relatorio pra enviar** → layout editorial clean, printavel
 - **Pra site proprio** → clean, responsivo
 
-Depois invoca `/frontend-design` passando:
+Depois invoca `/geral-frontend-design` passando:
 - Os dados brutos (JSON)
 - O objetivo escolhido
 - Identidade V4 como base (Bebas Neue + Montserrat, #1a1a1a/#fff/#e50914)
 
-O rendering HTML fica **100% na /frontend-design** — essa skill nao tem codigo de UI.
+O rendering HTML fica **100% na /geral-frontend-design** — essa skill nao tem codigo de UI.
 
-Salva o `.html` em `clientes/<cliente>/relatorios/` se aplicavel.
+Salva o `.html` em `squads/{squad}/clientes/{cliente}/relatorios/` se aplicavel.
 
 ### Opcao 3 — CSV
 
@@ -166,7 +167,7 @@ Direto: `--format csv --out relatorios/meta-<data>.csv`. Mostra path e abre.
 
 ### Opcao 4 — PDF
 
-Pipeline: dados → HTML via `/frontend-design` → Chrome headless:
+Pipeline: dados → HTML via `/geral-frontend-design` → Chrome headless:
 
 ```bash
 google-chrome --headless --disable-gpu --print-to-pdf=<output>.pdf file://<html>
@@ -201,7 +202,7 @@ Depois Claude analisa os 4 JSONs e entrega conforme passo 5 (conversar / HTML / 
 
 ### "Relatorio mensal cliente"
 
-Similar mas com `--days 30`. Output default: HTML relatorio pra enviar via /frontend-design.
+Similar mas com `--days 30`. Output default: HTML relatorio pra enviar via /geral-frontend-design.
 
 ### "Auditoria criativos"
 
@@ -242,5 +243,5 @@ A API retorna `BELOW_AVERAGE_10`, `BELOW_AVERAGE_20`, `BELOW_AVERAGE_35` (pior t
 - `--format json` pra ver estrutura crua
 - `--limit 1 --max 1` pra testar autenticacao sem baixar muito
 - Exit 2 + mensagem de credencial faltando → conferir `.env`
-- HTTP 500 em alguns endpoints (raro) → tratado como 0 rows
+- HTTP 429/500/502/503/504 → ate 3 tentativas com espera progressiva; depois falha de forma explicita
 - Se resultado ficar estranho, checar se a API honrou `--order-by` ou se precisa reordenar client-side (alguns endpoints ignoram `orderBy`)

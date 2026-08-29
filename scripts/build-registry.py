@@ -7,9 +7,10 @@ Agrupa por funcao/papel, usa `area:` do frontmatter (mantido por compat); se aus
 Uso: python3 scripts/build-registry.py
 Tambem rodado pela GitHub Action em toda merge na main.
 """
+
 from __future__ import annotations
 
-import datetime
+import argparse
 import pathlib
 import re
 import sys
@@ -55,6 +56,7 @@ BASE_SKILLS = {
     "criador-de-skills",
     "novo-cliente",
     "novo-projeto",
+    "novo-squad",
     "compartilhar-skill",
     "sync-hub",
 }
@@ -106,13 +108,12 @@ def classify(name: str, fm: dict[str, str]) -> tuple[str, str]:
     return "function", function
 
 
-def main() -> int:
+def render_registry() -> str:
     if not SKILLS_DIR.is_dir():
-        print(f"Erro: {SKILLS_DIR} não existe", file=sys.stderr)
-        return 1
+        raise FileNotFoundError(f"{SKILLS_DIR} não existe")
 
     # Coleta todas as skills
-    skills: list[tuple[str, dict[str, str], str]] = []
+    skills: list[tuple[str, dict[str, str], str, str]] = []
     for path in sorted(SKILLS_DIR.iterdir()):
         skill_md = path / "SKILL.md"
         if not skill_md.is_file():
@@ -127,8 +128,6 @@ def main() -> int:
         skills.append((path.name, fm, family, key))
 
     total = len(skills)
-    today = datetime.date.today().isoformat()
-
     # Conta por chave (funcao ou source)
     counts: dict[str, int] = {"_base": 0}
     for fn in FUNCTIONS:
@@ -141,7 +140,7 @@ def main() -> int:
     lines: list[str] = []
     lines.append("# Builders Hub — Registry")
     lines.append("")
-    lines.append(f"**{total} skills** · última atualização: {today}")
+    lines.append(f"**{total} skills**")
     lines.append("")
     lines.append(
         "> Catálogo auto-gerado por `scripts/build-registry.py`. "
@@ -194,19 +193,25 @@ def main() -> int:
     for fn in FUNCTIONS:
         if counts.get(fn, 0) == 0:
             continue
-        render_section(FUNCTION_LABEL[fn], fn, lambda f, k, _fn=fn: f == "function" and k == _fn)
+        render_section(
+            FUNCTION_LABEL[fn], fn, lambda f, k, _fn=fn: f == "function" and k == _fn
+        )
     # Integrações / Fontes (se tem qualquer uma)
     if source_total:
         lines.append("## 🔌 Integrações / Fontes")
         lines.append("")
         lines.append('<a id="fontes"></a>')
         lines.append("")
-        lines.append("_Skills que puxam dados de integrações externas. Reutilizáveis por outras skills._")
+        lines.append(
+            "_Skills que puxam dados de integrações externas. Reutilizáveis por outras skills._"
+        )
         lines.append("")
         for s in SOURCES:
             if counts.get(s, 0) == 0:
                 continue
-            render_section(SOURCE_LABEL[s], s, lambda f, k, _s=s: f == "source" and k == _s)
+            render_section(
+                SOURCE_LABEL[s], s, lambda f, k, _s=s: f == "source" and k == _s
+            )
 
     lines.append("---")
     lines.append("")
@@ -216,8 +221,37 @@ def main() -> int:
     )
     lines.append("")
 
-    OUTPUT.write_text("\n".join(lines), encoding="utf-8")
-    print(f"✓ REGISTRY.md regenerado ({total} skills)")
+    return "\n".join(lines)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Regenera ou valida o REGISTRY.md")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="não altera arquivos; falha se o REGISTRY.md estiver desatualizado",
+    )
+    args = parser.parse_args()
+
+    try:
+        rendered = render_registry()
+    except FileNotFoundError as exc:
+        print(f"Erro: {exc}", file=sys.stderr)
+        return 1
+
+    if args.check:
+        current = OUTPUT.read_text(encoding="utf-8") if OUTPUT.is_file() else ""
+        if current != rendered:
+            print(
+                "✗ REGISTRY.md está desatualizado; rode python3 scripts/build-registry.py",
+                file=sys.stderr,
+            )
+            return 1
+        print("✓ REGISTRY.md está atualizado")
+        return 0
+
+    OUTPUT.write_text(rendered, encoding="utf-8")
+    print("✓ REGISTRY.md regenerado")
     return 0
 
 

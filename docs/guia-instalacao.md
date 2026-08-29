@@ -2,10 +2,16 @@
 
 ## Passo 1 — Baixar o repositorio
 
-1. Acesse o link do GitHub (compartilhado na aula)
-2. Clique no botao verde **Code**
-3. Clique em **Download ZIP**
-4. Descompacte o arquivo no seu computador (Desktop ou pasta de trabalho)
+1. Instale o Git se ainda não tiver: [git-scm.com](https://git-scm.com/downloads)
+2. Abra um terminal na pasta onde quer guardar o Hub
+3. Rode:
+
+```bash
+git clone https://github.com/V4-Company/builders-hub.git
+cd builders-hub
+```
+
+O ZIP serve apenas para leitura. Sem um clone Git, `/sync-hub`, commits e Pull Requests não funcionam.
 
 ## Passo 2 — Instalar o Anti-Gravity
 
@@ -49,6 +55,24 @@ No terminal, digite:
 
 A skill valida git e GitHub CLI primeiro (garante que seu push/PR vao funcionar), depois instala o que faltar (Claude Code CLI, notebooklm, etc) e te mostra como compartilhar skills com o time via `/compartilhar-skill`.
 
+## Passo 7 — Dependencias dos scripts
+
+Se for usar integrações por API, instale as dependências Python na raiz do repositório:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+Para confirmar que o clone está consistente:
+
+```bash
+python3 scripts/validate-repo.py
+python3 scripts/build-registry.py --check
+python3 scripts/run-tests.py
+```
+
+O Builders Hub não possui servidor, banco, migrations ou processo residente. Depois da instalação não há serviço para iniciar ou reiniciar: as skills são usadas diretamente pelo agente.
+
 ## Problemas comuns
 
 **"Comando nao encontrado"**
@@ -61,3 +85,6 @@ A skill valida git e GitHub CLI primeiro (garante que seu push/PR vao funcionar)
 **"MCP nao conecta"**
 - Verifique sua conexao com a internet
 - Tente rodar `/onboarding` novamente — ele vai tentar reconectar
+
+**"No module named requests"**
+- Rode `python3 -m pip install -r requirements.txt` na raiz do repositório

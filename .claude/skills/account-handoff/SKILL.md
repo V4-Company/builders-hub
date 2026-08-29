@@ -29,7 +29,8 @@ Transforme **form de kickoff + transcript da reuniao de vendas** na **primeira v
 - **Roda com o que tem.** Lacuna nao bloqueia — vira pergunta no `03-perguntas-kickoff.md` e item `❓` no deck.
 - Nao criar pasta de cliente aqui. Cliente inexistente → manda pra `/novo-cliente` e para.
 - Nao transcrever audio. Se vier so link de gravacao, oriente o usuario a rodar Read.ai/Fireflies primeiro.
-- **Linguagem cliente-facing por padrao.** O deck vai ser compartilhado com o cliente — analise critica fica em `alertaInterno` (so visivel em Modo Account) e nos markdowns internos.
+- **Linguagem cliente-facing por padrao.** A tela do deck vai ser compartilhada com o cliente — analise critica fica em `alertaInterno` (so visivel em Modo Account) e nos markdowns internos.
+- **Modo Cliente nao e redacao.** Ele apenas esconde elementos na tela; o HTML e o JSON exportado continuam contendo `alertaInterno`. Nunca envie esses arquivos ao cliente. Se precisar enviar uma copia, gere outro arquivo removendo `alertaInterno` e `factibilidade` do payload e valide a copia antes.
 - Portugues brasileiro em tudo.
 
 ## Passo 1 — Identificar e validar a pasta do cliente
@@ -336,7 +337,7 @@ Cada bloco tem ate 4 campos:
 {
   "titulo": "Volume e faturamento",
   "conteudo": "Pra dimensionar bem nossa estrategia, queria entender melhor: dos numeros que conversamos, qual e a fotografia mais real da operacao hoje?",
-  "alertaInterno": "🔴 Form diz R$ 150k/ano de faturamento mas 50 acoes × R$ 10k = R$ 500k/mes potencial. Pergunta diplomatica pra reconciliar sem expor o erro de preenchimento."
+  "alertaInterno": "🔴 O volume declarado e a receita informada nao fecham. Pergunta diplomatica pra reconciliar sem expor o erro de preenchimento."
 }
 ```
 
@@ -372,6 +373,7 @@ links.md (raiz)                — atualizado com [N] novos links
   ⚠️ Antes de compartilhar tela com o cliente, troque pra "Modo Cliente" no botao do topo.
   Em Modo Account voce ve a analise interna; em Modo Cliente ela some — fica so a linguagem
   diplomatica que o cliente pode ler.
+  Nao envie o arquivo HTML nem o JSON exportado ao cliente: ambos preservam a analise interna.
 
 → Antes do kickoff, considera rodar /account-pesquisa-profunda-cliente
   pra chegar ainda mais preparado (pesquisa externa de mercado/concorrencia/consumidor).
@@ -384,6 +386,7 @@ links.md (raiz)                — atualizado com [N] novos links
 
 - Account abre o HTML em **Modo Account** (default), revisa todos os blocos vendo a analise interna.
 - Antes de compartilhar tela com o cliente, **clica no botao "Modo: Account" no topo** — ele vira "Modo: Cliente". Chips de factibilidade somem. Caixas amarelas de alerta interno somem.
+- O toggle e apenas visual. O payload interno continua no arquivo-fonte; **nao envie o HTML nem o JSON exportado ao cliente**.
 - Compartilha tela. Conduz a conversa rolando pra baixo.
 - Cada bloco tem 3 botoes: ✅ confirmado · ✏️ ajustar · ❓ lacuna.
 - Cliques sao salvos automaticamente no localStorage do navegador (chave `handoff-{slug-cliente}`).

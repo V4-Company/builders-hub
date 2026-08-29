@@ -1,0 +1,37 @@
+name: Validate Repository
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install runtime dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate-repo.py
+
+      - name: Check generated registry
+        run: python3 scripts/build-registry.py --check
+
+      - name: Run unit tests
+        run: python3 scripts/run-tests.py
+
+      - name: Compile Python sources
+        run: python3 -m compileall -q scripts .claude/skills
+
+      - name: Smoke-test the Meta Ads CLI
+        run: python3 .claude/skills/v4mos-dados-meta-ads/scripts/v4mos_meta.py --help

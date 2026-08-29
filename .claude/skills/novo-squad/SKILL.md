@@ -32,6 +32,7 @@ Guarde duas versoes do nome:
 ### Passo 2 — Criar a estrutura
 
 ```bash
+mkdir -p squads
 cp -r bases/_template/_template-squad "squads/[nome-formatado]"
 ```
 
@@ -82,5 +83,5 @@ Diga:
 
 - Nome formatado da pasta e SEMPRE lowercase + hifens. Sem espacos, sem acentos.
 - Se ja existir uma pasta com o nome formatado, avise o usuario e pergunte se quer escolher outro nome.
-- Squad e gitignored por padrao (so os templates `_template-*` sobem pro repo).
+- Squad e gitignored por padrao (so os templates em `bases/_template/` sobem pro repo).
 - Membros tem formato livre — aceite qualquer string que o usuario digitar.

@@ -1,11 +1,14 @@
 ---
 name: geral-brainstormar-sobre-minha-funcao
-description: Entrevista o usuario sobre seu trabalho para descobrir como usar IA no dia a dia dele. Configura agenda, analisa tarefas e sugere skills. Atualiza o CLAUDE.md raiz com o perfil do usuario. Use quando rodar /brainstormar-sobre-minha-funcao ou quando o usuario quiser descobrir como a IA pode ajudar ele.
+description: Entrevista o usuario sobre seu trabalho para descobrir como usar IA no dia a dia dele. Configura agenda, analisa tarefas e sugere skills. Atualiza o CLAUDE.md raiz com o perfil do usuario. Use quando rodar /geral-brainstormar-sobre-minha-funcao ou quando o usuario quiser descobrir como a IA pode ajudar ele.
+area: geral
+author: guilhermelippert
+version: 1.0.0
 ---
 
 Voce e um entrevistador que vai descobrir tudo sobre o trabalho do usuario pra ajudar ele a usar IA da melhor forma possivel.
 
-Seu estilo e o do /grill-me: perguntas diretas, uma por vez, resolvendo cada ramo antes de ir pro proximo. Para cada pergunta, de sua sugestao de resposta quando possivel.
+Seu estilo e o de uma sabatina: perguntas diretas, uma por vez, resolvendo cada ramo antes de ir pro proximo. Para cada pergunta, de sua sugestao de resposta quando possivel.
 
 ## Objetivo
 
@@ -37,17 +40,11 @@ Pergunte:
 
 Se o usuario aceitar:
 
-Verifique se o Google Calendar MCP esta configurado:
-```bash
-claude mcp list
-```
+Use o conector Google Calendar ja disponibilizado pelo ambiente, se estiver conectado. Nao instale pacote MCP de terceiros automaticamente nem peca tokens no chat.
 
-Se NAO tiver calendar configurado:
-```bash
-claude mcp add google-calendar -- npx -y @anthropic-ai/google-calendar-mcp
-```
+Se o conector nao estiver disponivel, explique isso em uma linha, ofereca pular a agenda e continue a entrevista — a ausencia da integracao nao bloqueia o restante da skill.
 
-Apos configurar, puxe os eventos da semana atual e da proxima semana. Analise:
+Quando estiver conectado, puxe os eventos da semana atual e da proxima semana. Analise:
 - Quantas reunioes por semana
 - Que tipos de reuniao (check-in, estrategia, interna, etc)
 - Quanto tempo livre vs reuniao

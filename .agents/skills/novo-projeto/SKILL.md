@@ -17,18 +17,15 @@ Use o nome para criar a pasta. Converta para lowercase-com-hifens (ex: "Concilia
 ### Passo 2 — Criar a estrutura
 
 ```bash
-cp -r bases/_template "bases/[nome-formatado]"
-cp "bases/[nome-formatado]/.env.example" "bases/[nome-formatado]/.env"
+cp -r bases/_template/_template-projeto "bases/[nome-formatado]"
 ```
-
-`.env` fica local (bases/ inteiro e gitignored, so `_template/` sobe). Preenche credenciais conforme usar.
 
 ### Passo 3 — Contexto inicial
 
 Pergunte:
 > "Me conta em 1-2 frases o que e esse projeto. Pra que ele serve?"
 
-Crie `bases/[nome-formatado]/CLAUDE.md`:
+Substitua os placeholders em `README.md` e crie `CLAUDE.md` e `AGENTS.md` com conteudo identico:
 ```markdown
 # [Nome do Projeto]
 
@@ -45,8 +42,8 @@ Mostre a estrutura criada:
 ```
 bases/[nome-formatado]/
 ├── CLAUDE.md
-├── .env            # credenciais locais (gitignored)
-├── .env.example    # template
+├── AGENTS.md
+├── README.md
 ├── docs/
 ├── dados/
 └── referencias/

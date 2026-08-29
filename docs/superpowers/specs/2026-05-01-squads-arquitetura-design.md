@@ -15,7 +15,7 @@ Precisamos agrupar clientes por squad — um squad e um time fixo de pessoas (ge
 
 ## Objetivo
 
-Adicionar uma camada de squad entre `clientes/` e o cliente. Criar uma skill `/novo-squad` para criar a pasta do squad com README de membros. Atualizar `/novo-cliente` e `/contexto` para o novo layout. Migrar o cliente existente (`lopes-campanelli-sociedade-de-advogados`) para um `squad-exemplo`.
+Adicionar uma camada de squad entre `clientes/` e o cliente. Criar uma skill `/novo-squad` para criar a pasta do squad com README de membros. Atualizar `/novo-cliente` e `/contexto` para o novo layout. Migrar a KB existente para um `squad-exemplo`, sem registrar dados do cliente neste documento publico.
 
 `bases/` nao sofre mudanca.
 
@@ -85,7 +85,7 @@ Conteudo do `README.md` no template:
 
 **`bases/_template/_template-cliente/`**:
 
-Mesmo conteudo de hoje. So muda o nome da pasta. Tem `.env.example`, `CLAUDE.md` placeholder, e subpastas `calls/`, `checkins/`, `docs/`, `campanhas/` (com `.gitkeep`). `mission-control/` pode nascer vazio via `/contexto` ou `/account-handoff`.
+Tem `.env.example` e subpastas `calls/`, `checkins/`, `docs/`, `campanhas/` (com `.gitkeep`). A skill `/novo-cliente` grava `CLAUDE.md` e `AGENTS.md` depois da copia. `mission-control/` pode nascer vazio via `/contexto` ou `/account-handoff`.
 
 ### 2. Skill nova: `/novo-squad`
 
@@ -150,11 +150,11 @@ Como parte da execucao do plano:
 
 1. Mover templates versionados para `bases/_template/_template-cliente/` e `bases/_template/_template-squad/`.
 2. Rodar `/novo-squad` (manual ou simulado) pra criar `squads/squad-exemplo/` — membros placeholder que o usuario preenche depois.
-3. Mover `clientes/lopes-campanelli-sociedade-de-advogados/` → `squads/squad-exemplo/clientes/lopes-campanelli-sociedade-de-advogados/`. (Como o conteudo do cliente e gitignored, na pratica e um `mv` mesmo — git nao rastreia esses arquivos.)
+3. Mover a KB existente para `squads/squad-exemplo/clientes/{cliente-existente}/`. Como o conteudo e gitignored, o Git nao rastreia esses arquivos.
 
 ## Skills nao impactadas neste spec
 
-Skills que recebem o cliente como argumento ou via prompt (ex.: `account-pesquisa-profunda-cliente`, `v4mos-dados-meta-ads`, `trafego-meta-diagnostico`) usam caminho dinamico. Nao precisam mudanca no spec. Se alguma quebrar por assumir caminho hardcoded, ajustamos como bug fix durante a execucao.
+Skills que recebem o cliente como argumento ou via prompt (ex.: `account-pesquisa-profunda-cliente` e `v4mos-dados-meta-ads`) usam caminho dinamico. Nao precisam mudanca no spec. Se alguma quebrar por assumir caminho hardcoded, ajustamos como bug fix durante a execucao.
 
 ## Fora de escopo
 
@@ -169,6 +169,6 @@ Skills que recebem o cliente como argumento ou via prompt (ex.: `account-pesquis
 2. `/novo-cliente` recusa rodar se nao houver squad e cria o cliente em `squads/{squad}/clientes/{cliente}/` quando houver.
 3. `/contexto` funciona corretamente em pasta de squad e em pasta de cliente.
 4. Templates versionados vivem em `bases/_template/`.
-5. `clientes/lopes-campanelli-sociedade-de-advogados/` foi movido pra `squads/squad-exemplo/clientes/`.
+5. A KB existente foi movida para `squads/squad-exemplo/clientes/{cliente-existente}/`.
 6. CLAUDE.md raiz descreve a estrutura nova e cita `/novo-squad`.
 7. Skills `/novo-squad`, `/novo-cliente`, `/contexto` existem identicas em `.claude/skills/` e `.agents/skills/`.

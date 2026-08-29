@@ -67,7 +67,7 @@ git config --global user.email
 
 **Correcao:**
 
-1. Pergunte o nome completo do usuario (ex: "Guilherme Lippert")
+1. Pergunte o nome completo do usuario (ex: "Nome Sobrenome")
 2. Pergunte o email da conta GitHub dele — **precisa ser exatamente o mesmo do GitHub** pra commits linkarem ao perfil
 3. Rode:
    ```bash
@@ -76,7 +76,7 @@ git config --global user.email
    ```
 4. Verifique de novo com `git config --global user.name` e `git config --global user.email`
 
-Se o usuario usa um email especifico no GitHub (ex: `guilherme@v4company.com`), use ESSE. Ele pode confirmar em https://github.com/settings/emails.
+Se o usuario usa um email especifico no GitHub (ex: `nome@v4company.com`), use ESSE. Ele pode confirmar em https://github.com/settings/emails.
 
 ### Check 1.3 — Default branch = main
 
@@ -131,7 +131,7 @@ git remote -v
 - **Ok:** esta dentro de `builders-hub/` e remote `origin` aponta pra `https://github.com/V4-Company/builders-hub.git`
 - **Quebrado caso A (baixou ZIP):** sem remote. Oriente re-clonar:
   ```bash
-  # 1. Mova arquivos pessoais de clientes/ e bases/ pra outro lugar
+  # 1. Mova arquivos pessoais de squads/ e bases/ pra outro lugar
   # 2. Clone de novo:
   git clone https://github.com/V4-Company/builders-hub.git
   # 3. Mova de volta os arquivos pessoais pro novo clone
@@ -196,7 +196,7 @@ Mostre ao usuario:
 ✅ Git setup 100%
 
 Git: 2.43.0
-Identidade: Guilherme Lippert <guilherme@v4company.com>
+Identidade: Nome Sobrenome <nome@v4company.com>
 gh: autenticado como guilhermelippert
 Repo: builders-hub na branch main (upstream origin/main)
 Python: 3.11.5
@@ -215,6 +215,17 @@ uname -s
 ```
 
 Adapte os comandos de instalacao abaixo conforme SO.
+
+## Passo 2.1 — Dependencias Python do Hub
+
+Na raiz do repositorio:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+Isso instala as dependencias reproduziveis dos scripts de integracao. Se falhar,
+nao prossiga: corrija o Python/pip e rode novamente.
 
 ## Passo 3 — Node.js e npm
 
@@ -265,7 +276,7 @@ Na primeira vez, `claude` abre browser pra autenticar. Peca pro usuario fazer lo
 ## Passo 5 — notebooklm-py
 
 ```bash
-pip install "notebooklm-py[browser]"
+python3 -m pip install "notebooklm-py[browser]"
 playwright install chromium
 ```
 
@@ -335,13 +346,13 @@ Explique cada uma com exemplo pratico:
 **`/criador-de-skills`**
 > "A mais poderosa. Quando algo com a IA ficou bom — uma analise, um relatorio, um check-in — transforma em skill. Ai na proxima vez voce so roda a skill. Exemplo: preparou um check-in com IA e ficou otimo. Roda `/criador-de-skills`, descreve o que fez, e ela cria `/account-checkin-ppt` que repete o processo. Essa skill FORCA prefixo de papel (geral/gt/designer/copy/account/coord) e escreve em `.claude/` E `.agents/` ao mesmo tempo."
 
-**`/brainstormar-sobre-minha-funcao`**
+**`/geral-brainstormar-sobre-minha-funcao`**
 > "Pra quem nao sabe por onde comecar. Te entrevista sobre o seu trabalho — tarefas, agenda, dores — e descobre onde IA agrega mais valor pra voce. No final atualiza o CLAUDE.md com seu perfil. Recomendo rodar logo se quer um mapa personalizado."
 
-**`/sabatina`**
+**`/geral-sabatina`**
 > "Pra stress-testar plano ou ideia. A IA vai questionar cada aspecto ate voce ter certeza. Funciona pra estrategia de cliente, proposta, campanha."
 
-**`/frontend-design`**
+**`/geral-frontend-design`**
 > "Pra gerar interfaces frontend com qualidade profissional. Usa quando a skill precisa produzir HTML/UI (ex: relatorio visual, landing page)."
 
 **`notebooklm` (CLI)**
@@ -363,10 +374,10 @@ Depois:
 > "`/sync-hub` — puxa as skills que o time ja compartilhou. Voce comeca com tudo disponivel."
 
 **Passo 2 (todo mundo):**
-> "`/brainstormar-sobre-minha-funcao` — te entrevista e monta um plano personalizado de uso da IA."
+> "`/geral-brainstormar-sobre-minha-funcao` — te entrevista e monta um plano personalizado de uso da IA."
 
 **Passo 3, se operacao:**
-> "`/novo-cliente` pra criar seu primeiro cliente, jogue os dados, `/contexto`."
+> "Se ainda nao existe um squad, rode `/novo-squad`. Depois use `/novo-cliente`, jogue os dados e rode `/contexto`."
 
 **Passo 3, se outras areas:**
 > "`/novo-projeto` pra criar seu primeiro projeto, jogue os dados, `/contexto`."
