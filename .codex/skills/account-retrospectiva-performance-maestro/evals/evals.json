@@ -1,0 +1,73 @@
+{
+  "skill_name": "account-retrospectiva-performance-maestro",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Faça a retrospectiva de Q3 de um cliente de inside sales com Meta e Google. O CRM tem MQL, SQL, orçamento e venda, há oito vendedores e uma ferramenta de WhatsApp. O cliente ainda não possui break-even. Quero os rankings completos e uma base que prove cada conclusão.",
+      "expected_output": "Roda de ponta a ponta sem paradas intermediárias: descobre fontes e definições, cria break-even local quando encontra as premissas, cruza mídia, CRM, vendedores e conversas, aplica horas úteis e cadência de 7+ follow-ups, registra decisões em decisoes.md e entrega o pacote de validação sem iniciar o plano do quarter.",
+      "files": [],
+      "assertions": [
+        "Usa first paid touch e preserva não atribuídos",
+        "Gera ranking por CPL, CPMQL, CPSQL e CPVenda com funil completo",
+        "Cria break-even local e registra fee, verba e MC1 como premissa_economica crítica em decisoes.md, sem pausar a execução",
+        "Gera base de conversas com links e evidências",
+        "Não cria plano, prioridade, prazo ou responsável",
+        "Não pergunta nada entre o início e o pacote de validação final"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Monte a retrospectiva de Q2 de um e-commerce com Meta, Google, GA4 e Shopify. Compare os canais, landing pages e produtos. Quero entender sessão, conversão, ticket, receita, ROAS, estoque e os criativos vencedores.",
+      "expected_output": "Separa tráfego pago e não pago, reconcilia NEKT, GA4 e loja, analisa produto e mídia em macro e micro, baixa criativos pelo NEKT e entrega achados com evidências.",
+      "files": [],
+      "assertions": [
+        "Não aplica taxas do tráfego pago às sessões orgânicas",
+        "Compara categoria, produto, SKU, conversão e ticket",
+        "Usa NEKT para assets de criativos",
+        "Expõe conflitos entre GA4, plataforma e mídia",
+        "Produz saída canônica em Markdown"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Preciso da retrospectiva trimestral de um cliente novo, mas não existe repositório e eu ainda não sei qual CRM ele usa nem como define MQL e SQL.",
+      "expected_output": "Varre as fontes disponíveis, segue sem sabatina intermediária, aplica as escolhas mais bem evidenciadas e registra o restante como lacuna em decisoes.md, sem inventar definições; a validação acontece toda no pacote final.",
+      "files": [],
+      "assertions": [
+        "Não interrompe a execução para perguntar CRM ou definições",
+        "Registra modelo de negócio, período e definições do funil como decisão assumida ou lacuna",
+        "Registra lacunas e conflitos em decisoes.md",
+        "Não inventa MQL ou SQL",
+        "Mantém o pacote versionado e roda --review-ready antes de apresentar"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Audite a qualidade comercial de Q3 para um inside sales. Temos CRM e WhatsApp, mas parte das conversas tem áudio sem transcrição e o cliente ainda não aprovou uma rubrica. Quero comparar os vendedores e entender se o atendimento explica as diferenças de venda.",
+      "expected_output": "Mede execução operacional objetivamente, mantém competência comercial provisória até calibrar a rubrica, separa resultado de funil, preserva conversas não localizadas ou não avaliáveis e sustenta cada classificação com evidência.",
+      "files": [],
+      "assertions": [
+        "Não cria nota única combinando execução, competência e resultado",
+        "Não penaliza conteúdo de áudio sem transcrição",
+        "Exige rubrica calibrada para score comercial definitivo",
+        "Usa SLA em horas úteis e 7 ou mais follow-ups em até 7 dias",
+        "Mantém resultado de funil como camada separada",
+        "Classifica criticidade P0 a P4 com evidência"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "A retrospectiva autônoma do Q3 terminou. Respondo: D-002 corrigir: MQL é orçamento acima de R$ 5.000; L-003 aceitar; confirmar pendentes média e baixa. Depois disso, retrospectiva aprovada.",
+      "expected_output": "Atualiza confirmações e aceites na execução atual, gera nova run_id com parent_run_id para a correção de MQL, recalcula a partir de 02-midia.md, roda --approval-ready e só então aceita a aprovação e libera o adaptador do ROPRE.",
+      "files": [],
+      "assertions": [
+        "Não altera números da execução anterior",
+        "Cria nova run_id com parent_run_id e recalcula a partir do módulo afetado",
+        "Confirma em lote somente as pendências de criticidade média e baixa",
+        "Recusa a aprovação enquanto houver decisão assumida ou lacuna aberta",
+        "Com aprovação válida, libera account-ropre-quarter-retrospectiva sem nova pergunta",
+        "Não publica no Drive sem autorização própria"
+      ]
+    }
+  ]
+}
