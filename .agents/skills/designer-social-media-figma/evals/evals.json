@@ -1,0 +1,41 @@
+{
+  "skill_name": "designer-social-media-figma",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Quero o social de novembro da Marca Exemplo: quatro carrosseis em 04.11, 11.11, 18.11 e 25.11. Ja forneci Miro, pasta, Figma e identidade. Os briefings tem respectivamente 4, 5, 4 e 3 cards. O encerramento aprovado esta nas referencias. Simule sem chamar servicos externos nem gerar imagens.",
+      "expected_output": "Reaproveita intake, trata o lote em conjunto, respeita 4/5/4/3 cards (16 no total), usa identidade e encerramento do cliente, verifica escrita antes de gerar o lote e exige revisao visual sem afirmar execucao real.",
+      "files": [],
+      "assertions": [
+        "Distingue quatro posts das contagens de cards.",
+        "Prioriza material oficial e encerramento aprovado.",
+        "Preve escrita real antes da geracao em lote.",
+        "Nao afirma ter criado arquivo durante uma simulacao."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Atualize so 25.11 pelo Miro. Troquei o link do Figma e ajustei manualmente 04.11 e 11.11. A nova headline esta clara, mas o miolo tem duas instrucoes atuais conflitantes sobre o mesmo beneficio. Simule resposta e passos sem acessar fontes reais.",
+      "expected_output": "Usa novo destino, inspeciona grupo atual, preserva ajustes das outras datas e faz uma pergunta localizada sobre as duas copies sem inventar beneficio ou repetir formulario.",
+      "files": [],
+      "assertions": [
+        "O link mais recente prevalece.",
+        "Restringe a alteracao a data pedida.",
+        "A pergunta se concentra na divergencia concreta.",
+        "Nao inventa promessa para resolver conflito."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Simulacao: a capa OpenAI esta pronta, Adobe falha no miolo, foto oficial de 16 MB recebe HTTP 413 com limite de 10 MB, outro upload tem sucesso mas o card segue sem fill e o screenshot retorna so URL e metadados. Diga como concluir sem mudar o briefing e sem chamadas reais.",
+      "expected_output": "Usa OpenAI no miolo, reduz copia da foto preservando original, confere alvo/fill e abre renderizacao para revisar. Nao pede reconexao para 413 nem regenera imagem por falha de transferencia.",
+      "files": [],
+      "assertions": [
+        "Preserva briefing no fallback de provedor.",
+        "Reduz copia sem substituir produto oficial.",
+        "Verifica fill no alvo correto.",
+        "Abre a imagem antes de alegar QA visual."
+      ]
+    }
+  ]
+}
